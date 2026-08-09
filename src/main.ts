@@ -61,6 +61,7 @@ app.load({
 
     styles: {
       main: {
+        // the sidebar layout's main area ships no default padding; set it here until it does
         padding: 'var(--u-space-3xl, 32px)',
         background: 'var(--u-bg-color-raised, #FAFAFA)',
       },
