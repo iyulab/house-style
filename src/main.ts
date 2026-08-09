@@ -58,6 +58,13 @@ app.load({
         onClick: () => window.open('https://github.com/iyulab/house-style', '_blank'),
       },
     ],
+
+    styles: {
+      main: {
+        padding: 'var(--u-space-3xl, 32px)',
+        background: 'var(--u-bg-color-raised, #FAFAFA)',
+      },
+    },
   },
 }).then(() => {
   // Deliberately loaded AFTER `app.load()` resolves, not as a static top-level
