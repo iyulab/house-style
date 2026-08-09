@@ -45,8 +45,7 @@ const ROWS = [
  * data representation, the list screen and the edit-form assembly (below) are all
  * real, running compositions of already-shipped components — none of them required
  * a new house-style-specific component. The status-history timeline is the one
- * remaining piece with no existing component to build on, so that gap is named
- * plainly instead of demoed with something that doesn't exist.
+ * remaining piece, and it stays undecided on purpose — see the section below.
  */
 @customElement('house-data-patterns-section')
 export class DataPatternsSection extends LitElement {
@@ -151,10 +150,15 @@ export class DataPatternsSection extends LitElement {
           </u-drawer>
         </u-group-box>
 
-        <u-group-box title="Designed, not yet built">
+        <u-group-box title="Not yet built — by design">
           <p>
-            A status-history timeline — a chronological event display primitive with no
-            existing component to build on, not started.
+            A status-history timeline is not a missing implementation — it's a
+            deliberate hold. <code>@iyulab/modern-app</code>'s own charter already
+            names this exact pattern ("timeline / step rail") and records the
+            repeated need it has observed, but concludes the shape hasn't converged
+            on one answer yet. Building a house-style-specific version here would
+            pre-empt that judgment rather than honor it, so this stays undecided
+            until the upstream charter is ready to.
           </p>
         </u-group-box>
       </section>
