@@ -1,0 +1,25 @@
+{
+  "name": "@iyulab/house-style",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "devDependencies": {
+    "@iyulab/components": "^1.27.0",
+    "@iyulab/enterprise": "^0.8.2",
+    "@iyulab/modern-app": "^0.13.0",
+    "@types/node": "^25.5.0",
+    "lit": "^3.3.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3"
+  }
+}
