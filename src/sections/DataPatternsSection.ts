@@ -4,11 +4,17 @@ import { customElement, state } from 'lit/decorators.js';
 import '@iyulab/components/dist/components/date-picker/UDatePicker.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/badge/UBadge.js';
+import '@iyulab/components/dist/components/drawer/UDrawer.js';
+import '@iyulab/components/dist/components/input/UInput.js';
+import '@iyulab/components/dist/components/select/USelect.js';
+import '@iyulab/components/dist/components/option/UOption.js';
+import '@iyulab/components/dist/components/field/UField.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { ColumnDef, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 
 const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
@@ -36,10 +42,11 @@ const ROWS = [
  * §4 Data visualization & patterns.
  *
  * Graded the blueprint's biggest gap. The gap is uneven within the category itself:
- * data-representation primitives (below, "Data representation") and the list-screen
- * assembly (below, "List screen") are both real, running components. Edit-form and
- * timeline kits are not — grepping this repo for either returns nothing, so that gap
- * is named plainly rather than demoed with components that don't exist.
+ * data representation, the list screen and the edit-form assembly (below) are all
+ * real, running compositions of already-shipped components — none of them required
+ * a new house-style-specific component. The status-history timeline is the one
+ * remaining piece with no existing component to build on, so that gap is named
+ * plainly instead of demoed with something that doesn't exist.
  */
 @customElement('house-data-patterns-section')
 export class DataPatternsSection extends LitElement {
@@ -51,6 +58,14 @@ export class DataPatternsSection extends LitElement {
 
   private handleSelectionChange(e: RichTableEventMap['selection-change']) {
     this.selectedCount = e.detail.selectedIds.length;
+  }
+
+  private openEditDrawer() {
+    this.querySelector<UDrawer>('#edit-drawer')?.show();
+  }
+
+  private closeEditDrawer() {
+    this.querySelector<UDrawer>('#edit-drawer')?.hide();
   }
 
   render() {
@@ -98,11 +113,45 @@ export class DataPatternsSection extends LitElement {
           </u-rich-table>
         </u-group-box>
 
-        <u-group-box title="Designed, not yet built">
+        <u-group-box title="Edit form — assembled, not a dedicated kit">
           <p>
-            An edit-form kit (drawer shell, grid-based field layout) — designed against
-            a real "edit order details" panel, not started.
+            Same story as the list screen: no purpose-built "edit-form kit" component
+            exists. This is <code>u-drawer</code> — its existing header/body/footer
+            slots and imperative <code>show()</code>/<code>hide()</code> — wrapped
+            around the same <code>u-info-section</code> + <code>u-field</code> grid
+            composition a full-page edit screen already uses elsewhere in this
+            framework, so a field keeps the same column rhythm whether it sits on a
+            page or inside a drawer.
           </p>
+          <u-button color="primary" @click=${this.openEditDrawer}>Edit order</u-button>
+          <u-drawer id="edit-drawer" placement="right" closable>
+            <span slot="header">Edit order G-2026-0512</span>
+            <u-info-section min="200">
+              <u-field label="Customer" required>
+                <u-input value="Aster Trading"></u-input>
+              </u-field>
+              <u-field label="Status">
+                <u-select value="pending">
+                  <u-option value="pending">Pending</u-option>
+                  <u-option value="shipped">Shipped</u-option>
+                  <u-option value="delivered">Delivered</u-option>
+                </u-select>
+              </u-field>
+              <u-field label="Delivery date">
+                <u-date-picker value="2026-03-31" clearable></u-date-picker>
+              </u-field>
+              <u-field label="Total" description="Read-only — set at order creation">
+                <u-input value="₩1,240,000" disabled></u-input>
+              </u-field>
+            </u-info-section>
+            <div slot="footer">
+              <u-button variant="ghost" @click=${this.closeEditDrawer}>Cancel</u-button>
+              <u-button color="primary" @click=${this.closeEditDrawer}>Save</u-button>
+            </div>
+          </u-drawer>
+        </u-group-box>
+
+        <u-group-box title="Designed, not yet built">
           <p>
             A status-history timeline — a chronological event display primitive with no
             existing component to build on, not started.
