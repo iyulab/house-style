@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
 import { Theme } from '@iyulab/components';
 
+import './styles/page-shell.css';
 import './pages/HouseStylePage.js';
 
 const base = import.meta.env.BASE_URL;

@@ -1,0 +1,21 @@
+/* packages/house-style/src/styles/page-shell.css
+ *
+ * house-style-page 와 그 안의 각 <section>(§1~§7 카테고리)은 전부 라이트 DOM으로
+ * 렌더된다(createRenderRoot() { return this; }) — 이 파일이 그 경계를 넘나들며 세로
+ * 리듬을 준다. 값은 새로 만들지 않고 @iyulab/components 가 이미 연 --u-space-* 를
+ * 그대로 인용한다.
+ */
+
+house-style-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3xl, 32px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+house-style-page section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-xl, 20px);
+}
