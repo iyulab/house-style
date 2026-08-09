@@ -81,11 +81,11 @@ export class DataPatternsSection extends LitElement {
           <u-rich-table
             .columns=${COLUMNS}
             .data=${ROWS}
-            total-count="4"
+            .totalCount=${4}
             selectable
             filterable
-            filter-placeholder="Filter…"
-            filter-all-label="All statuses"
+            .filterPlaceholder=${'Filter…'}
+            .filterAllLabel=${'All statuses'}
             @selection-change=${this.handleSelectionChange}
           >
             <span slot="bulk-actions">
