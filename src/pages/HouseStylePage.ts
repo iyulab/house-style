@@ -4,18 +4,10 @@ import { customElement } from 'lit/decorators.js';
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 
-import '../sections/IdentitySection.js';
-import '../sections/LayoutSection.js';
-import '../sections/DepthSection.js';
-import '../sections/DataPatternsSection.js';
-import '../sections/FlowsSection.js';
-import '../sections/FeedbackSection.js';
-import '../sections/VoiceA11ySection.js';
-
 /**
- * The whole site is one page — the sidebar's nav buttons scroll to the sections
- * below rather than routing anywhere, so there is exactly one route to resolve
- * and nothing for a router to get wrong under a GitHub Pages subpath.
+ * The landing page — an introduction to how this site is graded. The seven
+ * categories used to be stacked below this page's scroll; they now live at
+ * their own routes (see main.ts) and are reached through the sidebar.
  */
 @customElement('house-style-page')
 export class HouseStylePage extends LitElement {
@@ -40,14 +32,6 @@ export class HouseStylePage extends LitElement {
           design decision just to fill a section.
         </p>
       </u-group-box>
-
-      <house-identity-section></house-identity-section>
-      <house-layout-section></house-layout-section>
-      <house-depth-section></house-depth-section>
-      <house-data-patterns-section></house-data-patterns-section>
-      <house-flows-section></house-flows-section>
-      <house-feedback-section></house-feedback-section>
-      <house-voice-a11y-section></house-voice-a11y-section>
     `;
   }
 }
