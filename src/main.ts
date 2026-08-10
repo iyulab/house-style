@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
 import { Theme } from '@iyulab/components';
 
+import '@iyulab/enterprise/icons';
 import './styles/page-shell.css';
 import './pages/HouseStylePage.js';
 
@@ -37,24 +38,30 @@ app.load({
     // Every item is a button, not a link — scrolling to an in-page section, never
     // navigating. See §2's "Layout & viewport" section for why that matters here.
     main: [
-      { type: 'button', label: 'Visual identity & tokens', onClick: () => scrollToSection('identity') },
-      { type: 'button', label: 'Layout & viewport', onClick: () => scrollToSection('layout') },
-      { type: 'button', label: 'Component depth', onClick: () => scrollToSection('depth') },
-      { type: 'button', label: 'Data patterns', onClick: () => scrollToSection('data-patterns') },
-      { type: 'button', label: 'User flows', onClick: () => scrollToSection('flows') },
-      { type: 'button', label: 'Feedback & motion', onClick: () => scrollToSection('feedback') },
-      { type: 'button', label: 'Voice, tone & accessibility', onClick: () => scrollToSection('voice-a11y') },
+      { type: 'button', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('identity') },
+      { type: 'button', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('layout') },
+      { type: 'button', label: 'Component depth', icon: 'layers', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('depth') },
+      { type: 'button', label: 'Data patterns', icon: 'table', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('data-patterns') },
+      { type: 'button', label: 'User flows', icon: 'flow', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('flows') },
+      { type: 'button', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('feedback') },
+      { type: 'button', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('voice-a11y') },
     ],
 
     footer: [
       {
         type: 'button',
         label: 'Toggle theme',
+        icon: 'contrast',
+        lib: 'house',
+        styles: { icon: { color: 'var(--u-primary-color)' } },
         onClick: () => Theme.set(Theme.resolved() === 'dark' ? 'light' : 'dark'),
       },
       {
         type: 'button',
         label: 'View source',
+        icon: 'code',
+        lib: 'house',
+        styles: { icon: { color: 'var(--u-primary-color)' } },
         onClick: () => window.open('https://github.com/iyulab/house-style', '_blank'),
       },
     ],
