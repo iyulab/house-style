@@ -58,6 +58,19 @@ const ROWS = [
 
 const FILTER_ITEMS = ['Aster Trading', 'Blue Harbor Co.', 'Cedar & Finch'];
 
+const LINE_ITEM_COLUMNS: ColumnDef[] = [
+  { key: 'item', label: 'Item', filterable: false },
+  { key: 'qty', label: 'Qty', align: 'right', width: '80px' },
+  { key: 'unitPrice', label: 'Unit price', align: 'right', width: '120px' },
+  { key: 'subtotal', label: 'Subtotal', align: 'right', width: '120px' },
+];
+
+const LINE_ITEMS = [
+  { _id: 'li-1', item: 'Business cards, 500ct', qty: 2, unitPrice: '₩45,000', subtotal: '₩90,000' },
+  { _id: 'li-2', item: 'Letterhead, A4', qty: 1, unitPrice: '₩1,150,000', subtotal: '₩1,150,000' },
+  { _id: 'li-3', item: 'Envelope, #10', qty: 1, unitPrice: '₩0', subtotal: '₩0' },
+];
+
 /**
  * §4 Data visualization & patterns.
  *
@@ -201,6 +214,25 @@ export class DataPatternsSection extends LitElement {
               <u-button size="sm" color="primary">New order</u-button>
             </span>
           </u-empty-state>
+        </u-group-box>
+
+        <u-group-box title="Line items — order G-2026-0512">
+          <span slot="actions">
+            <u-button size="sm" variant="outlined">Add item</u-button>
+          </span>
+          <p>
+            The one-to-many case: a single order, many line items. No dedicated
+            "related-list" component exists — this is the same <code>u-group-box</code> +
+            <code>u-rich-table</code> pairing as the List screen above, just nested inside
+            one record's detail view instead of standing alone, with columns trimmed to
+            what belongs on a line item and the "add related record" action riding in the
+            group-box's own <code>actions</code> slot.
+          </p>
+          <u-rich-table
+            .columns=${LINE_ITEM_COLUMNS}
+            .data=${LINE_ITEMS}
+            .totalCount=${3}
+          ></u-rich-table>
         </u-group-box>
 
         <u-group-box title="Edit form — assembled, not a dedicated kit">
