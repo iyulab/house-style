@@ -35,8 +35,8 @@ export class VoiceA11ySection extends LitElement {
 
       <u-group-box title="Keyboard interaction">
         <p>
-          The date picker above (§4) follows the WAI-ARIA Date Picker Dialog
-          pattern — arrow keys move between days, Enter selects, Escape closes —
+          The date picker on the Data patterns page follows the WAI-ARIA Date Picker
+          Dialog pattern — arrow keys move between days, Enter selects, Escape closes —
           built into the component rather than left for each consumer to implement.
         </p>
         <p>

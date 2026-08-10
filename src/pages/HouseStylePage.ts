@@ -26,7 +26,7 @@ export class HouseStylePage extends LitElement {
         <p>
           Seven categories, graded the same way the design audit behind this site graded
           them: some are shown live, generated from the actual tokens and components
-          currently loaded on this page, so this page cannot drift out of sync with its
+          currently loaded on this site, so this site cannot drift out of sync with its
           own source. Others are described from what the code does today. A few are
           named as open questions rather than answered — this page does not invent a
           design decision just to fill a section.
