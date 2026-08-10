@@ -15,7 +15,7 @@ import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/EmptyState.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
-import type { ColumnDef, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+import type { ColumnDef, FilterState, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
 
@@ -90,8 +90,31 @@ export class DataPatternsSection extends LitElement {
   @state() private selectedCount = 0;
   @state() private filterText = '';
 
+  /**
+   * `u-rich-table` renders the filter row and emits `filter-change`, but does not filter
+   * its own `.data` — that's the host's job (the same contract server-paged consumers rely
+   * on to turn a filter into an API query instead of a client-side operation). This demo's
+   * data is static, so filtering happens here.
+   */
+  @state() private filters: FilterState = {};
+
   private handleSelectionChange(e: RichTableEventMap['selection-change']) {
     this.selectedCount = e.detail.selectedIds.length;
+  }
+
+  private handleFilterChange(e: RichTableEventMap['filter-change']) {
+    this.filters = e.detail.filters;
+  }
+
+  private get filteredRows() {
+    return ROWS.filter(row =>
+      Object.entries(this.filters).every(([field, value]) => {
+        const cell = String((row as Record<string, unknown>)[field] ?? '');
+        const column = COLUMNS.find(c => c.key === field);
+        return column?.filterType === 'select'
+          ? cell === value
+          : cell.toLowerCase().includes(value.toLowerCase());
+      }));
   }
 
   private openEditDrawer() {
@@ -135,13 +158,14 @@ export class DataPatternsSection extends LitElement {
           </p>
           <u-rich-table
             .columns=${COLUMNS}
-            .data=${ROWS}
-            .totalCount=${4}
+            .data=${this.filteredRows}
+            .totalCount=${this.filteredRows.length}
             selectable
             filterable
             .filterPlaceholder=${'Filter…'}
             .filterAllLabel=${'All statuses'}
             @selection-change=${this.handleSelectionChange}
+            @filter-change=${this.handleFilterChange}
           >
             <span slot="bulk-actions">
               ${this.selectedCount > 0
