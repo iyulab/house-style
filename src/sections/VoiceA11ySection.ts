@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/field/UField.js';
+import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 
@@ -21,33 +22,36 @@ export class VoiceA11ySection extends LitElement {
 
   render() {
     return html`
-      <section id="voice-a11y">
-        <u-group-box title="Focus visibility">
-          <u-info-section min="200">
-            <u-field label="Focus me"><u-input placeholder="Tab to this field"></u-input></u-field>
-          </u-info-section>
-        </u-group-box>
+      <u-page-header
+        title="Voice, tone & accessibility"
+        subtitle="Focus visibility and keyboard interaction"
+      ></u-page-header>
 
-        <u-group-box title="Keyboard interaction">
-          <p>
-            The date picker above (§4) follows the WAI-ARIA Date Picker Dialog
-            pattern — arrow keys move between days, Enter selects, Escape closes —
-            built into the component rather than left for each consumer to implement.
-          </p>
-          <p>
-            The component library ships its own contrast-ramp generation tooling,
-            used when deriving new color ramps rather than picking values by eye.
-          </p>
-        </u-group-box>
+      <u-group-box title="Focus visibility">
+        <u-info-section min="200">
+          <u-field label="Focus me"><u-input placeholder="Tab to this field"></u-input></u-field>
+        </u-info-section>
+      </u-group-box>
 
-        <u-group-box title="Not yet decided">
-          <p>
-            There is no public-facing accessibility standard document yet (a minimum
-            contrast ratio, a focus-ring specification) for consumers to reference, and
-            no UX-writing glossary yet.
-          </p>
-        </u-group-box>
-      </section>
+      <u-group-box title="Keyboard interaction">
+        <p>
+          The date picker above (§4) follows the WAI-ARIA Date Picker Dialog
+          pattern — arrow keys move between days, Enter selects, Escape closes —
+          built into the component rather than left for each consumer to implement.
+        </p>
+        <p>
+          The component library ships its own contrast-ramp generation tooling,
+          used when deriving new color ramps rather than picking values by eye.
+        </p>
+      </u-group-box>
+
+      <u-group-box title="Not yet decided">
+        <p>
+          There is no public-facing accessibility standard document yet (a minimum
+          contrast ratio, a focus-ring specification) for consumers to reference, and
+          no UX-writing glossary yet.
+        </p>
+      </u-group-box>
     `;
   }
 }

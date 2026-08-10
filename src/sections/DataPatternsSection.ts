@@ -9,6 +9,7 @@ import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
 import '@iyulab/components/dist/components/option/UOption.js';
 import '@iyulab/components/dist/components/field/UField.js';
+import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
@@ -69,8 +70,12 @@ export class DataPatternsSection extends LitElement {
 
   render() {
     return html`
-      <section id="data-patterns">
-        <u-group-box title="Data representation — built">
+      <u-page-header
+        title="Data patterns"
+        subtitle="Data representation, list screen, and edit form — assembled from shipped components"
+      ></u-page-header>
+
+      <u-group-box title="Data representation — built">
           <p>
             One consistent API for the three representations that used to disagree with
             each other screen to screen: a raw number, a formatted amount, and a date.
@@ -161,7 +166,6 @@ export class DataPatternsSection extends LitElement {
             until the upstream charter is ready to.
           </p>
         </u-group-box>
-      </section>
     `;
   }
 }

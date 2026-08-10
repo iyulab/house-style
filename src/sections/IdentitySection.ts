@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
+import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
@@ -53,8 +54,12 @@ export class IdentitySection extends LitElement {
   render() {
     void this.tick; // forces the readToken() calls below to re-evaluate on theme change
     return html`
-      <section id="identity">
-        <u-group-box title="Type scale">
+      <u-page-header
+        title="Visual identity & tokens"
+        subtitle="Type scale, radius, and elevation — read live from the tokens loaded on this page"
+      ></u-page-header>
+
+      <u-group-box title="Type scale">
           <p>
             Seven stages, each carrying size, weight, line-height and letter-tracking.
           </p>
@@ -118,7 +123,6 @@ export class IdentitySection extends LitElement {
             decision — it is intentionally out of scope here rather than improvised.
           </p>
         </u-group-box>
-      </section>
     `;
   }
 }

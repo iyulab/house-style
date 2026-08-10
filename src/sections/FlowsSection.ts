@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
+import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 
 /**
@@ -18,23 +19,26 @@ export class FlowsSection extends LitElement {
 
   render() {
     return html`
-      <section id="flows">
-        <u-group-box title="Built">
-          <p>
-            Row-selection state consistency and a <code>select-all</code> event landed
-            in the rich-table component — the building block a bulk-action flow needs,
-            not the flow itself.
-          </p>
-        </u-group-box>
+      <u-page-header
+        title="User flows"
+        subtitle="CRUD, wizard, and bulk-action patterns"
+      ></u-page-header>
 
-        <u-group-box title="Not yet decided">
-          <p>
-            There is no documented criterion yet for when an edit action should open a
-            modal, a slide-over panel, or a dedicated page. Wizard and draft-save
-            patterns are out of scope for now — no measured demand for them exists yet.
-          </p>
-        </u-group-box>
-      </section>
+      <u-group-box title="Built">
+        <p>
+          Row-selection state consistency and a <code>select-all</code> event landed
+          in the rich-table component — the building block a bulk-action flow needs,
+          not the flow itself.
+        </p>
+      </u-group-box>
+
+      <u-group-box title="Not yet decided">
+        <p>
+          There is no documented criterion yet for when an edit action should open a
+          modal, a slide-over panel, or a dedicated page. Wizard and draft-save
+          patterns are out of scope for now — no measured demand for them exists yet.
+        </p>
+      </u-group-box>
     `;
   }
 }
