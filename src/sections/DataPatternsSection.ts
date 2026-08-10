@@ -28,9 +28,24 @@ const COLUMNS: ColumnDef[] = [
       { value: 'shipped', label: 'Shipped' },
       { value: 'delivered', label: 'Delivered' },
     ],
+    render: renderStatusBadge,
   },
   { key: 'total', label: 'Total', align: 'right', width: '120px' },
 ];
+
+const STATUS_BADGE_COLOR: Record<string, 'neutral' | 'info' | 'success'> = {
+  pending: 'neutral',
+  shipped: 'info',
+  delivered: 'success',
+};
+
+function renderStatusBadge(value: unknown): HTMLElement {
+  const status = String(value);
+  const badge = document.createElement('u-badge');
+  badge.setAttribute('color', STATUS_BADGE_COLOR[status] ?? 'neutral');
+  badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+  return badge;
+}
 
 const ROWS = [
   { _id: '1', id: 'G-2026-0512', customer: 'Aster Trading', status: 'pending', total: '₩1,240,000' },
@@ -95,7 +110,9 @@ export class DataPatternsSection extends LitElement {
             <code>u-rich-table</code> from <code>@iyulab/data-components</code>, as-is,
             with its own filter row, selection tracking and bulk-action slot switched on.
             Nothing here is a house-style-specific component; the assembly itself is the
-            answer to "how do these already-built pieces fit together."
+            answer to "how do these already-built pieces fit together." The Status column
+            renders through <code>ColumnDef.render</code> as <code>u-badge</code> — see the
+            convention below for which color means what.
           </p>
           <u-rich-table
             .columns=${COLUMNS}
@@ -115,6 +132,28 @@ export class DataPatternsSection extends LitElement {
                 : ''}
             </span>
           </u-rich-table>
+        </u-group-box>
+
+        <u-group-box title="Status → badge convention">
+          <p>
+            Color is reserved for state a user needs to notice at a glance — the table
+            above renders <code>status</code> through a <code>ColumnDef.render</code> hook
+            that maps each value to a role token, never a raw hue.
+          </p>
+          <u-info-section min="200">
+            <u-info-field label="pending">
+              <u-badge color="neutral">Pending</u-badge>
+              <div>Waiting — no action needed yet, so it stays neutral rather than a warning color.</div>
+            </u-info-field>
+            <u-info-field label="shipped">
+              <u-badge color="info">Shipped</u-badge>
+              <div>In transit — informational, not a call to action.</div>
+            </u-info-field>
+            <u-info-field label="delivered">
+              <u-badge color="success">Delivered</u-badge>
+              <div>Done — the one state worth a positive color, not just "no longer pending."</div>
+            </u-info-field>
+          </u-info-section>
         </u-group-box>
 
         <u-group-box title="Edit form — assembled, not a dedicated kit">
