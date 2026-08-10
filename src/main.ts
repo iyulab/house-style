@@ -51,14 +51,14 @@ app.load({
     // highlight) comes for free from SidebarLayout's own URLPattern matching,
     // no extra wiring needed.
     main: [
-      { type: 'link', label: 'Overview', icon: 'home', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: base },
-      { type: 'link', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}identity` },
-      { type: 'link', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}layout` },
-      { type: 'link', label: 'Component depth', icon: 'layers', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}depth` },
-      { type: 'link', label: 'Data patterns', icon: 'table', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}data-patterns` },
-      { type: 'link', label: 'User flows', icon: 'flow', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}flows` },
-      { type: 'link', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}feedback` },
-      { type: 'link', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}voice-a11y` },
+      { type: 'link', label: 'Overview', icon: 'home', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: base },
+      { type: 'link', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}identity` },
+      { type: 'link', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}layout` },
+      { type: 'link', label: 'Component depth', icon: 'layers', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}depth` },
+      { type: 'link', label: 'Data patterns', icon: 'table', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}data-patterns` },
+      { type: 'link', label: 'User flows', icon: 'flow', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}flows` },
+      { type: 'link', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}feedback` },
+      { type: 'link', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}voice-a11y` },
     ],
 
     footer: [
