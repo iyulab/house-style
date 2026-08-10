@@ -1,29 +1,37 @@
 /* src/styles/page-shell.css
  *
- * house-style-page and each <section> inside it (the §1-§7 categories) render
- * into light DOM (createRenderRoot() { return this; }), so this file can reach
- * across those element boundaries to set the page's vertical rhythm. Values are
- * not invented here — they cite the --u-space-* / --u-bg-color-raised tokens
- * already opened by @iyulab/components.
+ * The landing page and each of the 7 category pages (house-style-page,
+ * house-identity-section, ...) are each the root element of their own route —
+ * every one renders into light DOM (createRenderRoot() { return this; }), so this
+ * file can reach across those element boundaries to set the page's vertical
+ * rhythm. Values are not invented here — they cite the --u-space-* /
+ * --u-bg-color-raised tokens already opened by @iyulab/components.
+ *
+ * One gap tier, not two: before routing, categories were sections stacked on one
+ * page, so a "between categories" gap and a "within one category" gap were both
+ * needed. Now each category is its own page — there is no longer a "between
+ * categories" case, so a single tier (the old "within one category" value)
+ * covers every page.
  */
 
-house-style-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--u-space-3xl, 32px);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-house-style-page section {
+house-style-page,
+house-identity-section,
+house-layout-section,
+house-depth-section,
+house-data-patterns-section,
+house-flows-section,
+house-feedback-section,
+house-voice-a11y-section {
   display: flex;
   flex-direction: column;
   gap: var(--u-space-xl, 20px);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* cards inside group-boxes need visual separation from their container (both
  * would otherwise read --u-panel-bg-color, making them indistinguishable)
  */
-house-style-page u-card {
+house-depth-section u-card {
   background: var(--u-bg-color-raised, #FAFAFA);
 }
