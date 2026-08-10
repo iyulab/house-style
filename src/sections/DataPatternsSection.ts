@@ -13,9 +13,11 @@ import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
+import '@iyulab/modern-app/dist/components/EmptyState.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { ColumnDef, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
+import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
 
 const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
@@ -54,6 +56,8 @@ const ROWS = [
   { _id: '4', id: 'G-2026-0515', customer: 'Aster Trading', status: 'pending', total: '₩2,010,000' },
 ];
 
+const FILTER_ITEMS = ['Aster Trading', 'Blue Harbor Co.', 'Cedar & Finch'];
+
 /**
  * §4 Data visualization & patterns.
  *
@@ -70,6 +74,7 @@ export class DataPatternsSection extends LitElement {
   }
 
   @state() private selectedCount = 0;
+  @state() private filterText = '';
 
   private handleSelectionChange(e: RichTableEventMap['selection-change']) {
     this.selectedCount = e.detail.selectedIds.length;
@@ -154,6 +159,49 @@ export class DataPatternsSection extends LitElement {
               <div>Done — the one state worth a positive color, not just "no longer pending."</div>
             </u-info-field>
           </u-info-section>
+        </u-group-box>
+
+        <u-group-box title="Filter with no matches">
+          <p>
+            A live filter over a small independent list — not the table above, so this
+            recipe stays legible on its own. Type something that matches nothing (e.g.
+            "zzz") to see the <code>no-results</code> empty state; clear the field to see
+            the list again.
+          </p>
+          <u-input
+            placeholder="Filter customers…"
+            clearable
+            .value=${this.filterText}
+            @input=${(e: Event) => { this.filterText = (e.target as UInput).value ?? ''; }}
+          ></u-input>
+          ${(() => {
+            const matches = FILTER_ITEMS.filter(name =>
+              name.toLowerCase().includes(this.filterText.toLowerCase()));
+            return matches.length > 0
+              ? html`<ul>${matches.map(name => html`<li>${name}</li>`)}</ul>`
+              : html`
+                <u-empty-state variant="no-results">
+                  <span slot="actions">
+                    <u-button size="sm" variant="outlined" @click=${() => { this.filterText = ''; }}>
+                      Clear filter
+                    </u-button>
+                  </span>
+                </u-empty-state>
+              `;
+          })()}
+        </u-group-box>
+
+        <u-group-box title="No data yet">
+          <p>
+            A different empty state for a different reason — nothing has been created,
+            rather than a filter matching nothing. The action is "create," not "change the
+            filter."
+          </p>
+          <u-empty-state variant="no-data">
+            <span slot="actions">
+              <u-button size="sm" color="primary">New order</u-button>
+            </span>
+          </u-empty-state>
         </u-group-box>
 
         <u-group-box title="Edit form — assembled, not a dedicated kit">
