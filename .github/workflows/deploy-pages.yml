@@ -30,6 +30,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: SPA fallback (client-side routing)
+        run: cp publish/index.html publish/404.html
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: publish
