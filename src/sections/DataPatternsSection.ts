@@ -165,12 +165,11 @@ export class DataPatternsSection extends LitElement {
           <p>
             A live filter over a small independent list — not the table above, so this
             recipe stays legible on its own. Type something that matches nothing (e.g.
-            "zzz") to see the <code>no-results</code> empty state; clear the field to see
-            the list again.
+            "zzz") to see the <code>no-results</code> empty state; use the "Clear filter"
+            button in that state to get back to the list.
           </p>
           <u-input
             placeholder="Filter customers…"
-            clearable
             .value=${this.filterText}
             @input=${(e: Event) => { this.filterText = (e.target as UInput).value ?? ''; }}
           ></u-input>
