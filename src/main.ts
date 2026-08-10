@@ -5,20 +5,32 @@ import { Theme } from '@iyulab/components';
 import '@iyulab/enterprise/icons';
 import './styles/page-shell.css';
 import './pages/HouseStylePage.js';
+import './sections/IdentitySection.js';
+import './sections/LayoutSection.js';
+import './sections/DepthSection.js';
+import './sections/DataPatternsSection.js';
+import './sections/FlowsSection.js';
+import './sections/FeedbackSection.js';
+import './sections/VoiceA11ySection.js';
 
 const base = import.meta.env.BASE_URL;
-
-function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
 
 app.load({
   basepath: base,
 
-  // A single route — the sidebar below never asks the router to resolve anything
-  // else, so there is nothing for a GitHub Pages subpath to get wrong.
+  // Seven real routes, one per category, plus the landing page at the index.
+  // Every href below is base-relative (never a literal leading '/') — the router's
+  // parseUrl() treats a leading '/' as an absolute, basepath-ignoring path, which
+  // would break navigation under GitHub Pages' subpath deployment.
   routes: [
     { index: true, render: () => html`<house-style-page></house-style-page>` },
+    { path: 'identity', render: () => html`<house-identity-section></house-identity-section>` },
+    { path: 'layout', render: () => html`<house-layout-section></house-layout-section>` },
+    { path: 'depth', render: () => html`<house-depth-section></house-depth-section>` },
+    { path: 'data-patterns', render: () => html`<house-data-patterns-section></house-data-patterns-section>` },
+    { path: 'flows', render: () => html`<house-flows-section></house-flows-section>` },
+    { path: 'feedback', render: () => html`<house-feedback-section></house-feedback-section>` },
+    { path: 'voice-a11y', render: () => html`<house-voice-a11y-section></house-voice-a11y-section>` },
   ],
 
   theme: {
@@ -35,16 +47,17 @@ app.load({
     breakpoints: [768, 1024],
     title: 'House Style',
 
-    // Every item is a button, not a link — scrolling to an in-page section, never
-    // navigating. See §2's "Layout & viewport" section for why that matters here.
+    // Every item is a link to a real route now — `selected` (current-route
+    // highlight) comes for free from SidebarLayout's own URLPattern matching,
+    // no extra wiring needed.
     main: [
-      { type: 'button', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('identity') },
-      { type: 'button', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('layout') },
-      { type: 'button', label: 'Component depth', icon: 'layers', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('depth') },
-      { type: 'button', label: 'Data patterns', icon: 'table', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('data-patterns') },
-      { type: 'button', label: 'User flows', icon: 'flow', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('flows') },
-      { type: 'button', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('feedback') },
-      { type: 'button', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, onClick: () => scrollToSection('voice-a11y') },
+      { type: 'link', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}identity` },
+      { type: 'link', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}layout` },
+      { type: 'link', label: 'Component depth', icon: 'layers', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}depth` },
+      { type: 'link', label: 'Data patterns', icon: 'table', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}data-patterns` },
+      { type: 'link', label: 'User flows', icon: 'flow', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}flows` },
+      { type: 'link', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}feedback` },
+      { type: 'link', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { icon: { color: 'var(--u-primary-color)' } }, href: `${base}voice-a11y` },
     ],
 
     footer: [
