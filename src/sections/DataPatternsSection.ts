@@ -75,10 +75,11 @@ const LINE_ITEMS = [
  * §4 Data visualization & patterns.
  *
  * Graded the blueprint's biggest gap. The gap is uneven within the category itself:
- * data representation, the list screen and the edit-form assembly (below) are all
- * real, running compositions of already-shipped components — none of them required
- * a new house-style-specific component. The status-history timeline is the one
- * remaining piece, and it stays undecided on purpose — see the section below.
+ * data representation, the list screen (with its status-badge convention and empty-state
+ * pairing), the related-records (1:N) recipe, and the edit-form assembly are all real,
+ * running compositions of already-shipped components — none of them required a new
+ * house-style-specific component. The status-history timeline is the one remaining
+ * piece, and it stays undecided on purpose — see the section below.
  */
 @customElement('house-data-patterns-section')
 export class DataPatternsSection extends LitElement {
@@ -105,7 +106,7 @@ export class DataPatternsSection extends LitElement {
     return html`
       <u-page-header
         title="Data patterns"
-        subtitle="Data representation, list screen, and edit form — assembled from shipped components"
+        subtitle="Data representation, list screens, status, filters, related records, and edit forms — assembled from shipped components"
       ></u-page-header>
 
       <u-group-box title="Data representation — built">
