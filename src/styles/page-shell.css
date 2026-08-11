@@ -35,3 +35,22 @@ house-voice-a11y-section {
 house-depth-section u-card {
   background: var(--u-bg-color-raised, #FAFAFA);
 }
+
+/* Multi-line code samples (first used on the landing page's React callout) get a
+ * background/border so they read as a block, not plain unstyled text — no dedicated
+ * code-block component is in scope here, so this cites the same role tokens
+ * @iyulab/chat-components' own code-block component uses for the same treatment.
+ */
+pre {
+  margin: 0;
+  padding: var(--u-space-sm, 8px) var(--u-space-lg, 16px);
+  border: 1px solid var(--u-border-color, #E0E0E0);
+  border-radius: 8px;
+  background: var(--u-bg-color-raised, #FAFAFA);
+  overflow-x: auto;
+}
+pre code {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  background: none;
+  padding: 0;
+}

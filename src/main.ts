@@ -15,22 +15,35 @@ import './sections/VoiceA11ySection.js';
 
 const base = import.meta.env.BASE_URL;
 
+/**
+ * The single source for the seven categories — everything that used to require
+ * editing two hand-paired arrays (`routes` below, and the sidebar's `main` links)
+ * every time a category was added, renamed, or reordered. One array generates both,
+ * the same way a real app would generate a nav menu and its routes from one list of
+ * screens instead of maintaining the pairing by hand.
+ */
+const CATEGORIES = [
+  { path: 'identity', label: 'Visual identity & tokens', icon: 'identity', render: () => html`<house-identity-section></house-identity-section>` },
+  { path: 'layout', label: 'Layout & viewport', icon: 'layout', render: () => html`<house-layout-section></house-layout-section>` },
+  { path: 'depth', label: 'Component depth', icon: 'layers', render: () => html`<house-depth-section></house-depth-section>` },
+  { path: 'data-patterns', label: 'Data patterns', icon: 'table', render: () => html`<house-data-patterns-section></house-data-patterns-section>` },
+  { path: 'flows', label: 'User flows', icon: 'flow', render: () => html`<house-flows-section></house-flows-section>` },
+  { path: 'feedback', label: 'Feedback & motion', icon: 'pulse', render: () => html`<house-feedback-section></house-feedback-section>` },
+  { path: 'voice-a11y', label: 'Voice, tone & accessibility', icon: 'message', render: () => html`<house-voice-a11y-section></house-voice-a11y-section>` },
+];
+
+const navLinkStyles = { host: { '--link-icon-color': 'var(--u-primary-color)' } };
+
 app.load({
   basepath: base,
 
-  // Seven real routes, one per category, plus the landing page at the index.
-  // Every href below is base-relative (never a literal leading '/') — the router's
-  // parseUrl() treats a leading '/' as an absolute, basepath-ignoring path, which
-  // would break navigation under GitHub Pages' subpath deployment.
+  // The landing page at the index, plus one route per CATEGORIES entry. Every href
+  // below is base-relative (never a literal leading '/') — the router's parseUrl()
+  // treats a leading '/' as an absolute, basepath-ignoring path, which would break
+  // navigation under GitHub Pages' subpath deployment.
   routes: [
     { index: true, render: () => html`<house-style-page></house-style-page>` },
-    { path: 'identity', render: () => html`<house-identity-section></house-identity-section>` },
-    { path: 'layout', render: () => html`<house-layout-section></house-layout-section>` },
-    { path: 'depth', render: () => html`<house-depth-section></house-depth-section>` },
-    { path: 'data-patterns', render: () => html`<house-data-patterns-section></house-data-patterns-section>` },
-    { path: 'flows', render: () => html`<house-flows-section></house-flows-section>` },
-    { path: 'feedback', render: () => html`<house-feedback-section></house-feedback-section>` },
-    { path: 'voice-a11y', render: () => html`<house-voice-a11y-section></house-voice-a11y-section>` },
+    ...CATEGORIES.map(c => ({ path: c.path, render: c.render })),
   ],
 
   theme: {
@@ -51,14 +64,10 @@ app.load({
     // highlight) comes for free from SidebarLayout's own URLPattern matching,
     // no extra wiring needed.
     main: [
-      { type: 'link', label: 'Overview', icon: 'home', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: base },
-      { type: 'link', label: 'Visual identity & tokens', icon: 'identity', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}identity` },
-      { type: 'link', label: 'Layout & viewport', icon: 'layout', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}layout` },
-      { type: 'link', label: 'Component depth', icon: 'layers', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}depth` },
-      { type: 'link', label: 'Data patterns', icon: 'table', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}data-patterns` },
-      { type: 'link', label: 'User flows', icon: 'flow', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}flows` },
-      { type: 'link', label: 'Feedback & motion', icon: 'pulse', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}feedback` },
-      { type: 'link', label: 'Voice, tone & accessibility', icon: 'message', lib: 'house', styles: { host: { '--link-icon-color': 'var(--u-primary-color)' } }, href: `${base}voice-a11y` },
+      { type: 'link', label: 'Overview', icon: 'home', lib: 'house', styles: navLinkStyles, href: base },
+      ...CATEGORIES.map(c => ({
+        type: 'link' as const, label: c.label, icon: c.icon, lib: 'house', styles: navLinkStyles, href: `${base}${c.path}`,
+      })),
     ],
 
     footer: [

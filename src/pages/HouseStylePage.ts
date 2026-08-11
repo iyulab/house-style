@@ -32,6 +32,28 @@ export class HouseStylePage extends LitElement {
           design decision just to fill a section.
         </p>
       </u-group-box>
+
+      <u-group-box title="Using these components from React">
+        <p>
+          Everything on this site is a Lit web component, but it doesn't have to stay
+          that way for consumers — <code>@iyulab/components</code>,
+          <code>@iyulab/data-components</code>, and <code>@iyulab/u-widgets</code> each
+          ship a <code>/react</code> subpath (built on <code>@lit/react</code>'s
+          <code>createComponent</code>) that wraps every component as a typed React
+          component: JSX props instead of attribute strings, <code>onXxx</code> handlers
+          instead of manual <code>addEventListener</code>, no hand-rolled
+          <code>customElements.whenDefined</code> race to work around.
+        </p>
+        <pre><code>import { UButton, UInput } from '@iyulab/components/react';
+
+function Form() {
+  return &lt;UButton color="primary" onClick={submit}&gt;Save&lt;/UButton&gt;;
+}</code></pre>
+        <p>
+          <code>@lit/react</code> and <code>react</code> are peer dependencies — install
+          them alongside whichever package's <code>/react</code> subpath you import.
+        </p>
+      </u-group-box>
     `;
   }
 }

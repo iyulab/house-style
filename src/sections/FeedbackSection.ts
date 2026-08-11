@@ -1,14 +1,33 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 import '@iyulab/components/dist/components/alert/UAlert.js';
 import '@iyulab/components/dist/components/progress-bar/UProgressBar.js';
 import '@iyulab/components/dist/components/skeleton/USkeleton.js';
 import '@iyulab/components/dist/components/spinner/USpinner.js';
+import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
+
+/**
+ * Wraps an async action with busy-state bookkeeping — the shape every async handler
+ * in this app hand-rolls otherwise: flip a busy flag on, run the request, flip it off
+ * in a `finally` so a thrown error still clears it (the Edit-form Save handler in
+ * Data patterns does this by hand today). A plain function is the smallest unit that
+ * solves the repeated shape — a mixin/base-class would only earn its keep once enough
+ * call sites needed the same lifecycle wired into shared state, which is component-
+ * library territory, not a house-style recipe's scope.
+ */
+async function withBusyState(setBusy: (busy: boolean) => void, action: () => Promise<void>): Promise<void> {
+  setBusy(true);
+  try {
+    await action();
+  } finally {
+    setBusy(false);
+  }
+}
 
 /**
  * §6 State feedback & motion.
@@ -20,6 +39,16 @@ import '@iyulab/modern-app/dist/components/InfoField.js';
 export class FeedbackSection extends LitElement {
   protected createRenderRoot() {
     return this;
+  }
+
+  @state() private demoBusy = false;
+  @state() private demoRefreshedAt: string | null = null;
+
+  private handleRefresh() {
+    return withBusyState(busy => { this.demoBusy = busy; }, async () => {
+      await new Promise<void>(resolve => setTimeout(resolve, 600));
+      this.demoRefreshedAt = new Date().toLocaleTimeString();
+    });
   }
 
   render() {
@@ -43,6 +72,22 @@ export class FeedbackSection extends LitElement {
           <u-info-field label="Spinner"><u-spinner></u-spinner></u-info-field>
           <u-info-field label="Skeleton"><u-skeleton lines="3"></u-skeleton></u-info-field>
         </u-info-section>
+      </u-group-box>
+
+      <u-group-box title="Busy-state wrapper — one helper for the async lifecycle">
+        <p>
+          Every async action elsewhere on this site (Save, Cancel orders in Data
+          patterns) hand-rolls the same three steps: flip a busy flag on, run the
+          request, flip it off — in a <code>finally</code> so a thrown error still
+          clears it. <code>withBusyState()</code> pulls that shape out once. It's a
+          plain function, not a new component: a mixin/base-class would only earn its
+          keep once enough call sites needed the same lifecycle wired into shared
+          state, which is component-library territory, not this recipe's scope.
+        </p>
+        <u-button variant="outlined" ?disabled=${this.demoBusy} @click=${this.handleRefresh}>
+          ${this.demoBusy ? html`<u-spinner></u-spinner> Refreshing…` : 'Refresh'}
+        </u-button>
+        ${this.demoRefreshedAt ? html`<p><small>Last refreshed at ${this.demoRefreshedAt}.</small></p>` : ''}
       </u-group-box>
 
       <u-group-box title="Not yet decided">

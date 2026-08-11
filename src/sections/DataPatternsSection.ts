@@ -14,10 +14,13 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/EmptyState.js';
+import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { ColumnDef, FilterState, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
+import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
+import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 
 const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
@@ -57,6 +60,31 @@ const ROWS = [
 ];
 
 const FILTER_ITEMS = ['Aster Trading', 'Blue Harbor Co.', 'Cedar & Finch'];
+
+/** A server-shaped error — has a message worth showing the user as-is. */
+interface ApiError { code: string; message: string; }
+
+function isApiError(value: unknown): value is ApiError {
+  return typeof value === 'object' && value !== null && 'code' in value && 'message' in value;
+}
+
+/**
+ * Capabilities the UI names but hasn't built yet. A missing feature checked against
+ * this set renders disabled with an explanation, rather than being hidden or omitted
+ * — an omitted button leaves a user wondering whether the capability exists at all;
+ * a disabled one with no explanation leaves them wondering why. This demo's set is
+ * static; a real one would come from a feature-flag or entitlement check.
+ */
+const MISSING_FEATURES = new Set(['export-accounting', 'bulk-print']);
+
+const PAGED_PAGE_SIZE = 5;
+const PAGED_ROWS = Array.from({ length: 12 }, (_, i) => ({
+  _id: `p-${i + 1}`,
+  id: `G-2026-${(600 + i).toString().padStart(4, '0')}`,
+  customer: ['Aster Trading', 'Blue Harbor Co.', 'Cedar & Finch', 'Driftwood Supply'][i % 4],
+  status: ['pending', 'shipped', 'delivered'][i % 3],
+  total: `₩${((i + 1) * 87000).toLocaleString()}`,
+}));
 
 const LINE_ITEM_COLUMNS: ColumnDef[] = [
   { key: 'item', label: 'Item', filterable: false },
@@ -106,6 +134,27 @@ export class DataPatternsSection extends LitElement {
     this.filters = e.detail.filters;
   }
 
+  @state() private cancelMessage = '';
+
+  /**
+   * Simulates an API refetch — a real implementation would re-request `.data` here.
+   * This demo's refetch also clears any existing status message as a side effect,
+   * modeling a common shape: one view-state object holds both the rows and the status
+   * line, and refetching replaces the whole object. That's exactly why the success
+   * message below is set *after* this call returns, not before — setting it first
+   * would have this "refetch" immediately erase it.
+   */
+  private simulateRefetch() {
+    this.cancelMessage = '';
+  }
+
+  private handleCancelOrders() {
+    this.querySelector<URichTable>('#list-screen-table')?.clearSelection();
+    this.selectedCount = 0;
+    this.simulateRefetch();
+    this.cancelMessage = 'Selected orders canceled.';
+  }
+
   private get filteredRows() {
     return ROWS.filter(row =>
       Object.entries(this.filters).every(([field, value]) => {
@@ -117,12 +166,113 @@ export class DataPatternsSection extends LitElement {
       }));
   }
 
+  /**
+   * `selection-change`'s `detail.selectedIds` is cumulative across every page visited
+   * so far; `detail.selectedRows` only covers the current page (the component can't
+   * return rows it doesn't have). This recipe reads the cumulative id list to show a
+   * bulk-action count that survives page navigation.
+   */
+  @state() private pagedCurrentPage = 1;
+  @state() private pagedSelectedIds: string[] = [];
+
+  private get pagedPageRows() {
+    const start = (this.pagedCurrentPage - 1) * PAGED_PAGE_SIZE;
+    return PAGED_ROWS.slice(start, start + PAGED_PAGE_SIZE);
+  }
+
+  private get pagedSelectedOnPageCount() {
+    const pageIds = new Set(this.pagedPageRows.map(row => row._id));
+    return this.pagedSelectedIds.filter(id => pageIds.has(id)).length;
+  }
+
+  private handlePagedSelectionChange(e: RichTableEventMap['selection-change']) {
+    this.pagedSelectedIds = e.detail.selectedIds;
+  }
+
+  private handlePagedPageChange(e: RichTableEventMap['page-change']) {
+    this.pagedCurrentPage = e.detail.page;
+  }
+
+  /**
+   * `u-master-detail-layout` doesn't manage selection — it only shows or hides its
+   * `detail` slot depending on whether that slot has content. Which record fills it is
+   * the host's decision. `u-rich-table`'s only selection signal today is checkbox-based
+   * `selection-change` (there's no row-click "activate" event yet), so this demo treats
+   * "exactly one row checked" as the signal to open a detail pane.
+   */
+  @state() private masterDetailSelectedId: string | null = null;
+
+  private handleMasterDetailSelectionChange(e: RichTableEventMap['selection-change']) {
+    const ids = e.detail.selectedIds;
+    this.masterDetailSelectedId = ids.length === 1 ? String(ids[0]) : null;
+  }
+
+  private get masterDetailSelectedRow() {
+    return ROWS.find(row => row._id === this.masterDetailSelectedId);
+  }
+
+  /**
+   * The overlay close button only fires `detail-close` — it doesn't clear the slot
+   * itself (the layout doesn't own selection, so it has nothing to clear). The host
+   * clears its own state and also clears the table's checkbox, so the two stay in sync.
+   */
+  private handleMasterDetailClose() {
+    this.masterDetailSelectedId = null;
+    this.querySelector<URichTable>('#master-detail-table')?.clearSelection();
+  }
+
   private openEditDrawer() {
+    this.saveStatus = 'idle';
+    this.saveError = null;
     this.querySelector<UDrawer>('#edit-drawer')?.show();
   }
 
   private closeEditDrawer() {
     this.querySelector<UDrawer>('#edit-drawer')?.hide();
+  }
+
+  @state() private saveScenario: 'ok' | 'api-error' | 'network-error' = 'ok';
+  @state() private saveStatus: 'idle' | 'saving' | 'error' = 'idle';
+  @state() private saveError: string | null = null;
+
+  /**
+   * Stands in for a real API call. `'api-error'` rejects with a server-shaped error
+   * (has a `message` worth showing as-is); `'network-error'` rejects with a raw
+   * `TypeError`, the same shape a failed `fetch()` throws — never something to show a
+   * user directly.
+   */
+  private simulateSaveRequest(scenario: typeof this.saveScenario): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (scenario === 'api-error') {
+          reject({ code: 'VALIDATION_ERROR', message: 'Delivery date must be after the order date.' } satisfies ApiError);
+        } else if (scenario === 'network-error') {
+          reject(new TypeError('Failed to fetch'));
+        } else {
+          resolve();
+        }
+      }, 10);
+    });
+  }
+
+  /**
+   * The two-tier split this recipe demonstrates: a typed API error carries a
+   * server-provided message worth showing as-is; anything else (a raw `TypeError`
+   * from a failed `fetch`, or any other exception shape) becomes one generic message
+   * — the user never sees a raw exception string.
+   */
+  private async handleSave() {
+    this.saveStatus = 'saving';
+    this.saveError = null;
+    try {
+      await this.simulateSaveRequest(this.saveScenario);
+      this.closeEditDrawer();
+    } catch (err) {
+      this.saveStatus = 'error';
+      this.saveError = isApiError(err) ? err.message : 'Something went wrong. Please try again.';
+      return;
+    }
+    this.saveStatus = 'idle';
   }
 
   render() {
@@ -146,6 +296,28 @@ export class DataPatternsSection extends LitElement {
           <u-date-picker label="Delivery date" value="2026-03-31" clearable></u-date-picker>
         </u-group-box>
 
+        <u-group-box title="KPI dashboard — stat tiles, not a dedicated component">
+          <p>
+            No dedicated "stat tile" component exists here either — this is
+            <code>u-info-field</code> again, in its <code>size="lg"</code> mode, arranged
+            in the same <code>u-info-section</code> grid as above. A dashboard header is a
+            "tile strip": each tile owns exactly one number, its label, and an optional
+            trend — the pattern common to Stripe, Linear, and Vercel's own dashboards.
+          </p>
+          <u-info-section min="180">
+            <u-info-field label="Orders today" size="lg" .value=${24} trend="up" trendLabel="+12% vs yesterday"></u-info-field>
+            <u-info-field label="Revenue today" size="lg" format="currency" currency="KRW" .value=${12450000} trend="up" trendLabel="+8% vs yesterday"></u-info-field>
+            <u-info-field label="Pending orders" size="lg" .value=${7} trend="down" trendLabel="−3 vs yesterday" tone="positive"></u-info-field>
+            <u-info-field label="Avg. fulfillment" size="lg" .value=${'2.4 days'} trend="flat" trendLabel="No change"></u-info-field>
+          </u-info-section>
+          <p>
+            The third tile is why <code>tone</code> exists as its own prop, separate from
+            <code>trend</code>: a falling pending-order count is a downward trend, but it's
+            good news, so the tone is overridden to <code>positive</code> instead of the
+            auto-inferred <code>negative</code>.
+          </p>
+        </u-group-box>
+
         <u-group-box title="List screen — assembled, not a dedicated kit">
           <p>
             No purpose-built "list-screen kit" component exists — this is
@@ -157,6 +329,7 @@ export class DataPatternsSection extends LitElement {
             convention below for which color means what.
           </p>
           <u-rich-table
+            id="list-screen-table"
             .columns=${COLUMNS}
             .data=${this.filteredRows}
             .totalCount=${this.filteredRows.length}
@@ -171,10 +344,74 @@ export class DataPatternsSection extends LitElement {
               ${this.selectedCount > 0
                 ? html`<u-badge color="primary">${this.selectedCount} selected</u-badge>
                        <u-button size="sm" variant="outlined">Export</u-button>
-                       <u-button size="sm" color="danger" variant="outlined">Cancel orders</u-button>`
+                       <u-button size="sm" color="danger" variant="outlined" @click=${this.handleCancelOrders}>Cancel orders</u-button>`
                 : ''}
             </span>
           </u-rich-table>
+          ${this.cancelMessage ? html`<p>${this.cancelMessage}</p>` : ''}
+        </u-group-box>
+
+        <u-group-box title="Cross-page selection — the bulk-action count isn't what's checked">
+          <p>
+            <code>selection-change</code>'s <code>detail.selectedIds</code> is cumulative
+            across every page visited so far; <code>detail.selectedRows</code> only covers
+            the current page, because the component can't return rows it doesn't have.
+            Select a row or two, page forward, and select more — the total below keeps
+            counting the earlier page's picks even though this page's checkboxes start
+            unchecked.
+          </p>
+          <p>
+            <strong>${this.pagedSelectedIds.length}</strong> selected across all pages ·
+            <strong>${this.pagedSelectedOnPageCount}</strong> checked on this page
+          </p>
+          <u-rich-table
+            .columns=${COLUMNS}
+            .data=${this.pagedPageRows}
+            .totalCount=${PAGED_ROWS.length}
+            .pageSize=${PAGED_PAGE_SIZE}
+            .currentPage=${this.pagedCurrentPage}
+            selectable
+            @selection-change=${this.handlePagedSelectionChange}
+            @page-change=${this.handlePagedPageChange}
+          ></u-rich-table>
+        </u-group-box>
+
+        <u-group-box title="Master›detail — a list and its record detail, side by side">
+          <p>
+            <code>u-master-detail-layout</code> (a Vaadin <code>MasterDetailLayout</code>-style
+            split-pane shell) doesn't manage selection either — it only shows its
+            <code>detail</code> slot when that slot has content, and hides it when empty.
+            Which record fills it is the host's decision, wired the same way the bulk-action
+            bar above is: by reading <code>u-rich-table</code>'s <code>selection-change</code>
+            event. Check exactly one row to open its detail pane. Narrow this window (or
+            resize the browser) below the layout's own <code>overlay-breakpoint</code> and the
+            detail pane switches from a side panel to a full overlay with a close button —
+            that's the component's own responsive behavior, not extra code here.
+          </p>
+          <u-master-detail-layout
+            style="height: 22rem"
+            overlay-breakpoint="640"
+            @detail-close=${this.handleMasterDetailClose}
+          >
+            <u-rich-table
+              id="master-detail-table"
+              .columns=${COLUMNS}
+              .data=${ROWS}
+              .totalCount=${ROWS.length}
+              selectable
+              @selection-change=${this.handleMasterDetailSelectionChange}
+            ></u-rich-table>
+            ${this.masterDetailSelectedRow ? html`
+              <div slot="detail" style="padding: var(--u-space-lg, 16px)">
+                <u-info-section min="140">
+                  <u-info-field label="Order" .value=${this.masterDetailSelectedRow.id}></u-info-field>
+                  <u-info-field label="Customer" .value=${this.masterDetailSelectedRow.customer}></u-info-field>
+                  <u-info-field label="Total" .value=${this.masterDetailSelectedRow.total}></u-info-field>
+                </u-info-section>
+                ${renderStatusBadge(this.masterDetailSelectedRow.status)}
+              </div>
+            ` : ''}
+          </u-master-detail-layout>
         </u-group-box>
 
         <u-group-box title="Status → badge convention">
@@ -270,6 +507,14 @@ export class DataPatternsSection extends LitElement {
             framework, so a field keeps the same column rhythm whether it sits on a
             page or inside a drawer.
           </p>
+          <p>
+            Saving also demonstrates a two-tier error split: a typed API error (a
+            server-shaped <code>{ code, message }</code>) shows its <code>message</code>
+            as-is, because the server wrote it to be read. Anything else — a raw
+            <code>TypeError</code> from a failed <code>fetch</code>, or any other
+            exception shape — collapses to one generic sentence instead. Pick a
+            scenario below, then Save, to see both.
+          </p>
           <u-button color="primary" @click=${this.openEditDrawer}>Edit order</u-button>
           <u-drawer id="edit-drawer" placement="right" closable>
             <span slot="header">Edit order G-2026-0512</span>
@@ -290,12 +535,49 @@ export class DataPatternsSection extends LitElement {
               <u-field label="Total" description="Read-only — set at order creation">
                 <u-input value="₩1,240,000" disabled></u-input>
               </u-field>
+              <u-field label="Simulate save result" description="Demo control — not part of the recipe">
+                <u-select
+                  .value=${this.saveScenario}
+                  @change=${(e: Event) => {
+                    const value = (e.target as USelect).value;
+                    this.saveScenario = (Array.isArray(value) ? value[0] : value) as typeof this.saveScenario;
+                  }}
+                >
+                  <u-option value="ok">Success</u-option>
+                  <u-option value="api-error">API validation error</u-option>
+                  <u-option value="network-error">Network error</u-option>
+                </u-select>
+              </u-field>
             </u-info-section>
+            ${this.saveStatus === 'error'
+              ? html`<u-badge color="danger">${this.saveError}</u-badge>`
+              : ''}
             <div slot="footer">
               <u-button variant="ghost" @click=${this.closeEditDrawer}>Cancel</u-button>
-              <u-button color="primary" @click=${this.closeEditDrawer}>Save</u-button>
+              <u-button color="primary" ?disabled=${this.saveStatus === 'saving'} @click=${this.handleSave}>
+                ${this.saveStatus === 'saving' ? 'Saving…' : 'Save'}
+              </u-button>
             </div>
           </u-drawer>
+        </u-group-box>
+
+        <u-group-box title="Unimplemented feature — shown, not hidden">
+          <p>
+            Two of the three actions below aren't built yet. They still render —
+            disabled, with a reason attached — instead of disappearing from the
+            toolbar. Whether a capability exists at all shouldn't be something a user
+            has to guess from its absence.
+          </p>
+          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('export-accounting')}>
+            Export to accounting system
+          </u-button>
+          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('bulk-print')}>
+            Bulk print shipping labels
+          </u-button>
+          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('archive')}>
+            Archive selected
+          </u-button>
+          <p><small>Grayed-out actions above are planned, not hidden — not yet built.</small></p>
         </u-group-box>
 
         <u-group-box title="Not yet built — by design">

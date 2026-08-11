@@ -33,6 +33,20 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
+      <u-group-box title="Nav and routes — one list, not two">
+        <p>
+          This site's own sidebar and its seven routes used to be two hand-paired
+          arrays — a route list in one place, a matching nav-link list in another,
+          kept in sync by whoever remembered to edit both. They're generated from one
+          <code>CATEGORIES</code> array now (<code>src/main.ts</code>): each entry
+          carries its path, label, icon, and what to render, and both the router's
+          <code>routes</code> and the sidebar's <code>main</code> links are
+          <code>.map()</code>ed from it. Add, rename, or reorder a category by editing
+          one array — this page's own navigation is the proof it works, not a
+          separate example.
+        </p>
+      </u-group-box>
+
       <u-group-box title="Breakpoints">
         <p>
           <code>ScreenObserver</code> tracks three sizes — <code>small</code>,
