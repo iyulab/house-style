@@ -1,4 +1,4 @@
-import { Theme } from '@iyulab/components';
+import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 
 /**
  * The reference app renders outside `@iyulab/modern-app`'s `app.load()` (which normally owns
