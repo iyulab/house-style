@@ -31,8 +31,10 @@ export const handlers = [
     return HttpResponse.json({ value: orders });
   }),
 
-  http.patch('*/$data/Orders(:id)', async ({ params, request }) => {
-    const order = orders.find((o) => o.Id === params.id);
+  http.patch(/\/\$data\/Orders\(([^)]+)\)$/, async ({ request }) => {
+    const match = new URL(request.url).pathname.match(/\/Orders\(([^)]+)\)$/);
+    const id = match?.[1];
+    const order = orders.find((o) => o.Id === id);
     if (!order) return new HttpResponse(null, { status: 404 });
     const patch = (await request.json()) as Partial<Order>;
     Object.assign(order, patch);
