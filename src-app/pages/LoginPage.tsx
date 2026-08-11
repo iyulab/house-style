@@ -9,14 +9,21 @@ import {
 import { auth } from '../lib/auth.js';
 import './LoginPage.css';
 
-// `@iyulab/components/react` cannot be imported anywhere in this program: even with
-// theme.ts off the barrel, `@iyulab/enterprise`'s own dist/index.d.ts does
-// `import { LocaleNamespace } from '@iyulab/components'` (a bare, undodgeable barrel
-// import inside a different, already-published package) and auth.ts's `createAuthClient`
-// import pulls that file in — so the SRC barrel (declaring all ~40 custom-element
-// classes) is transitively loaded regardless of what this page or theme.ts do. Building
-// local `createComponent` wrappers from that same SRC barrel avoids ever touching
-// `@iyulab/components/react`'s DIST typings, so there's nothing left to conflict with.
+// `@iyulab/components/react` cannot be imported anywhere in this program. Root
+// cause, confirmed with `tsc --traceResolution`: this package compiles the
+// existing Lit guide (`src/`) and this app (`src-app/`) in one `tsc` program
+// (one `tsconfig.json`), and the guide's own demo sections plus
+// `@iyulab/modern-app`'s layouts (used by this app's shell) register dozens of
+// component classes straight from `@iyulab/components`' source — by design,
+// since that's what a component guide and a layout library do. Every one of
+// those source-resolved classes conflicts under `declare global` with
+// `@iyulab/components/react`'s built (dist) typings for the same tag, the
+// moment `/react` is imported anywhere in the program. This isn't a narrow
+// import to fix (unlike `@iyulab/enterprise`'s and `@iyulab/modern-app`'s own
+// prior barrel imports, which were fixed upstream) — it's structural, so this
+// page builds its own `createComponent` wrappers from the same source classes
+// everything else in this program already resolves to, instead of importing
+// `@iyulab/components/react`.
 const UInput = createComponent({
   react: React,
   tagName: 'u-input',
