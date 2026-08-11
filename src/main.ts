@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
-import { Theme } from '@iyulab/components';
+import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 
 import '@iyulab/enterprise/icons';
 import './styles/page-shell.css';
