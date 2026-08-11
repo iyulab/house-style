@@ -1,4 +1,7 @@
 import { createRoot } from 'react-dom/client';
+import { startMockWorker } from './mocks/browser.js';
 
-const root = document.body.appendChild(document.createElement('div'));
-createRoot(root).render(<div>Reference app scaffold OK</div>);
+startMockWorker().then(() => {
+  const root = document.body.appendChild(document.createElement('div'));
+  createRoot(root).render(<div>Mock worker started</div>);
+});
