@@ -9,21 +9,23 @@ import {
 import { auth } from '../lib/auth.js';
 import './LoginPage.css';
 
-// `@iyulab/components/react` cannot be imported anywhere in this program. Root
-// cause, confirmed with `tsc --traceResolution`: this package compiles the
-// existing Lit guide (`src/`) and this app (`src-app/`) in one `tsc` program
-// (one `tsconfig.json`), and the guide's own demo sections plus
-// `@iyulab/modern-app`'s layouts (used by this app's shell) register dozens of
-// component classes straight from `@iyulab/components`' source — by design,
-// since that's what a component guide and a layout library do. Every one of
-// those source-resolved classes conflicts under `declare global` with
-// `@iyulab/components/react`'s built (dist) typings for the same tag, the
-// moment `/react` is imported anywhere in the program. This isn't a narrow
-// import to fix (unlike `@iyulab/enterprise`'s and `@iyulab/modern-app`'s own
-// prior barrel imports, which were fixed upstream) — it's structural, so this
-// page builds its own `createComponent` wrappers from the same source classes
-// everything else in this program already resolves to, instead of importing
-// `@iyulab/components/react`.
+// `@iyulab/components/react` cannot be imported anywhere in this program.
+// Narrowing several individual barrel imports (this app's own theme setup,
+// a few call sites in `@iyulab/enterprise` and `@iyulab/modern-app`, and this
+// package's pre-existing Lit guide entry point) reduces the conflict but
+// doesn't close it. The remaining source is `@iyulab/modern-app`'s own
+// layout components (already loaded via this app's shell) and this
+// package's pre-existing guide sections, both of which register custom
+// elements via `@iyulab/components/dist/components/*/U*.js` side-effect
+// imports. That path looks like it targets the real built `dist`, but
+// `@iyulab/components`' `package.json` redirects `"./dist/*": "./src/*"` in
+// this local workspace, so it silently resolves to the same source classes
+// `/react`'s built typings conflict with under `declare global` — same tag,
+// two nominal types, across roughly three dozen import lines spanning two
+// packages, one of them a shared layout library. Not something this one
+// page can fix on its own, so it builds its own `createComponent` wrappers
+// from the same source classes everything else in this program already
+// resolves to, instead of importing `@iyulab/components/react`.
 const UInput = createComponent({
   react: React,
   tagName: 'u-input',
