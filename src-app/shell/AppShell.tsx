@@ -6,6 +6,7 @@ import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { NAV_ITEMS } from './nav.js';
 import LoginPage from '../pages/LoginPage.js';
+import DashboardPage from '../pages/DashboardPage.js';
 
 const base = import.meta.env.BASE_URL + 'app/';
 
@@ -39,7 +40,7 @@ export function mountAppShell(root: HTMLElement) {
           </SidebarLayout>
         ),
         children: [
-          { index: true, render: () => import('../pages/DashboardPage.js').then((m) => <m.default />) },
+          { index: true, render: () => <DashboardPage /> },
         ],
       },
     ],
