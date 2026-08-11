@@ -9,12 +9,14 @@ import {
 import { auth } from '../lib/auth.js';
 import './LoginPage.css';
 
-// `@iyulab/components` resolves to source in this workspace (its "." export
-// points at src/), while `@iyulab/components/react` is a real built dist copy.
-// Importing both in the same program declares the custom-element classes twice
-// under conflicting types (and, at runtime, double-registers the tags). So this
-// page builds its own `createComponent` wrappers from the same barrel `theme.ts`
-// already loads, instead of importing the package's `/react` entry point.
+// `@iyulab/components/react` cannot be imported anywhere in this program: even with
+// theme.ts off the barrel, `@iyulab/enterprise`'s own dist/index.d.ts does
+// `import { LocaleNamespace } from '@iyulab/components'` (a bare, undodgeable barrel
+// import inside a different, already-published package) and auth.ts's `createAuthClient`
+// import pulls that file in — so the SRC barrel (declaring all ~40 custom-element
+// classes) is transitively loaded regardless of what this page or theme.ts do. Building
+// local `createComponent` wrappers from that same SRC barrel avoids ever touching
+// `@iyulab/components/react`'s DIST typings, so there's nothing left to conflict with.
 const UInput = createComponent({
   react: React,
   tagName: 'u-input',
