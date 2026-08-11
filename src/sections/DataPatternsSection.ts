@@ -445,8 +445,10 @@ export class DataPatternsSection extends LitElement {
           </p>
           <u-input
             placeholder="Filter customers…"
+            clearable
             .value=${this.filterText}
             @input=${(e: Event) => { this.filterText = (e.target as UInput).value ?? ''; }}
+            @change=${(e: Event) => { this.filterText = (e.target as UInput).value ?? ''; }}
           ></u-input>
           ${(() => {
             const matches = FILTER_ITEMS.filter(name =>
