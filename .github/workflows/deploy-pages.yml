@@ -30,8 +30,28 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: SPA fallback (client-side routing)
-        run: cp publish/index.html publish/404.html
+      - name: SPA fallback (client-side routing, guide + reference app)
+        run: |
+          cat > publish/404.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+            <head><meta charset="UTF-8" /></head>
+            <body>
+              <script>
+                (function () {
+                  var base = '/house-style/';
+                  var isApp = location.pathname.indexOf(base + 'app/') === 0;
+                  var target = location.origin + base + (isApp ? 'app/index.html' : 'index.html');
+                  fetch(target).then(function (r) { return r.text(); }).then(function (html) {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                  });
+                })();
+              </script>
+            </body>
+          </html>
+          EOF
 
       - uses: actions/upload-pages-artifact@v3
         with:

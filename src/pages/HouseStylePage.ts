@@ -4,6 +4,8 @@ import { customElement } from 'lit/decorators.js';
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 
+const base = import.meta.env.BASE_URL;
+
 /**
  * The landing page — an introduction to how this site is graded. The seven
  * categories used to be stacked below this page's scroll; they now live at
@@ -30,6 +32,16 @@ export class HouseStylePage extends LitElement {
           own source. Others are described from what the code does today. A few are
           named as open questions rather than answered — this page does not invent a
           design decision just to fill a section.
+        </p>
+      </u-group-box>
+
+      <u-group-box title="From graded categories to a real screen">
+        <a slot="actions" href="${base}app/">See it assembled into a real app →</a>
+        <p>
+          Every category above is graded in isolation. The same tokens and components
+          also sit inside a small assembled reference app — sign in, browse and cancel
+          orders, walk a multi-step wizard — built the way a real consumer app would use
+          them rather than the way a grading page displays them.
         </p>
       </u-group-box>
 
