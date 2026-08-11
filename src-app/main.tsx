@@ -1,7 +1,7 @@
-import { createRoot } from 'react-dom/client';
 import { startMockWorker } from './mocks/browser.js';
+import { bootTheme } from './lib/theme.js';
+import { mountAppShell } from './shell/AppShell.js';
 
-startMockWorker().then(() => {
-  const root = document.body.appendChild(document.createElement('div'));
-  createRoot(root).render(<div>Mock worker started</div>);
+Promise.all([startMockWorker(), bootTheme()]).then(() => {
+  mountAppShell(document.body);
 });
