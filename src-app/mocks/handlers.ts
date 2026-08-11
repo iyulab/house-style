@@ -25,6 +25,12 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
+  http.get(/\/\$data\/Orders\(([^)]+)\)$/, ({ request }) => {
+    const match = new URL(request.url).pathname.match(/\/Orders\(([^)]+)\)$/);
+    const order = orders.find((o) => o.Id === match?.[1]);
+    return order ? HttpResponse.json(order) : new HttpResponse(null, { status: 404 });
+  }),
+
   http.get('*/$data/Orders', () => {
     // Filtering/pagination happen client-side in this demo (matches the existing house-style
     // Data Patterns list-screen recipe) — the mock always returns the full set.
