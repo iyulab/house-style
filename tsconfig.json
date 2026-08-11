@@ -29,11 +29,14 @@
 
     "noEmit": true,
 
+    "jsx": "react-jsx",
+
     "useDefineForClassFields": false,
     "preserveSymlinks": true
   },
   "include": [
     "src/**/*",
+    "src-app/**/*",
     "vite.config.ts",
     "vite-env.d.ts"
   ],

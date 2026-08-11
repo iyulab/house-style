@@ -17,10 +17,23 @@
     "@iyulab/components": "^1.27.0",
     "@iyulab/data-components": "^0.14.0",
     "@iyulab/enterprise": "^0.9.0",
-    "@iyulab/modern-app": "^0.16.0",
+    "@iyulab/modern-app": "^0.17.0",
+    "@iyulab/router": "^0.11.0",
+    "@iyulab/u-widgets": "^0.16.0",
+    "@lit/react": "^1.0.8",
     "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "lit": "^3.3.2",
+    "msw": "^2.7.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "typescript": "^5.9.3",
     "vite": "^8.0.3"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
