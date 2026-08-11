@@ -19,6 +19,15 @@ async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
   return user ? true : base + 'login';
 }
 
+async function signOut() {
+  await auth.logout();
+  // A hard `location.href` navigation would reload the page — and with it, the MSW mock
+  // backend's in-memory session (see mocks/handlers.ts). Route client-side instead, same
+  // idiom as LoginPage.tsx's post-login redirect.
+  history.pushState({}, '', base + 'login');
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
 export function mountAppShell(root: HTMLElement) {
   const outlet = document.createElement('u-outlet');
   root.appendChild(outlet);
@@ -36,6 +45,7 @@ export function mountAppShell(root: HTMLElement) {
               type: 'sidebar',
               title: 'Orders Reference',
               main: NAV_ITEMS.map((n) => ({ type: 'link', label: n.label, icon: n.icon, href: base.slice(0, -1) + n.path })),
+              footer: [{ type: 'button', label: 'Sign out', icon: 'log-out', onClick: signOut }],
               hasPermission,
             }}
           >

@@ -24,6 +24,14 @@ function renderStatusBadge(value: unknown): HTMLElement {
   return badge;
 }
 
+// A hard `location.href` navigation would reload the page — and with it, the MSW mock
+// backend's in-memory session (see mocks/handlers.ts) and the Router's client-side state.
+// Route client-side instead, same idiom as LoginPage.tsx's post-login redirect.
+function navigate(path: string) {
+  history.pushState({}, '', path);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
 // `ColumnDef` is not generic — `key` is matched against row properties at runtime, not checked
 // against `Order` at compile time (matches the existing house-style Data Patterns recipe).
 const COLUMNS: ColumnDef[] = [
@@ -91,7 +99,7 @@ export default function OrdersListPage() {
         </UButton>
         <UButton
           color="primary"
-          onClick={() => { window.location.href = `${import.meta.env.BASE_URL}app/orders/new`; }}
+          onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}
         >
           New order
         </UButton>
@@ -106,11 +114,9 @@ export default function OrdersListPage() {
         columns={COLUMNS}
         selectable
         filterable
-        onFilterChange={(e) => setFilters(e.detail.filters)}
-        onSelectionChange={(e) => setSelectedIds(e.detail.selectedIds)}
-        onRowActivate={(e) => {
-          window.location.href = `${import.meta.env.BASE_URL}app/orders/${e.detail.id}`;
-        }}
+        onFilterChange={(e) => { setFilters(e.detail.filters); setMessage(''); }}
+        onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
+        onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)}
       />
     </div>
   );

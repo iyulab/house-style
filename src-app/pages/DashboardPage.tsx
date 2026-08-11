@@ -9,9 +9,12 @@ export default function DashboardPage() {
 
   return (
     <div style={{ display: 'grid', gap: 'var(--u-space-lg, 18px)', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-      <UWidget spec={{ widget: 'metric', data: { value: ORDERS.length, unit: 'orders', change: 8.2, trend: 'up' } }} />
-      <UWidget spec={{ widget: 'metric', data: { value: revenue, unit: 'KRW', change: 12.5, trend: 'up' } }} />
-      <UWidget spec={{ widget: 'metric', data: { value: pending, unit: 'pending', change: -4, trend: 'down' } }} />
+      {/* `change` below is an illustrative constant, not derived from `ORDERS` — a real
+          dashboard would compute it against a prior period. */}
+      <UWidget spec={{ widget: 'metric', data: { value: ORDERS.length, label: 'Orders today', change: 8.2, trend: 'up' } }} />
+      <UWidget spec={{ widget: 'metric', data: { value: revenue, label: 'Revenue today', unit: 'KRW', change: 12.5, trend: 'up' } }} />
+      <UWidget spec={{ widget: 'metric', data: { value: pending, label: 'Pending orders', change: -4, trend: 'down' } }} />
+      {/* Illustrative constant series, not derived from `ORDERS`. */}
       <UWidget
         spec={{
           widget: 'chart.bar',
