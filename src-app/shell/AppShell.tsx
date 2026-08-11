@@ -7,6 +7,7 @@ import { hasPermission } from '@iyulab/enterprise';
 import { NAV_ITEMS } from './nav.js';
 import LoginPage from '../pages/LoginPage.js';
 import DashboardPage from '../pages/DashboardPage.js';
+import OrdersListPage from '../pages/OrdersListPage.js';
 
 const base = import.meta.env.BASE_URL + 'app/';
 
@@ -41,6 +42,7 @@ export function mountAppShell(root: HTMLElement) {
         ),
         children: [
           { index: true, render: () => <DashboardPage /> },
+          { path: 'orders', render: () => <OrdersListPage /> },
         ],
       },
     ],
