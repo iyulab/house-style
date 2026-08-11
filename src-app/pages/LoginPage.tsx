@@ -5,7 +5,7 @@ import {
   UInput as UInputElement,
   UDrawer as UDrawerElement,
 } from '@iyulab/components';
-import { UButton } from '../lib/ui-react.js';
+import { UButton, UInput } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
 import './LoginPage.css';
 
@@ -23,16 +23,10 @@ import './LoginPage.css';
 // `/react`'s built typings conflict with under `declare global` — same tag,
 // two nominal types, across roughly three dozen import lines spanning two
 // packages, one of them a shared layout library. Not something this one
-// page can fix on its own. `UButton` is shared from `../lib/ui-react.js`
-// (other pages need it too); `UInput`/`UDrawer` are only used here, so they
-// stay as local `createComponent` wrappers from the same source classes
-// everything else in this program already resolves to.
-const UInput = createComponent({
-  react: React,
-  tagName: 'u-input',
-  elementClass: UInputElement,
-  events: { onInput: 'input', onChange: 'change' },
-});
+// page can fix on its own. `UButton`/`UInput` are shared from
+// `../lib/ui-react.js` (other pages need them too); `UDrawer` is only used
+// here, so it stays as a local `createComponent` wrapper from the same
+// source class everything else in this program already resolves to.
 const UDrawer = createComponent({
   react: React,
   tagName: 'u-drawer',

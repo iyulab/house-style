@@ -9,6 +9,7 @@ import LoginPage from '../pages/LoginPage.js';
 import DashboardPage from '../pages/DashboardPage.js';
 import OrdersListPage from '../pages/OrdersListPage.js';
 import OrderDetailPage from '../pages/OrderDetailPage.js';
+import NewOrderPage from '../pages/NewOrderPage.js';
 
 const base = import.meta.env.BASE_URL + 'app/';
 
@@ -44,6 +45,7 @@ export function mountAppShell(root: HTMLElement) {
         children: [
           { index: true, render: () => <DashboardPage /> },
           { path: 'orders', render: () => <OrdersListPage /> },
+          { path: 'orders/new', render: () => <NewOrderPage /> },
           { path: 'orders/:id', render: (ctx) => <OrderDetailPage orderId={ctx.params.id as string} /> },
         ],
       },

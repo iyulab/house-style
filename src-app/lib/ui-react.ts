@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit/react';
-import { UButton as UButtonElement, UBadge as UBadgeElement } from '@iyulab/components';
+import { UButton as UButtonElement, UBadge as UBadgeElement, UInput as UInputElement } from '@iyulab/components';
 
 // `@iyulab/components/react` cannot be imported anywhere in this program — see the
 // comment block in `LoginPage.tsx` for the full technical explanation (duplicate
@@ -21,4 +21,11 @@ export const UBadge = createComponent({
   tagName: 'u-badge',
   elementClass: UBadgeElement,
   events: {},
+});
+
+export const UInput = createComponent({
+  react: React,
+  tagName: 'u-input',
+  elementClass: UInputElement,
+  events: { onInput: 'input', onChange: 'change' },
 });
