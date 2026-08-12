@@ -7,6 +7,7 @@ import type { ColumnDef, FilterState } from '@iyulab/data-components/react';
 import '@iyulab/components/dist/components/badge/UBadge.js';
 import { UButton } from '../lib/ui-react.js';
 import { svc } from '../lib/odata.js';
+import NewOrderDrawer from './NewOrderDrawer.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
 
 const STATUS_COLOR: Record<OrderStatus, 'neutral' | 'info' | 'success' | 'danger'> = {
@@ -60,10 +61,10 @@ export default function OrdersListPage() {
   const [filters, setFilters] = useState<FilterState>({});
   // `selection-change`'s `detail.selectedIds` is cumulative across every filter/page visited so
   // far (confirmed against the component's source) — this page just displays that count,
-  // instead of re-deriving a "which rows are checked right now" set itself. That's the gap the
-  // audit found the *existing* list-screen recipe doesn't demonstrate.
+  // instead of re-deriving a "which rows are checked right now" set itself.
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
+  const [newOrderOpen, setNewOrderOpen] = useState(false);
 
   async function reload() {
     const rows = await svc.odataGet<Order>('Orders');
@@ -97,19 +98,16 @@ export default function OrdersListPage() {
         <UButton disabled={selectedIds.length === 0} onClick={cancelSelected}>
           Cancel selected ({selectedIds.length})
         </UButton>
-        <UButton
-          color="primary"
-          onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}
-        >
+        <UButton color="primary" onClick={() => setNewOrderOpen(true)}>
           New order
+        </UButton>
+        <UButton onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
+          New order with items
         </UButton>
         {message && <span>{message}</span>}
       </div>
 
       <URichTableReact
-        // `data` is typed `Record<string, unknown>[]` on the element (same untyped-by-design
-        // shape as `ColumnDef.key` above) — `Order` has no index signature, so this cast
-        // matches the component's actual contract instead of widening `Order` itself.
         data={filteredRows as unknown as Record<string, unknown>[]}
         columns={COLUMNS}
         selectable
@@ -117,6 +115,12 @@ export default function OrdersListPage() {
         onFilterChange={(e) => { setFilters(e.detail.filters); setMessage(''); }}
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)}
+      />
+
+      <NewOrderDrawer
+        open={newOrderOpen}
+        onClose={() => setNewOrderOpen(false)}
+        onCreated={reload}
       />
     </div>
   );
