@@ -1,39 +1,9 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
-import * as React from 'react';
-import { createComponent } from '@lit/react';
-import {
-  UInput as UInputElement,
-  UDrawer as UDrawerElement,
-} from '@iyulab/components';
-import { UButton, UInput } from '../lib/ui-react.js';
+import type { UInput as UInputElement } from '@iyulab/components';
+import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
 import { DEMO_CREDENTIALS } from '../mocks/data.js';
 import './LoginPage.css';
-
-// `@iyulab/components/react` cannot be imported anywhere in this program.
-// Narrowing several individual barrel imports (this app's own theme setup,
-// a few call sites in `@iyulab/enterprise` and `@iyulab/modern-app`, and this
-// package's pre-existing Lit guide entry point) reduces the conflict but
-// doesn't close it. The remaining source is `@iyulab/modern-app`'s own
-// layout components (already loaded via this app's shell) and this
-// package's pre-existing guide sections, both of which register custom
-// elements via `@iyulab/components/dist/components/*/U*.js` side-effect
-// imports. That path looks like it targets the real built `dist`, but
-// `@iyulab/components`' `package.json` redirects `"./dist/*": "./src/*"` in
-// this local workspace, so it silently resolves to the same source classes
-// `/react`'s built typings conflict with under `declare global` — same tag,
-// two nominal types, across roughly three dozen import lines spanning two
-// packages, one of them a shared layout library. Not something this one
-// page can fix on its own. `UButton`/`UInput` are shared from
-// `../lib/ui-react.js` (other pages need them too); `UDrawer` is only used
-// here, so it stays as a local `createComponent` wrapper from the same
-// source class everything else in this program already resolves to.
-const UDrawer = createComponent({
-  react: React,
-  tagName: 'u-drawer',
-  elementClass: UDrawerElement,
-  events: {},
-});
 
 export default function LoginPage() {
   const [brandIn, setBrandIn] = useState(false);

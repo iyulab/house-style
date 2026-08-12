@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { createComponent } from '@lit/react';
-import { UButton as UButtonElement, UBadge as UBadgeElement, UInput as UInputElement } from '@iyulab/components';
+import {
+  UButton as UButtonElement,
+  UBadge as UBadgeElement,
+  UInput as UInputElement,
+  USelect as USelectElement,
+  UDrawer as UDrawerElement,
+} from '@iyulab/components';
 
 // `@iyulab/components/react` cannot be imported anywhere in this program — see the
 // comment block in `LoginPage.tsx` for the full technical explanation (duplicate
@@ -28,4 +34,21 @@ export const UInput = createComponent({
   tagName: 'u-input',
   elementClass: UInputElement,
   events: { onInput: 'input', onChange: 'change' },
+});
+
+export const USelect = createComponent({
+  react: React,
+  tagName: 'u-select',
+  elementClass: USelectElement,
+  events: { onChange: 'change' },
+});
+
+// `hide` bubbles: false, composed: false (deliberately — see UOverlayElement's source) — it
+// still reaches a listener bound directly to the element instance, which is what
+// `createComponent` does, so `onHide` fires correctly despite not bubbling through the DOM.
+export const UDrawer = createComponent({
+  react: React,
+  tagName: 'u-drawer',
+  elementClass: UDrawerElement,
+  events: { onHide: 'hide' },
 });
