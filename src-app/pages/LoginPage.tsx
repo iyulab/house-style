@@ -7,6 +7,7 @@ import {
 } from '@iyulab/components';
 import { UButton, UInput } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
+import { DEMO_CREDENTIALS } from '../mocks/data.js';
 import './LoginPage.css';
 
 // `@iyulab/components/react` cannot be imported anywhere in this program.
@@ -98,6 +99,11 @@ export default function LoginPage() {
             <h2>Sign in</h2>
             <div className="login-page__form-accent" />
           </div>
+
+          <p className="login-page__hint">
+            This is a demo backend (mocked, no real accounts) — sign in with{' '}
+            <code>{DEMO_CREDENTIALS.Username}</code> / <code>{DEMO_CREDENTIALS.Password}</code>.
+          </p>
 
           <UInput
             label="Username"

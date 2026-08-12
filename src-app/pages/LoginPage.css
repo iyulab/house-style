@@ -80,6 +80,22 @@
   border-radius: 2px;
 }
 
+.login-page__hint {
+  margin: 0;
+  padding: var(--u-space-sm, 10px) var(--u-space-md, 12px);
+  background: var(--u-bg-color-hover, #f3f4f6);
+  border-radius: var(--u-radius-md, 6px);
+  color: var(--u-text-color-secondary, #5b6777);
+  font-size: var(--u-font-size-sm, 13px);
+}
+
+.login-page__hint code {
+  padding: 1px 5px;
+  background: var(--u-bg-color-raised, white);
+  border-radius: var(--u-radius-sm, 4px);
+  font-size: 0.95em;
+}
+
 .login-page__error {
   padding: var(--u-space-sm, 10px) var(--u-space-md, 12px);
   background: var(--u-color-danger-bg, #fef2f2);

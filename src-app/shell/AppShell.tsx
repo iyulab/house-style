@@ -44,8 +44,8 @@ export function mountAppShell(root: HTMLElement) {
             config={{
               type: 'sidebar',
               title: 'Orders Reference',
-              main: NAV_ITEMS.map((n) => ({ type: 'link', label: n.label, icon: n.icon, href: base.slice(0, -1) + n.path })),
-              footer: [{ type: 'button', label: 'Sign out', icon: 'log-out', onClick: signOut }],
+              main: NAV_ITEMS.map((n) => ({ type: 'link', label: n.label, icon: n.icon, lib: n.lib, href: base.slice(0, -1) + n.path })),
+              footer: [{ type: 'button', label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut }],
               hasPermission,
             }}
           >
