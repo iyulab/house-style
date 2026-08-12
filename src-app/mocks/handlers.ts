@@ -1,10 +1,11 @@
 import { http, HttpResponse } from 'msw';
-import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, type Order } from './data.js';
+import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, PRODUCTS, ORDER_ITEMS, type Order, type OrderItem } from './data.js';
 
 // In-memory session + mutable order list, scoped to one page load — this is a demo backend,
 // not a persistence layer. Reset on every reload, same as the fixture arrays it wraps.
 let session: typeof DEMO_USER | null = null;
 const orders: Order[] = ORDERS.map((o) => ({ ...o }));
+const orderItems: OrderItem[] = ORDER_ITEMS.map((i) => ({ ...i }));
 
 export const handlers = [
   http.get('*/api/auth/me', () => {
@@ -70,5 +71,54 @@ export const handlers = [
     };
     orders.unshift(created);
     return HttpResponse.json(created, { status: 201 });
+  }),
+
+  http.get('*/$data/Products', () => {
+    // Read-only master data — no mutable copy needed (see the comment on `orderItems` above).
+    return HttpResponse.json({ value: PRODUCTS });
+  }),
+
+  http.get('*/$data/OrderItems', ({ request }) => {
+    const url = new URL(request.url);
+    const filter = url.searchParams.get('$filter') ?? '';
+    // This mock only ever receives an equality filter on OrderId — matches the "just enough to
+    // demo the pattern" scope the rest of this file already uses (see the single-Order-by-key
+    // handler above for the same kind of narrow, hand-rolled parsing).
+    const match = filter.match(/OrderId eq '([^']+)'/);
+    const rows = match ? orderItems.filter((i) => i.OrderId === match[1]) : orderItems;
+    return HttpResponse.json({ value: rows });
+  }),
+
+  http.post('*/$data/OrderItems', async ({ request }) => {
+    const body = (await request.json()) as Partial<OrderItem>;
+    const newId = `OI-${String(1000 + orderItems.length).slice(-4)}`;
+    const created: OrderItem = {
+      _id: newId,
+      Id: newId,
+      OrderId: body.OrderId ?? '',
+      ProductId: body.ProductId ?? '',
+      ProductName: body.ProductName ?? '',
+      Quantity: body.Quantity ?? 0,
+      UnitPrice: body.UnitPrice ?? 0,
+    };
+    orderItems.push(created);
+    return HttpResponse.json(created, { status: 201 });
+  }),
+
+  http.patch(/\/\$data\/OrderItems\(([^)]+)\)$/, async ({ request }) => {
+    const match = new URL(request.url).pathname.match(/\/OrderItems\(([^)]+)\)$/);
+    const item = orderItems.find((i) => i.Id === match?.[1]);
+    if (!item) return new HttpResponse(null, { status: 404 });
+    const patch = (await request.json()) as Partial<OrderItem>;
+    Object.assign(item, patch);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.delete(/\/\$data\/OrderItems\(([^)]+)\)$/, ({ request }) => {
+    const match = new URL(request.url).pathname.match(/\/OrderItems\(([^)]+)\)$/);
+    const idx = orderItems.findIndex((i) => i.Id === match?.[1]);
+    if (idx === -1) return new HttpResponse(null, { status: 404 });
+    orderItems.splice(idx, 1);
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
