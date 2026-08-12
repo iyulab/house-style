@@ -29,6 +29,18 @@ async function signOut() {
 }
 
 export function mountAppShell(root: HTMLElement) {
+  // `SidebarLayout`'s `:host` is `height: 100%` — it fills whatever height its parent chain
+  // gives it, and by default that chain resolves to nothing (`document.body`'s own height is
+  // `auto`, i.e. its content's height). `@iyulab/modern-app`'s own `app.load()` entry point
+  // sets exactly this when mounting to `document.body`; this app calls `Router` + `SidebarLayout`
+  // directly instead (for per-route control `app.load()` doesn't expose), so it has to set it
+  // itself — same values, same condition.
+  if (root === document.body) {
+    document.body.style.margin = '0';
+    document.body.style.width = '100vw';
+    document.body.style.height = '100vh';
+  }
+
   const outlet = document.createElement('u-outlet');
   root.appendChild(outlet);
 
