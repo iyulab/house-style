@@ -37,11 +37,15 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
   const [saveError, setSaveError] = useState('');
   const [itemsError, setItemsError] = useState('');
 
+  async function fetchItems(): Promise<OrderItem[]> {
+    return svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` });
+  }
+
   async function reload() {
     const [list, current, currentItems] = await Promise.all([
       svc.odataGet<Order>('Orders'),
       svc.odataGetById<Order>('Orders', orderId),
-      svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` }),
+      fetchItems(),
     ]);
     setOrders(list);
     setOrder(current);
@@ -53,21 +57,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
 
   async function syncTotal(nextItems: OrderItem[]) {
     const total = itemsTotal(nextItems);
-    // A plain fetch, not svc.odataPatch — the item mutation just above (add/quantity/remove)
-    // is the user-facing action and already carries its own toast + error handling; this
-    // recompute is bookkeeping the user didn't directly ask for, and going through
-    // svc.odataPatch here would fire a second "Order updated" toast for the same click. A
-    // failure here is non-critical (the display goes stale until the next reload()), so it's
-    // best-effort and not wrapped in the two-tier error handling the user-facing calls use.
-    // `fetch` only rejects on a network-level failure, not an HTTP error status, so the
-    // response is checked explicitly — otherwise a 4xx/5xx would fall through to the
-    // optimistic update below and show a Total that was never actually persisted.
-    const res = await fetch(`${svc.odataUrl('Orders')}(${orderId})`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Total: total }),
-    });
-    if (!res.ok) return;
+    await svc.odataPatch<Order>('Orders', orderId, { Total: total });
     setOrder((prev) => (prev ? { ...prev, Total: total } : prev));
   }
 
@@ -84,7 +74,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
         Quantity: line.quantity,
         UnitPrice: line.unitPrice,
       });
-      const nextItems = await svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` });
+      const nextItems = await fetchItems();
       setItems(nextItems);
       await syncTotal(nextItems);
     } catch (e) {
@@ -97,7 +87,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
     setItemsError('');
     try {
       await svc.odataPatch<OrderItem>('OrderItems', itemId, { Quantity: quantity });
-      const nextItems = await svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` });
+      const nextItems = await fetchItems();
       setItems(nextItems);
       await syncTotal(nextItems);
     } catch (e) {
@@ -109,7 +99,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
     setItemsError('');
     try {
       await svc.odataDelete('OrderItems', itemId);
-      const nextItems = await svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` });
+      const nextItems = await fetchItems();
       setItems(nextItems);
       await syncTotal(nextItems);
     } catch (e) {

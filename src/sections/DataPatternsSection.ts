@@ -534,8 +534,8 @@ export class DataPatternsSection extends LitElement {
               <u-field label="Delivery date">
                 <u-date-picker value="2026-03-31" clearable></u-date-picker>
               </u-field>
-              <u-field label="Total" description="Read-only — set at order creation">
-                <u-input value="₩1,240,000" disabled></u-input>
+              <u-field label="Total" description="Read-only — set from the order's items">
+                <u-input value="₩1,080,000" disabled></u-input>
               </u-field>
               <u-field label="Simulate save result" description="Demo control — not part of the recipe">
                 <u-select

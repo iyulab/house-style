@@ -82,6 +82,12 @@ export default function NewOrderPage() {
           break;
         }
       }
+      if (saved < lines.length) {
+        const actualTotal = lines.slice(0, saved).reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
+        // Best-effort correction — if this also fails, the completion screen's message below still
+        // tells the user where to fix things manually.
+        await svc.odataPatch<Order>('Orders', created.Id, { Total: actualTotal }).catch(() => {});
+      }
       setDone(created);
       setPartialFailure(saved < lines.length ? { saved, total: lines.length } : null);
     } catch (e) {

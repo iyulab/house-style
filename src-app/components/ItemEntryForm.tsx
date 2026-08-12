@@ -34,7 +34,7 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
       productId: product.Id,
       productName: product.Name,
       quantity: Number(quantity),
-      unitPrice: Number(unitPrice) || product.UnitPrice,
+      unitPrice: unitPrice === '' ? product.UnitPrice : Number(unitPrice),
     });
     setProductId('');
     setQuantity('1');

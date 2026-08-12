@@ -5,7 +5,11 @@ import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, PRODUCTS, ORDER_ITEMS, type Order,
 // not a persistence layer. Reset on every reload, same as the fixture arrays it wraps.
 let session: typeof DEMO_USER | null = null;
 const orders: Order[] = ORDERS.map((o) => ({ ...o }));
+let nextOrderSeq = orders.length;
 const orderItems: OrderItem[] = ORDER_ITEMS.map((i) => ({ ...i }));
+// A length-derived Id (like the Orders handler below uses) breaks once deletion is possible —
+// delete-then-create can reuse a still-live Id. This counter never reuses a value.
+let nextItemSeq = orderItems.length;
 
 export const handlers = [
   http.get('*/api/auth/me', () => {
@@ -60,7 +64,7 @@ export const handlers = [
     if (body.Customer === 'DUPLICATE_TEST') {
       return HttpResponse.json({ Message: 'An order for this customer is already in progress.' }, { status: 409 });
     }
-    const newId = `G-2026-${String(1000 + orders.length).slice(-4)}`;
+    const newId = `G-2026-${String(1000 + nextOrderSeq++).slice(-4)}`;
     const created: Order = {
       _id: newId,
       Id: newId,
@@ -91,7 +95,12 @@ export const handlers = [
 
   http.post('*/$data/OrderItems', async ({ request }) => {
     const body = (await request.json()) as Partial<OrderItem>;
-    const newId = `OI-${String(1000 + orderItems.length).slice(-4)}`;
+    // Deliberate trigger for the wizard's partial-failure path — a quantity no real order would
+    // ever use.
+    if (body.Quantity === 999) {
+      return HttpResponse.error();
+    }
+    const newId = `OI-${String(1000 + nextItemSeq++).slice(-4)}`;
     const created: OrderItem = {
       _id: newId,
       Id: newId,

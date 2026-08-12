@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormSection, FormRow } from '@iyulab/enterprise';
 import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
@@ -13,6 +13,13 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
   const [customer, setCustomer] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setCustomer('');
+      setError('');
+    }
+  }, [open]);
 
   async function save() {
     if (!customer.trim()) {
