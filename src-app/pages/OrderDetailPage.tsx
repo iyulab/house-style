@@ -59,11 +59,15 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
     // svc.odataPatch here would fire a second "Order updated" toast for the same click. A
     // failure here is non-critical (the display goes stale until the next reload()), so it's
     // best-effort and not wrapped in the two-tier error handling the user-facing calls use.
-    await fetch(`${svc.odataUrl('Orders')}(${orderId})`, {
+    // `fetch` only rejects on a network-level failure, not an HTTP error status, so the
+    // response is checked explicitly — otherwise a 4xx/5xx would fall through to the
+    // optimistic update below and show a Total that was never actually persisted.
+    const res = await fetch(`${svc.odataUrl('Orders')}(${orderId})`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Total: total }),
     });
+    if (!res.ok) return;
     setOrder((prev) => (prev ? { ...prev, Total: total } : prev));
   }
 
