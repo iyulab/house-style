@@ -87,6 +87,17 @@ app.load({
         styles: { icon: { color: 'var(--u-primary-color)' } },
         onClick: () => window.open('https://github.com/iyulab/house-style', '_blank'),
       },
+      {
+        type: 'button',
+        label: 'Open the reference app',
+        icon: 'box-arrow-up-right',
+        lib: 'bootstrap',
+        styles: { icon: { color: 'var(--u-primary-color)' } },
+        // A real navigation, not client-side routing — `app/` is a second, separate Vite
+        // HTML entry (its own React app + Router), not a route this guide's own Router
+        // knows about.
+        onClick: () => { window.location.href = `${base}app/`; },
+      },
     ],
 
     styles: {
