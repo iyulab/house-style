@@ -328,6 +328,12 @@ export class DataPatternsSection extends LitElement {
             renders through <code>ColumnDef.render</code> as <code>u-badge</code> — see the
             convention below for which color means what.
           </p>
+          <p>
+            This demo loads the full OData result set once and filters client-side —
+            <code>u-rich-table</code> fits small-to-medium, row-CRUD-focused lists like this
+            one. For large datasets that need true server-side paging and cell-level
+            editing, see <code>@iyulab/flex-table</code> instead.
+          </p>
           <u-rich-table
             id="list-screen-table"
             .columns=${COLUMNS}
