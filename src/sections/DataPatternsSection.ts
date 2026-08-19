@@ -16,7 +16,9 @@ import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/EmptyState.js';
 import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
+import '@iyulab/data-components/dist/components/u-record-picker/URecordPicker.js';
 import type { ColumnDef, FilterState, RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+import type { PickerItem } from '@iyulab/data-components/dist/components/u-record-picker/types.js';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
@@ -98,6 +100,18 @@ const LINE_ITEMS = [
   { _id: 'li-2', item: 'Letterhead, A4', qty: 1, unitPrice: '₩1,150,000', subtotal: '₩1,150,000' },
   { _id: 'li-3', item: 'Envelope, #10', qty: 1, unitPrice: '₩0', subtotal: '₩0' },
 ];
+
+const DEMO_CUSTOMERS: (PickerItem & { email: string })[] = [
+  { id: 'c1', label: 'Acme Corp', email: 'ops@acme.example' },
+  { id: 'c2', label: 'Beta Industries', email: 'hello@beta.example' },
+  { id: 'c3', label: 'Cascade Logistics', email: 'contact@cascade.example' },
+  { id: 'c4', label: 'Delta Freight', email: 'info@delta.example' },
+];
+
+const searchDemoCustomers = async (query: string): Promise<PickerItem[]> => {
+  const q = query.toLowerCase();
+  return DEMO_CUSTOMERS.filter((c) => c.label.toLowerCase().includes(q));
+};
 
 /**
  * §4 Data visualization & patterns.
@@ -503,6 +517,29 @@ export class DataPatternsSection extends LitElement {
             .data=${LINE_ITEMS}
             .totalCount=${3}
           ></u-rich-table>
+        </u-group-box>
+
+        <u-group-box title="Record picker — filter / lookup">
+          <p>
+            <code>u-record-picker</code> is one component with two entry points into the same
+            <code>search</code> callback. Typing filters an inline dropdown (partial-match list →
+            select). Enter with nothing highlighted, or the trailing find button, opens a modal
+            lookup — a search bar plus <code>u-rich-table</code> — for browsing a larger result
+            set. A single click on a row in that dialog only previews it (the dialog stays open);
+            Confirm or a row double-click commits the pick. The component owns none of the
+            matching logic — that lives entirely in the <code>search</code> callback passed in
+            below.
+          </p>
+          <u-record-picker
+            label="Customer"
+            placeholder="Type to search…"
+            clearable
+            .search=${searchDemoCustomers}
+            .columns=${[
+              { key: 'label', label: 'Company' },
+              { key: 'email', label: 'Email' },
+            ]}
+          ></u-record-picker>
         </u-group-box>
 
         <u-group-box title="Edit form — assembled, not a dedicated kit">
