@@ -68,6 +68,20 @@ app.load({
       ...CATEGORIES.map(c => ({
         type: 'link' as const, label: c.label, icon: c.icon, lib: 'house', styles: navLinkStyles, href: `${base}${c.path}`,
       })),
+      // `type: 'group'` (collapsible sub-nav) is a real `SidebarItem` variant this guide's
+      // own sidebar had never exercised — a real app groups external/secondary links this
+      // way (e.g. under "Resources") rather than flattening everything into `main`.
+      {
+        type: 'group',
+        label: 'Resources',
+        icon: 'collection',
+        lib: 'bootstrap',
+        styles: navLinkStyles,
+        items: [
+          { type: 'link', label: 'GitHub', icon: 'github', lib: 'bootstrap', href: 'https://github.com/iyulab/house-style', target: '_blank' },
+          { type: 'link', label: 'npm package', icon: 'box-seam', lib: 'bootstrap', href: 'https://www.npmjs.com/org/iyulab', target: '_blank' },
+        ],
+      },
     ],
 
     footer: [
