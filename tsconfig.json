@@ -32,7 +32,8 @@
     "jsx": "react-jsx",
 
     "useDefineForClassFields": false,
-    "preserveSymlinks": true
+    "preserveSymlinks": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*",

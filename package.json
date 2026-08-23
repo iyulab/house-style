@@ -21,7 +21,7 @@
     "@iyulab/router": "^0.11.0",
     "@iyulab/u-widgets": "^0.16.0",
     "@lit/react": "^1.0.8",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.1.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "echarts": "^5.5.0 || ^6.0.0",
