@@ -4,9 +4,9 @@ import { UWidget } from '@iyulab/u-widgets/react';
 import { ORDERS } from '../mocks/data.js';
 // `u-card` gives each widget below its border/shadow/padding — `@iyulab/u-widgets`' widgets
 // intentionally render bare (no card chrome of their own), so it's the consuming app's job to
-// frame them. `@iyulab/components/react` can't be imported in this program (see ui-react.ts),
-// so this is a raw custom element, registered via the same deep-import + JSX augmentation
-// pattern OrderDetailPage.tsx already uses for `u-master-detail-layout`.
+// frame them. `@iyulab/components/react` does ship a `UCard` wrapper, but this page uses the
+// card purely as a frame — no props, no events — so the raw custom element registered via the
+// deep-import + JSX augmentation pattern OrderDetailPage.tsx already uses is enough here.
 import '@iyulab/components/dist/components/card/UCard.js';
 
 declare module 'react' {
