@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { URichTableReact } from '@iyulab/data-components/react';
-import type { ColumnDef, FilterState } from '@iyulab/data-components/react';
-// `renderStatusBadge` below builds a raw `<u-badge>` element (URichTable's column `render`
-// expects an HTMLElement, not a React node) — this side-effect import registers the custom
-// element; without it `<u-badge>` renders as an unstyled unknown element.
-import '@iyulab/components/dist/components/badge/UBadge.js';
-import { UButton } from '../lib/ui-react.js';
+import type { ColumnDefReact, FilterState } from '@iyulab/data-components/react';
+import { UBadge, UButton } from '../lib/ui-react.js';
 import { svc } from '../lib/odata.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
@@ -17,12 +13,17 @@ const STATUS_COLOR: Record<OrderStatus, 'neutral' | 'info' | 'success' | 'danger
   cancelled: 'danger',
 };
 
-function renderStatusBadge(value: unknown): HTMLElement {
+// `URichTableReact` widens `render` to accept a React node (that is the whole point of
+// `ColumnDefReact` over the vanilla `ColumnDef`) — so this returns JSX through the shared
+// `UBadge` wrapper instead of hand-building an element, and the wrapper's own class import
+// is what registers `<u-badge>`.
+function renderStatusBadge(value: unknown) {
   const status = String(value) as OrderStatus;
-  const badge = document.createElement('u-badge');
-  badge.setAttribute('color', STATUS_COLOR[status] ?? 'neutral');
-  badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-  return badge;
+  return (
+    <UBadge color={STATUS_COLOR[status] ?? 'neutral'}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </UBadge>
+  );
 }
 
 // A hard `location.href` navigation would reload the page — and with it, the MSW mock
@@ -33,9 +34,10 @@ function navigate(path: string) {
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
-// `ColumnDef` is not generic — `key` is matched against row properties at runtime, not checked
-// against `Order` at compile time (matches the existing house-style Data Patterns recipe).
-const COLUMNS: ColumnDef[] = [
+// `ColumnDefReact` is not generic — `key` is matched against row properties at runtime, not
+// checked against `Order` at compile time (matches the existing house-style Data Patterns
+// recipe). The React variant is required here: `URichTableReact.columns` is typed against it.
+const COLUMNS: ColumnDefReact[] = [
   { key: 'Id', label: 'Order', width: '140px' },
   { key: 'Customer', label: 'Customer', width: '200px', filterable: true, filterType: 'text' },
   {
