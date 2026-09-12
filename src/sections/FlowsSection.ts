@@ -216,14 +216,27 @@ export class FlowsSection extends LitElement {
           760, assumes a master pane plus a detail pane wide enough to read.
         </p>
         <p>
-          <strong>Selection is not reflected in the URL yet.</strong> Opening and closing
-          the detail leaves the address bar untouched, so a refresh or a shared link
-          loses the selection, and Back does not close the panel. Putting selection in
-          the query string is the natural next step, but it currently re-mounts the whole
-          screen on every change &mdash; the router recreates a route's content whenever
-          the URL changes at all, including a query-only change, which would throw away
-          exactly the list state this container exists to preserve. Until that is
-          addressed upstream, keep selection in component state, as above.
+          <strong>Put the selection in the URL &mdash; and tell the route to keep the
+          page.</strong> With the selected id in the query string a refresh or a shared
+          link reopens the same detail and Back closes the panel. The one thing to know
+          is that the router recreates a route's content whenever the URL changes at
+          all, a query-only change included, unless the route says otherwise:
+          <code>key</code> (<code>@iyulab/router</code> 0.12+) decides when content is
+          remounted. Keyed on <code>pathname</code>, the screen survives every
+          <code>?id=</code> change and only the bound prop moves &mdash; the list keeps its
+          scroll, selection and loaded rows. Two lines, both on the route:
+        </p>
+        <pre><code>{
+  path: '/orders',
+  key: ctx =&gt; ctx.pathname,   // same path, same page — query changes arrive as props
+  render: ctx =&gt; html\`&lt;orders-screen .selectedId=\${ctx.query.get('id') ?? undefined}&gt;&lt;/orders-screen&gt;\`,
+}</code></pre>
+        <p>
+          Inside the screen, opening a row is <code>router.go('?id=' + row.id)</code> and
+          the close button is <code>history.back()</code> &mdash; the detail is derived from
+          the prop, never from a second copy of the selection in component state, so the
+          address bar and the panel cannot disagree. This demo keeps its selection in
+          memory only because it is not a routed screen.
         </p>
       </u-group-box>
 
