@@ -15,6 +15,7 @@ import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-t
 import type { PickerItem } from '@iyulab/data-components/dist/components/u-record-picker/types.js';
 
 import './data-patterns/ListScreenDemo.js';
+import './data-patterns/SearchScreenDemo.js';
 import './data-patterns/CrossPageSelectionDemo.js';
 import './data-patterns/MasterDetailDemo.js';
 import './data-patterns/FilterEmptyStateDemo.js';
@@ -129,12 +130,59 @@ export class DataPatternsSection extends LitElement {
             convention below for which color means what.
           </p>
           <p>
-            This demo loads the full OData result set once and filters client-side —
-            <code>u-rich-table</code> fits small-to-medium, row-CRUD-focused lists like this
-            one. For large datasets that need true server-side paging and cell-level
-            editing, see <code>@iyulab/flex-table</code> instead.
+            This demo loads the full result set once and filters client-side, which suits a
+            small-to-medium, row-CRUD-focused list like this one. <strong>That is a property of
+            this demo, not a limit of the component</strong> — <code>u-rich-table</code> pages
+            from a server perfectly well; see the search screen below, which does exactly that.
+            Reach for <code>@iyulab/flex-table</code> when you need <em>cell-level editing</em> or
+            spreadsheet-scale virtualisation, not merely because the data is paged. The two axes
+            are independent, and conflating them sends screens that only need paging to a
+            heavier component than they wanted.
           </p>
           <house-data-patterns-list-screen></house-data-patterns-list-screen>
+        </u-group-box>
+
+        <u-group-box title="Search screen — criteria form, then a server-paged result">
+          <p>
+            The dominant shape for internal screens: a criteria form, a search that goes to the
+            server, and a paged result table. Nothing below is a new component — it is
+            <code>u-info-section</code> + <code>u-field</code> for the criteria,
+            <code>u-action-bar</code> for the actions, <code>u-rich-table</code> for the result,
+            <code>u-alert</code> for the outcome line and <code>u-empty-state</code> for the two
+            empty cases. What the guide adds is the order and the decisions between them.
+          </p>
+          <p>
+            <strong>Use the same grid the edit form uses.</strong> The criteria form is
+            <code>u-info-section min="200"</code> with <code>u-field</code> children — the same
+            composition as the edit-form recipe further down. Hand-rolled
+            <code>display: flex; flex-wrap: wrap</code> criteria rows are where labels start
+            colliding with the next field at narrow widths. The difference from an edit form is
+            behavioural, not structural: nothing is <code>required</code>, nothing validates on
+            change, and the primary action searches instead of saving.
+          </p>
+          <p>
+            <strong>The criteria form and the table's own filter row are alternatives, not
+            layers.</strong> This screen turns <code>filterable</code> off, because the criteria
+            above own the query. Use the filter row when narrowing an already-loaded page is the
+            whole interaction; use a criteria form when the query goes to the server, needs
+            several inputs of different types, or should only run when the user asks. Running both
+            splits the condition across two places and neither one shows all of it.
+          </p>
+          <p>
+            <strong>Three wiring details worth copying.</strong> Editing a field does not move the
+            table — the screen holds the draft criteria separately from the applied ones, so
+            results only change when Search runs. Applying new criteria returns to page 1; staying
+            on page 4 of a result set that no longer has four pages is the usual bug here. And the
+            two empty states are different: before the first search it is
+            <code>variant="no-data"</code> with an instruction, while a search that matched
+            nothing is <code>variant="no-results"</code> with a way back out.
+          </p>
+          <p>
+            Every column here declares an absolute width, which is what makes those widths hold
+            once there are more columns than fit. The shared table above deliberately leaves one
+            column without one — the other half of the same contract.
+          </p>
+          <house-data-patterns-search-screen></house-data-patterns-search-screen>
         </u-group-box>
 
         <u-group-box title="Cross-page selection — the bulk-action count isn't what's checked">
