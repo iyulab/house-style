@@ -78,6 +78,49 @@ export class IdentitySection extends LitElement {
           </u-info-section>
         </u-group-box>
 
+        <u-group-box title="Korean (CJK) text — width is what decides line count">
+          <p>
+            The type scale above is demonstrated with <code>Aa 가나 123</code> for a reason: this
+            stack ships Korean products. Three rules come out of measuring it, and the first one
+            replaces the habit most people arrive with.
+          </p>
+          <p>
+            <strong>Do not reach for <code>word-break: keep-all</code>.</strong> It is the usual
+            advice for Korean UI and it does not help here. Measured inside a component's shadow
+            root: a compound label like <code>대출종류코드</code> has no word boundary to keep, so
+            the rule changes nothing at 40px, 60px or 90px; and a spaced label like
+            <code>주문 번호 상태</code> in a 60px cell gets <em>taller</em> with it — 48px becomes
+            72px, because refusing to split words costs a line in a narrow box.
+          </p>
+          <p>
+            <strong>What actually decides the line count is the width.</strong> The same label, the
+            same rules, width alone: 24px → 6 lines, 40px → 3, 60px → 2, <strong>90px → 1</strong>.
+            A header rendering as <code>B / O / X / 번 / 호</code> is a column squeezed to one
+            character, not a line-breaking problem. Declare table column widths and let the row area
+            scroll sideways; on narrow screens drop columns rather than compress them.
+          </p>
+          <p>
+            <strong>Leave <code>overflow-wrap: anywhere</code> on.</strong> Every component inherits
+            it, and for Korean compounds it makes no practical difference — what it does earn is
+            keeping a long identifier or URL from bursting its cell.
+          </p>
+          <p>
+            <strong>Two typographic rules Korean inverts:</strong> no <code>text-transform:
+            uppercase</code> — Korean has no uppercase, so it does nothing except enlarge any Latin
+            mixed into the same string — and no positive <code>letter-spacing</code>, which reduces
+            Hangul legibility rather than improving it. Build hierarchy from size, weight and colour
+            instead; the <code>overline</code> stage is the one place a positive tracking belongs,
+            and it assumes Latin.
+          </p>
+          <p>
+            <strong>Two-character button labels need nothing.</strong> A common workaround is padding
+            <code>검색</code> out with spaces; don't — a screen reader reads the gaps. Measured on
+            <code>u-button</code>: <code>검색</code> is 56px and <code>초기화</code> 69px, against
+            <code>OK</code> at 50px and <code>Search</code> at 68px. The control's padding already
+            gives short Korean labels a sensible minimum.
+          </p>
+        </u-group-box>
+
         <u-group-box title="Radius">
           <p>
             The control-level radius ladder is one notch rounder than the neutral
@@ -117,10 +160,27 @@ export class IdentitySection extends LitElement {
           </u-info-section>
         </u-group-box>
 
+        <u-group-box title="Icons — pick one set and name it">
+          <p>
+            Which icon set is a brand decision and is still open (below). That does not leave
+            consumers without a rule, because the failure it causes is silent: pass a name
+            <code>u-icon</code> cannot resolve and it draws the fallback shape — no error, no
+            warning. Thirty menu entries can render as the same glyph and nothing says so.
+          </p>
+          <p>
+            So: <strong>choose one set, pass <code>lib</code> explicitly, and do not mix sets.</strong>
+            This guide's own shell does exactly that (<code>lib="bootstrap"</code>). Naming the
+            library is what turns an unresolved icon into a visible mistake instead of a uniform
+            one, and it is worth doing before the brand decision rather than after it.
+          </p>
+        </u-group-box>
+
         <u-group-box title="Not yet decided">
           <p>
             A dedicated illustration/icon-set policy is on hold pending a brand
             decision — it is intentionally out of scope here rather than improvised.
+            The operational rule above (one set, named explicitly) stands regardless of
+            which set is eventually chosen.
           </p>
         </u-group-box>
     `;

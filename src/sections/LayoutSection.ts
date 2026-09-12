@@ -58,11 +58,36 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
+      <u-group-box title="Density — a switch you turn on, not a scale we ship">
+        <p>
+          Screens whose job is bulk lookup want tighter rows than the defaults give. There is a
+          lever for that: <code>--u-density</code>. Five places read it —
+          <code>u-button</code>, <code>u-button-group</code> and <code>u-form</code> in the
+          component library, the two data grids in <code>@iyulab/data-components</code>, and
+          <code>flex-table</code> — so one declaration reaches all of them:
+        </p>
+        <p>
+          <code>:root { --u-density: 12px; }</code>
+        </p>
+        <p>
+          Measured on <code>u-button</code>, that one line takes the font from 14px to 13.3px and
+          the control height from 37px to 35px. <strong>The token is deliberately left undeclared
+          by the stylesheets</strong> — every reader carries its own fallback, so nothing changes
+          until a consumer sets it. It is a switch you turn on for a screen or an app, not a scale
+          the design system has already chosen.
+        </p>
+      </u-group-box>
+
       <u-group-box title="Not yet decided">
         <p>
           Beyond the breakpoint computation itself, there is no written rule yet for
           exactly which width converts the sidebar into a drawer, or a documented
           z-index layering convention for slide-over panels stacked above it.
+        </p>
+        <p>
+          Density is only half-answered: <code>--u-density</code> moves type and control heights,
+          but table row height, form row spacing and a named "compact" variant are not on any axis
+          yet. Set the token where it helps; don't expect it to retune a whole screen.
         </p>
       </u-group-box>
     `;
