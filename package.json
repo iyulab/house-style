@@ -23,7 +23,7 @@
     "@iyulab/data-components": "^0.24.0",
     "@iyulab/enterprise": "^0.13.0",
     "@iyulab/modern-app": "^0.19.0",
-    "@iyulab/router": "^0.13.0",
+    "@iyulab/router": "^0.14.0",
     "@iyulab/u-widgets": "^0.20.0",
     "@lit/react": "^1.0.8",
     "@types/node": "^26.1.1",
