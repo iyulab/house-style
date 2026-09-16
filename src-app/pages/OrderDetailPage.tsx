@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
+// 하우스 스타일이 «화면을 무엇으로 조립하는가» 로 가르치는 프리미티브들 — 가이드(`src/`)가
+// 227회 쓰는 동안 이 레퍼런스 앱은 0회 썼고, 그 어긋남을 `예제 정합` 자가 지목했다.
+import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
+import { InfoSection } from '@iyulab/modern-app/react/InfoSection.js';
+import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
+import { GroupBox } from '@iyulab/modern-app/react/GroupBox.js';
+import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
+import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { FormSection, FormRow } from '@iyulab/enterprise';
-import { UButton, UBadge, UInput, USelect, UDrawer } from '../lib/ui-react.js';
+import { UButton, UBadge, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';
 import { svc } from '../lib/odata.js';
@@ -155,20 +163,32 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
       <div slot="detail" style={{ padding: 'var(--u-space-lg, 18px)' }}>
         {order ? (
           <>
-            <h2>{order.Id}</h2>
-            <p>{order.Customer}</p>
-            <UBadge color={order.Status === 'cancelled' ? 'danger' : 'neutral'}>{order.Status}</UBadge>
-            <p>₩{order.Total.toLocaleString()}</p>
+            <PageHeader title={order.Id} subtitle={order.Customer}>
+              <UBadge slot="status" color={order.Status === 'cancelled' ? 'danger' : 'neutral'}>
+                {order.Status}
+              </UBadge>
+            </PageHeader>
+
+            <InfoSection min={200}>
+              <InfoField label="Total" format="currency" currency="KRW" value={order.Total} />
+              <InfoField label="Items" value={items.length} />
+            </InfoSection>
+
             {canEdit && order.Status !== 'cancelled' && (
-              <div style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
+              <ActionBar>
+                <UButton slot="danger" color="danger" onClick={cancelOrder}>Cancel order</UButton>
                 <UButton color="primary" onClick={openEdit}>Edit order</UButton>
-                <UButton color="danger" onClick={cancelOrder}>Cancel order</UButton>
-              </div>
+              </ActionBar>
             )}
 
-            <section style={{ marginTop: 'var(--u-space-lg, 18px)' }}>
-              <h3>Items</h3>
-              {items.length === 0 && <p>No items yet.</p>}
+            <GroupBox title="Items">
+              {items.length === 0 && (
+                <EmptyState
+                  variant="no-data"
+                  title="No items yet"
+                  description={canEdit ? 'Add the first line below.' : 'Nothing has been added to this order.'}
+                />
+              )}
               {items.map((item) => (
                 <div
                   key={item.Id}
@@ -194,8 +214,8 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               {canEdit && order.Status !== 'cancelled' && (
                 <ItemEntryForm products={products} onAdd={addItem} />
               )}
-              {itemsError && <p role="alert">{itemsError}</p>}
-            </section>
+              {itemsError && <UAlert open status="error">{itemsError}</UAlert>}
+            </GroupBox>
 
             <UDrawer
               open={editOpen}
@@ -229,7 +249,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   <UInput label="Total" description="Read-only — set from the order's items" value={`₩${order.Total.toLocaleString()}`} disabled />
                 </FormRow>
               </FormSection>
-              {saveError && <UBadge color="danger">{saveError}</UBadge>}
+              {saveError && <UAlert open status="error">{saveError}</UAlert>}
               <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
                 <UButton onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
                 <UButton color="primary" onClick={saveEdit} loading={saving} disabled={saving}>

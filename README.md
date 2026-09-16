@@ -22,6 +22,19 @@ The live page is organized into sections:
 - **User flows** — CRUD, wizard, and bulk-action patterns
 - **Voice, tone & accessibility** — focus visibility and keyboard interaction
 
+## The reference app
+
+The guide has a second half: a small but working line-of-business app, assembled only from
+these libraries, at **https://iyulab.github.io/house-style/app/** (sign in with `demo` / `demo`
+— the backend is mocked in the browser, there are no real accounts). It is reachable from the
+guide's sidebar under "Open the reference app".
+
+Where the guide shows each pattern on its own, the app shows them load-bearing: a sidebar shell,
+a list screen with filtering, selection and bulk actions, a master-detail order screen with an
+edit drawer, and a multi-step wizard. It is held to the guide rather than kept beside it — a
+check in this monorepo compares the two and reports any layout primitive one half uses and the
+other does not.
+
 Sections that say "Not yet decided" mean exactly that — no design decision has
 been made for that area yet, rather than the guide inventing one.
 

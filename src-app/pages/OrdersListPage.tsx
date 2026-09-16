@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { URichTableReact } from '@iyulab/data-components/react';
 import type { ColumnDefReact, FilterState } from '@iyulab/data-components/react';
-import { UBadge, UButton } from '../lib/ui-react.js';
+import { UBadge, UButton, UAlert } from '../lib/ui-react.js';
+// 화면 제목·액션 줄·결과 메시지·빈 상태는 손으로 짜지 않는다 — 가이드가 이름을 준 자리다.
+import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
+import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
+import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { svc } from '../lib/odata.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
@@ -96,8 +100,10 @@ export default function OrdersListPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--u-space-md, 16px)' }}>
-      <div style={{ display: 'flex', gap: 'var(--u-space-md, 16px)', alignItems: 'center' }}>
-        <UButton disabled={selectedIds.length === 0} onClick={cancelSelected}>
+      <PageHeader title="Orders" subtitle={orders ? `${filteredRows.length} of ${orders.length}` : undefined} />
+
+      <ActionBar>
+        <UButton slot="danger" disabled={selectedIds.length === 0} onClick={cancelSelected}>
           Cancel selected ({selectedIds.length})
         </UButton>
         <UButton color="primary" onClick={() => setNewOrderOpen(true)}>
@@ -106,8 +112,20 @@ export default function OrdersListPage() {
         <UButton onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
           New order with items
         </UButton>
-        {message && <span>{message}</span>}
-      </div>
+      </ActionBar>
+
+      {message && <UAlert open status="success">{message}</UAlert>}
+
+      {/* 가이드가 가르치는 두 갈래를 지킨다 — 데이터가 아예 없는 것(`no-data`)과
+          필터가 걸러낸 것(`no-results`)은 사용자에게 다른 상황이고 다음 행동도 다르다.
+          `u-rich-table` 은 자기 데이터를 스스로 거르지 않으므로 이 구분도 여기서 한다. */}
+      {orders && filteredRows.length === 0 && (
+        <EmptyState
+          variant={orders.length === 0 ? 'no-data' : 'no-results'}
+          title={orders.length === 0 ? 'No orders yet' : 'No orders match these filters'}
+          description={orders.length === 0 ? 'Create the first one to get started.' : 'Clear a filter to see more.'}
+        />
+      )}
 
       <URichTableReact
         data={filteredRows as unknown as Record<string, unknown>[]}

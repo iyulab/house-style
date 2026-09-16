@@ -8,6 +8,7 @@ import { ORDERS } from '../mocks/data.js';
 // card purely as a frame — no props, no events — so the raw custom element registered via the
 // deep-import + JSX augmentation pattern OrderDetailPage.tsx already uses is enough here.
 import '@iyulab/components/dist/components/card/UCard.js';
+import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 
 declare module 'react' {
   namespace JSX {
@@ -22,14 +23,16 @@ export default function DashboardPage() {
   const revenue = ORDERS.reduce((sum, o) => sum + o.Total, 0);
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--u-space-lg, 18px)', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+    <>
+      <PageHeader title="Dashboard" subtitle="Today at a glance" />
+      <div style={{ display: 'grid', gap: 'var(--u-space-lg, 18px)', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
       {/* `change` below is an illustrative constant, not derived from `ORDERS` — a real
           dashboard would compute it against a prior period. */}
       <u-card>
         <UWidget spec={{ widget: 'metric', data: { value: ORDERS.length, label: 'Orders today', change: 8.2, trend: 'up' } }} />
       </u-card>
       <u-card>
-        <UWidget spec={{ widget: 'metric', data: { value: revenue, label: 'Revenue today', unit: 'KRW', change: 12.5, trend: 'up' } }} />
+        <UWidget spec={{ widget: 'metric', data: { value: revenue, label: 'Revenue today', format: 'currency:KRW', change: 12.5, trend: 'up' } }} />
       </u-card>
       <u-card>
         <UWidget spec={{ widget: 'metric', data: { value: pending, label: 'Pending orders', change: -4, trend: 'down' } }} />
@@ -46,6 +49,7 @@ export default function DashboardPage() {
           }}
         />
       </u-card>
-    </div>
+      </div>
+    </>
   );
 }
