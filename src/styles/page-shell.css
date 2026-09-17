@@ -14,6 +14,14 @@
  * covers every page.
  */
 
+/* `width: 100%` is load-bearing, not decorative. Each of these is a grid item of
+ * `<u-outlet>` (`display: grid`) — `margin: 0 auto` puts auto margins on the inline
+ * axis, which per spec disables Grid's default stretch and falls back to
+ * fit-content sizing. With flex descendants free to shrink to `min-width: 0`, that
+ * fit-content collapses toward ~0px at every viewport size, not just narrow ones
+ * (confirmed on the published site, not just locally). `width: 100%` restores the
+ * stretch this rule's own `margin: auto` opts out of.
+ */
 house-style-page,
 house-identity-section,
 house-layout-section,
@@ -25,6 +33,7 @@ house-voice-a11y-section {
   display: flex;
   flex-direction: column;
   gap: var(--u-space-xl, 20px);
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }

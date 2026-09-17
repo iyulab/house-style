@@ -1,7 +1,7 @@
 import { Router } from '@iyulab/router';
 import type { RouteContext } from '@iyulab/router';
 import { UOutlet } from '@iyulab/router/react';
-import { SidebarLayout } from '@iyulab/modern-app/react';
+import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { NAV_ITEMS } from './nav.js';
@@ -12,6 +12,27 @@ import OrderDetailPage from '../pages/OrderDetailPage.js';
 import NewOrderPage from '../pages/NewOrderPage.js';
 
 const base = import.meta.env.BASE_URL + 'app/';
+
+/** Matches `SidebarLayout`'s own documented default split — see the note below. */
+const BREAKPOINTS: [number, number] = [768, 1024];
+
+/**
+ * `SidebarLayout`'s `state` defaults to the hardcoded `'default'` (desktop) and is meant to be
+ * corrected by a `screen-resize` window event on mount. But this shell's `SidebarLayout` mounts
+ * lazily — only once `requireAuth` resolves — and `ScreenObserver` dispatches its one-time
+ * initial reading synchronously in its constructor, before that. By the time `SidebarLayout`
+ * connects and starts listening, the initial dispatch has already happened and gone, and since
+ * the viewport hasn't changed since, no later resize ever arrives to correct it — the sidebar
+ * was permanently stuck at `default`, full-width, on every screen size (confirmed: state stayed
+ * `'default'` on a 390px-wide viewport with no further events firing). `ScreenObserver` below
+ * still drives every *later* resize correctly, once the shell is listening — only the first
+ * paint needs this synchronous starting point, computed independently of that race.
+ */
+function initialSidebarState(): 'default' | 'slim' | 'mobile' {
+  const [small, medium] = BREAKPOINTS;
+  const width = window.innerWidth;
+  return width < small ? 'mobile' : width < medium ? 'slim' : 'default';
+}
 
 async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
   if (ctx.pathname === base + 'login') return true;
@@ -44,6 +65,11 @@ export function mountAppShell(root: HTMLElement) {
   const outlet = document.createElement('u-outlet');
   root.appendChild(outlet);
 
+  // `SidebarLayout`'s large/medium/small chrome switch, from here on, is driven by the
+  // `screen-resize` window event — `app.load()` creates the `ScreenObserver` that dispatches
+  // it, but this app bypasses `app.load()` (see comment above), so nothing did.
+  new ScreenObserver({ element: root, breakpoints: BREAKPOINTS });
+
   new Router({
     root,
     basepath: base,
@@ -53,6 +79,7 @@ export function mountAppShell(root: HTMLElement) {
       {
         render: () => (
           <SidebarLayout
+            state={initialSidebarState()}
             config={{
               type: 'sidebar',
               title: 'Orders Reference',
