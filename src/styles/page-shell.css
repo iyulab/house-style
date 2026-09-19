@@ -63,3 +63,15 @@ pre code {
   background: none;
   padding: 0;
 }
+
+/* A plain prose table has no scroll model of its own: at phone widths auto layout squeezes
+ * every column until headers and code spans wrap one letter per line. The wrapper scrolls
+ * sideways instead, and `min-width` on the table is what makes it overflow rather than
+ * squeeze. The wrapper is a focusable named region so keyboard users can scroll it.
+ */
+.table-scroll {
+  overflow-x: auto;
+}
+.table-scroll > table {
+  min-width: 36rem;
+}

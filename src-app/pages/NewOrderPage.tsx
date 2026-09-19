@@ -142,9 +142,9 @@ export default function NewOrderPage() {
           {lines.map((line, i) => (
             <div
               key={`${line.productId}-${i}`}
-              style={{ display: 'flex', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
+              style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
             >
-              <span style={{ flex: 1 }}>{line.productName} × {line.quantity}</span>
+              <span style={{ flex: '1 1 10rem', minWidth: 0 }}>{line.productName} × {line.quantity}</span>
               <span>₩{(line.quantity * line.unitPrice).toLocaleString()}</span>
               <UButton color="danger" onClick={() => removeLine(i)}>Remove</UButton>
             </div>

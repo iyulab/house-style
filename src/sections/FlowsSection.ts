@@ -120,6 +120,7 @@ export class FlowsSection extends LitElement {
           choice is not a matter of taste. The deciding question is
           <strong>whether the user comes back to the list, repeatedly, in one sitting</strong>.
         </p>
+        <div class="table-scroll" role="region" aria-label="Choosing a detail container" tabindex="0">
         <table>
           <thead>
             <tr><th>The user is</th><th>Container</th><th>Why</th></tr>
@@ -142,6 +143,7 @@ export class FlowsSection extends LitElement {
             </tr>
           </tbody>
         </table>
+        </div>
         <p>
           The costly mistake is the second row handled as the third: a queue worked
           front to back, where every item is a full navigation and every return re-runs

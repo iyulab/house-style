@@ -192,9 +192,12 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               {items.map((item) => (
                 <div
                   key={item.Id}
-                  style={{ display: 'flex', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
+                  style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
                 >
-                  <span style={{ flex: 1 }}>{item.ProductName}</span>
+                  {/* A flexible name with a floor: without `flex-wrap` + a basis the name is the only thing
+                      that can shrink, so on a phone it collapses to a few pixels and wraps one letter per
+                      line. With them the name takes its own line once the row no longer fits. */}
+                  <span style={{ flex: '1 1 10rem', minWidth: 0 }}>{item.ProductName}</span>
                   <UInput
                     type="number"
                     label="Quantity"
