@@ -40,8 +40,9 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusBadge } from './constants.js';
  *
  * Every column declares an absolute width, which is what makes the declared widths
  * hold when there are more columns than fit (see `u-rich-table`'s column-width
- * contract). The shared demo table elsewhere on this page deliberately leaves one
- * column without a width — that is the other half of the same contract.
+ * contract). The shared demo table elsewhere on this page does the same — leave even
+ * one column without a width and the table falls back to auto layout, squeezing
+ * every column to fit instead of scrolling sideways.
  */
 
 const COLUMNS: ColumnDef[] = [

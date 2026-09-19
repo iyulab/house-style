@@ -31,7 +31,7 @@ import './data-patterns/EditFormDemo.js';
 const MISSING_FEATURES = new Set(['export-accounting', 'bulk-print']);
 
 const LINE_ITEM_COLUMNS: ColumnDef[] = [
-  { key: 'item', label: 'Item', filterable: false },
+  { key: 'item', label: 'Item', width: '240px', filterable: false },
   { key: 'qty', label: 'Qty', align: 'right', width: '80px' },
   { key: 'unitPrice', label: 'Unit price', align: 'right', width: '120px' },
   { key: 'subtotal', label: 'Subtotal', align: 'right', width: '120px' },
@@ -178,9 +178,11 @@ export class DataPatternsSection extends LitElement {
             nothing is <code>variant="no-results"</code> with a way back out.
           </p>
           <p>
-            Every column here declares an absolute width, which is what makes those widths hold
-            once there are more columns than fit. The shared table above deliberately leaves one
-            column without one — the other half of the same contract.
+            Every column here, and in the shared table above, declares an absolute width — that is
+            what makes those widths hold and lets the table scroll sideways once there are more
+            columns than fit. Leave even one column without a width and the table falls back to
+            auto layout: every column squeezes to fit, and on a phone the headers wrap letter by
+            letter.
           </p>
           <house-data-patterns-search-screen></house-data-patterns-search-screen>
         </u-group-box>

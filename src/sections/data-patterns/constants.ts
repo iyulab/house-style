@@ -2,7 +2,7 @@ import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-t
 
 export const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
-  { key: 'customer', label: 'Customer', filterable: true, filterType: 'text' },
+  { key: 'customer', label: 'Customer', width: '200px', filterable: true, filterType: 'text' },
   {
     key: 'status', label: 'Status', width: '140px',
     filterable: true, filterType: 'select',
