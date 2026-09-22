@@ -30,7 +30,6 @@ export class IdentitySection extends LitElement {
 
   @state() private tick = 0;
   private observer?: MutationObserver;
-  private readonly onPresetReady = () => (this.tick += 1);
 
   connectedCallback() {
     super.connectedCallback();
@@ -39,16 +38,11 @@ export class IdentitySection extends LitElement {
     // reading below honest about which axes actually move and which don't.
     this.observer = new MutationObserver(() => (this.tick += 1));
     this.observer.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'] });
-    // The first render happens before `main.ts` finishes loading the house-style
-    // preset (see its comment on load order) — re-render once it lands so this
-    // table doesn't stay frozen on the pre-preset values it initially read.
-    window.addEventListener('house-style:preset-ready', this.onPresetReady);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.observer?.disconnect();
-    window.removeEventListener('house-style:preset-ready', this.onPresetReady);
   }
 
   render() {

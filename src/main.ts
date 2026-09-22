@@ -2,6 +2,12 @@ import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
 import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 
+// The canonical house-style preset, loaded the way its own header documents it: a plain
+// static import. Before @iyulab/components 1.44.0 that silently did nothing here —
+// `Theme.init()` appended the base token sheet at the end of `<head>`, so it outran a
+// statically imported sheet at equal specificity. The base sheet now sits ahead of the
+// document's other styles, so no sequencing is needed and none is done.
+import '@iyulab/enterprise/styles/preset.css';
 import '@iyulab/enterprise/icons';
 import '@iyulab/components/dist/components/popover/UPopover.js';
 import '@iyulab/components/dist/components/menu/UMenu.js';
@@ -148,20 +154,4 @@ app.load({
       },
     },
   },
-}).then(() => {
-  // Deliberately loaded AFTER `app.load()` resolves, not as a static top-level
-  // import. `Theme.init()` (inside `app.load()`) appends the base token sheet to
-  // `<head>` at runtime; a statically-imported stylesheet lands in `<head>` before
-  // that append happens. Both declare the same `:root` selector at equal
-  // specificity, so the later one in DOM order wins the cascade — a static import
-  // here would load textually first but lose to the base sheet anyway, and the
-  // house values would silently never apply. This is the canonical house-style
-  // preset — see `@iyulab/enterprise/src/styles/preset.css` — deferred just long
-  // enough to actually win.
-  return import('@iyulab/enterprise/styles/preset.css');
-}).then(() => {
-  // §1's token table renders once, synchronously, when the page first mounts —
-  // before this stylesheet has loaded. Without this signal it would keep showing
-  // the pre-preset values it happened to read on that first render forever.
-  window.dispatchEvent(new Event('house-style:preset-ready'));
 });
