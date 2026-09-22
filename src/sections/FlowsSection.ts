@@ -122,6 +122,13 @@ export class FlowsSection extends LitElement {
         </p>
         <div class="table-scroll" role="region" aria-label="Choosing a detail container" tabindex="0">
         <table>
+          <!-- Declared widths, per §2's own rule — see the note on the same table in
+               Feedback & motion. Without them \`Container\` squeezed to 60px. -->
+          <colgroup>
+            <col style="width: 18rem" />
+            <col style="width: 9rem" />
+            <col />
+          </colgroup>
           <thead>
             <tr><th>The user is</th><th>Container</th><th>Why</th></tr>
           </thead>

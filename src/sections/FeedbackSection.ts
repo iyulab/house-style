@@ -32,8 +32,10 @@ async function withBusyState(setBusy: (busy: boolean) => void, action: () => Pro
 /**
  * §6 State feedback & motion.
  *
- * Graded "partial" — the individual pieces exist and are shown live below;
- * what's missing is a single place that says which one to reach for.
+ * The pieces are shown live below, and the surface hierarchy that used to be
+ * missing — toast vs. alert banner vs. modal — now sits with them, decided on the
+ * axis of who ends the message rather than how urgent it feels. Motion
+ * duration/easing is the remaining undecided item.
  */
 @customElement('house-feedback-section')
 export class FeedbackSection extends LitElement {
@@ -90,11 +92,72 @@ export class FeedbackSection extends LitElement {
         ${this.demoRefreshedAt ? html`<p><small>Last refreshed at ${this.demoRefreshedAt}.</small></p>` : ''}
       </u-group-box>
 
+      <u-group-box title="Toast, banner, or modal — ask who ends it">
+        <p>
+          Three surfaces carry a message to the user, and the question that separates
+          them is not how urgent it is. It is <strong>who ends it</strong>: time, the
+          condition, or the user's decision. Pick by that and the choice stops being
+          a matter of taste.
+        </p>
+        <div class="table-scroll" role="region" aria-label="Choosing a feedback surface" tabindex="0">
+        <table>
+          <!-- Declared widths, per §2's own rule: with \`overflow-wrap: anywhere\` inherited,
+               a column's min-content is one character, so auto layout will squeeze a short
+               cell until its header reads S/u/r/f/a/c/e. The wrapper scrolls instead. -->
+          <colgroup>
+            <col style="width: 8rem" />
+            <col style="width: 15rem" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr><th>Surface</th><th>Who ends it</th><th>Reach for it when</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>app.success</code></td>
+              <td>Time — it dismisses itself after four seconds, and does not block.</td>
+              <td>Confirming something the user just did, where missing the message
+                  costs nothing because the result is already on screen.</td>
+            </tr>
+            <tr>
+              <td><code>u-alert</code></td>
+              <td>The condition, or the user. Set <code>duration="0"</code> so it does
+                  not time out; it still does not block.</td>
+              <td>A state that outlives one interaction. Either it clears itself when
+                  the condition does (connection restored), or it stays until the user
+                  acts on it (a new version is ready to load).</td>
+            </tr>
+            <tr>
+              <td><code>u-dialog</code></td>
+              <td>The user's decision — and it <strong>blocks</strong> until they make it.</td>
+              <td>The user genuinely cannot continue until they choose. Blocking is the
+                  whole cost of this surface — spend it only when carrying on would be
+                  wrong, not merely when the message feels important.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p>
+          <strong>A toast is not a quieter banner.</strong> It disappears on a timer, so
+          anything the user must still act on a minute later cannot live in one — that
+          is the line, not severity. An error can be a toast (the save failed, the form
+          is still there) and an informational notice can be a banner (a new version is
+          ready). <strong>And a banner is not a polite modal</strong>: if the app keeps
+          working, do not block it.
+        </p>
+        <p>
+          App-level notices — connection lost, a new build ready, a server contract the
+          client no longer matches — are all banners by this rule. None of them blocks,
+          and none of them ends on a timer. They belong to the shell rather than to a
+          screen, so the shell owns where they sit; a screen that positions its own
+          fixed banner will collide with the next one the app adds.
+        </p>
+      </u-group-box>
+
       <u-group-box title="Not yet decided">
         <p>
-          There is no documented hierarchy yet for choosing between a toast, an alert
-          banner, and a modal, and motion duration/easing values exist scattered
-          across the codebase rather than standardized in one place.
+          Motion duration/easing values exist scattered across the codebase rather than
+          standardized in one place.
         </p>
       </u-group-box>
     `;
