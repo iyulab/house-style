@@ -181,7 +181,13 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               </ActionBar>
             )}
 
-            <GroupBox level={2} title="Items">
+            {/* The count is `meta`, not part of the title: it states how many lines there are right now,
+                one step below the section's name. Omitted at zero — the empty state already says so. */}
+            <GroupBox
+              level={2}
+              title="Items"
+              meta={items.length === 0 ? undefined : `${items.length} ${items.length === 1 ? 'item' : 'items'}`}
+            >
               {items.length === 0 && (
                 <EmptyState
                   variant="no-data"
