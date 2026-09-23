@@ -47,7 +47,7 @@ export default function DashboardPage() {
           <InfoField label="Orders today" size="lg" value={ORDERS.length} trend="up" trendLabel="+8.2% vs yesterday" />
           <InfoField label="Revenue today" size="lg" format="currency" currency="KRW" value={revenue} trend="up" trendLabel="+12.5% vs yesterday" />
           <InfoField label="Pending orders" size="lg" value={pending} trend="down" trendLabel="−4 vs yesterday" tone="positive" />
-          <InfoField label="Avg. fulfillment" size="lg" value="2.4 days" trend="flat" trendLabel="No change" />
+          <InfoField label="Avg. fulfillment" size="lg" value={2.4} unit="days" trend="flat" trendLabel="No change" />
         </InfoSection>
       </div>
       {/* Illustrative constant series, not derived from `ORDERS`. */}

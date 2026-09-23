@@ -105,7 +105,7 @@ export class FlowsSection extends LitElement {
         subtitle="CRUD, wizard, and bulk-action patterns"
       ></u-page-header>
 
-      <u-group-box title="Built">
+      <u-group-box level="2" title="Built">
         <p>
           Row-selection state consistency and a <code>select-all</code> event landed
           in the rich-table component — the building block a bulk-action flow needs,
@@ -114,7 +114,7 @@ export class FlowsSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="List to detail — choosing the container">
+      <u-group-box level="2" title="List to detail — choosing the container">
         <p>
           Three containers can hold the detail of a row the user just picked, and the
           choice is not a matter of taste. The deciding question is
@@ -165,7 +165,7 @@ export class FlowsSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Master/detail — split, and overlay on narrow widths">
+      <u-group-box level="2" title="Master/detail — split, and overlay on narrow widths">
         <p>
           The default slot is the master pane and <code>slot="detail"</code> is the
           detail pane. Detail appears when that slot is filled and disappears when it
@@ -249,7 +249,7 @@ export class FlowsSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Wizard — multi-step setup flow">
+      <u-group-box level="2" title="Wizard — multi-step setup flow">
         <p>
           <code>u-wizard</code> owns the step indicator, the active panel, and Back/Next
           navigation — it does not own validation or persistence. <code>active</code> is
@@ -315,7 +315,7 @@ export class FlowsSection extends LitElement {
           `}
       </u-group-box>
 
-      <u-group-box title="Not yet decided">
+      <u-group-box level="2" title="Not yet decided">
         <p>
           Draft-save — persisting a partially filled form across sessions — is still out
           of scope; no measured demand for it exists yet.

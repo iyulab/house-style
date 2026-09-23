@@ -60,14 +60,14 @@ export class FeedbackSection extends LitElement {
         subtitle="Alerts, progress, and waiting states"
       ></u-page-header>
 
-      <u-group-box title="Feedback">
+      <u-group-box level="2" title="Feedback">
         <u-alert open status="info" title="Informational">Nothing needs your attention.</u-alert>
         <u-alert open status="success" title="Saved">The record was updated.</u-alert>
         <u-alert open status="warning" title="Review needed">Two fields fall back to defaults.</u-alert>
         <u-alert open status="error" title="Failed" closable>The upstream service did not respond.</u-alert>
       </u-group-box>
 
-      <u-group-box title="Progress and waiting">
+      <u-group-box level="2" title="Progress and waiting">
         <u-info-section min="220">
           <u-info-field label="Determinate"><u-progress-bar value="64" rounded></u-progress-bar></u-info-field>
           <u-info-field label="Indeterminate"><u-progress-bar indeterminate rounded></u-progress-bar></u-info-field>
@@ -76,7 +76,7 @@ export class FeedbackSection extends LitElement {
         </u-info-section>
       </u-group-box>
 
-      <u-group-box title="Busy-state wrapper — one helper for the async lifecycle">
+      <u-group-box level="2" title="Busy-state wrapper — one helper for the async lifecycle">
         <p>
           Every async action elsewhere on this site (Save, Cancel orders in Data
           patterns) hand-rolls the same three steps: flip a busy flag on, run the
@@ -92,7 +92,7 @@ export class FeedbackSection extends LitElement {
         ${this.demoRefreshedAt ? html`<p><small>Last refreshed at ${this.demoRefreshedAt}.</small></p>` : ''}
       </u-group-box>
 
-      <u-group-box title="Toast, banner, or modal — ask who ends it">
+      <u-group-box level="2" title="Toast, banner, or modal — ask who ends it">
         <p>
           Three surfaces carry a message to the user, and the question that separates
           them is not how urgent it is. It is <strong>who ends it</strong>: time, the
@@ -154,7 +154,7 @@ export class FeedbackSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Not yet decided">
+      <u-group-box level="2" title="Not yet decided">
         <p>
           Motion duration/easing values exist scattered across the codebase rather than
           standardized in one place.

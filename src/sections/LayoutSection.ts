@@ -24,7 +24,7 @@ export class LayoutSection extends LitElement {
         subtitle="The responsive sidebar shell is live, not a screenshot"
       ></u-page-header>
 
-      <u-group-box title="Sidebar shell — live, not a screenshot">
+      <u-group-box level="2" title="Sidebar shell — live, not a screenshot">
         <p>
           The chrome around this page's content — the sidebar, its collapse behaviour,
           the scrolling main region — is the actual <code>SidebarLayout</code> from
@@ -33,7 +33,7 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Nav and routes — one list, not two">
+      <u-group-box level="2" title="Nav and routes — one list, not two">
         <p>
           This site's own sidebar and its seven routes used to be two hand-paired
           arrays — a route list in one place, a matching nav-link list in another,
@@ -47,7 +47,7 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Breakpoints">
+      <u-group-box level="2" title="Breakpoints">
         <p>
           <code>ScreenObserver</code> tracks three sizes — <code>small</code>,
           <code>medium</code>, <code>large</code> — from a <code>ResizeObserver</code>
@@ -58,7 +58,7 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Density — a switch you turn on, not a scale we ship">
+      <u-group-box level="2" title="Density — a switch you turn on, not a scale we ship">
         <p>
           Screens whose job is bulk lookup want tighter rows than the defaults give. There is a
           lever for that: <code>--u-density</code>. Five places read it —
@@ -78,7 +78,7 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Not yet decided">
+      <u-group-box level="2" title="Not yet decided">
         <p>
           Beyond the breakpoint computation itself, there is no written rule yet for
           exactly which width converts the sidebar into a drawer, or a documented

@@ -27,13 +27,13 @@ export class VoiceA11ySection extends LitElement {
         subtitle="Focus visibility and keyboard interaction"
       ></u-page-header>
 
-      <u-group-box title="Focus visibility">
+      <u-group-box level="2" title="Focus visibility">
         <u-info-section min="200">
           <u-field label="Focus me"><u-input placeholder="Tab to this field"></u-input></u-field>
         </u-info-section>
       </u-group-box>
 
-      <u-group-box title="Keyboard interaction">
+      <u-group-box level="2" title="Keyboard interaction">
         <p>
           The date picker on the Data patterns page follows the WAI-ARIA Date Picker
           Dialog pattern — arrow keys move between days, Enter selects, Escape closes —
@@ -45,7 +45,7 @@ export class VoiceA11ySection extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Not yet decided">
+      <u-group-box level="2" title="Not yet decided">
         <p>
           There is no public-facing accessibility standard document yet (a minimum
           contrast ratio, a focus-ring specification) for consumers to reference, and

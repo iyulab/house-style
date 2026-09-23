@@ -83,7 +83,7 @@ export class DataPatternsSection extends LitElement {
         subtitle="Data representation, list screens, status, filters, related records, and edit forms — assembled from shipped components"
       ></u-page-header>
 
-      <u-group-box title="Data representation — built">
+      <u-group-box level="2" title="Data representation — built">
           <p>
             One consistent API for the three representations that used to disagree with
             each other screen to screen: a raw number, a formatted amount, and a date.
@@ -97,19 +97,19 @@ export class DataPatternsSection extends LitElement {
           <u-date-picker label="Delivery date" value="2026-03-31" clearable></u-date-picker>
         </u-group-box>
 
-        <u-group-box title="KPI dashboard — stat tiles, not a dedicated component">
+        <u-group-box level="2" title="KPI dashboard — stat tiles, not a dedicated component">
           <p>
             No dedicated "stat tile" component exists here either — this is
             <code>u-info-field</code> again, in its <code>size="lg"</code> mode, arranged
             in the same <code>u-info-section</code> grid as above. A dashboard header is a
-            "tile strip": each tile owns exactly one number, its label, and an optional
+            "tile strip": each tile owns exactly one number, its label, an optional unit, and an optional
             trend — the pattern common to Stripe, Linear, and Vercel's own dashboards.
           </p>
           <u-info-section min="180">
             <u-info-field label="Orders today" size="lg" .value=${24} trend="up" trendLabel="+12% vs yesterday"></u-info-field>
             <u-info-field label="Revenue today" size="lg" format="currency" currency="KRW" .value=${12450000} trend="up" trendLabel="+8% vs yesterday"></u-info-field>
             <u-info-field label="Pending orders" size="lg" .value=${7} trend="down" trendLabel="−3 vs yesterday" tone="positive"></u-info-field>
-            <u-info-field label="Avg. fulfillment" size="lg" .value=${'2.4 days'} trend="flat" trendLabel="No change"></u-info-field>
+            <u-info-field label="Avg. fulfillment" size="lg" .value=${2.4} unit="days" trend="flat" trendLabel="No change"></u-info-field>
           </u-info-section>
           <p>
             The third tile is why <code>tone</code> exists as its own prop, separate from
@@ -119,7 +119,7 @@ export class DataPatternsSection extends LitElement {
           </p>
         </u-group-box>
 
-        <u-group-box title="List screen — assembled, not a dedicated kit">
+        <u-group-box level="2" title="List screen — assembled, not a dedicated kit">
           <p>
             No purpose-built "list-screen kit" component exists — this is
             <code>u-rich-table</code> from <code>@iyulab/data-components</code>, as-is,
@@ -142,7 +142,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-list-screen></house-data-patterns-list-screen>
         </u-group-box>
 
-        <u-group-box title="Search screen — criteria form, then a server-paged result">
+        <u-group-box level="2" title="Search screen — criteria form, then a server-paged result">
           <p>
             The dominant shape for internal screens: a criteria form, a search that goes to the
             server, and a paged result table. Nothing below is a new component — it is
@@ -187,7 +187,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-search-screen></house-data-patterns-search-screen>
         </u-group-box>
 
-        <u-group-box title="Cross-page selection — the bulk-action count isn't what's checked">
+        <u-group-box level="2" title="Cross-page selection — the bulk-action count isn't what's checked">
           <p>
             <code>selection-change</code>'s <code>detail.selectedIds</code> is cumulative
             across every page visited so far; <code>detail.selectedRows</code> only covers
@@ -199,7 +199,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-cross-page-selection></house-data-patterns-cross-page-selection>
         </u-group-box>
 
-        <u-group-box title="Master›detail — a list and its record detail, side by side">
+        <u-group-box level="2" title="Master›detail — a list and its record detail, side by side">
           <p>
             <code>u-master-detail-layout</code> (a Vaadin <code>MasterDetailLayout</code>-style
             split-pane shell) doesn't manage selection either — it only shows its
@@ -214,7 +214,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-master-detail></house-data-patterns-master-detail>
         </u-group-box>
 
-        <u-group-box title="Status → badge convention">
+        <u-group-box level="2" title="Status → badge convention">
           <p>
             Color is reserved for state a user needs to notice at a glance — the table
             above renders <code>status</code> through a <code>ColumnDef.render</code> hook
@@ -236,7 +236,7 @@ export class DataPatternsSection extends LitElement {
           </u-info-section>
         </u-group-box>
 
-        <u-group-box title="Filter with no matches">
+        <u-group-box level="2" title="Filter with no matches">
           <p>
             A live filter over a small independent list — not the table above, so this
             recipe stays legible on its own. Type something that matches nothing (e.g.
@@ -246,7 +246,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-filter-empty-state></house-data-patterns-filter-empty-state>
         </u-group-box>
 
-        <u-group-box title="No data yet">
+        <u-group-box level="2" title="No data yet">
           <p>
             A different empty state for a different reason — nothing has been created,
             rather than a filter matching nothing. The action is "create," not "change the
@@ -259,7 +259,7 @@ export class DataPatternsSection extends LitElement {
           </u-empty-state>
         </u-group-box>
 
-        <u-group-box title="Line items — order G-2026-0512">
+        <u-group-box level="2" title="Line items — order G-2026-0512">
           <span slot="actions">
             <u-button size="sm" variant="outlined">Add item</u-button>
           </span>
@@ -278,7 +278,7 @@ export class DataPatternsSection extends LitElement {
           ></u-rich-table>
         </u-group-box>
 
-        <u-group-box title="Record picker — filter / lookup">
+        <u-group-box level="2" title="Record picker — filter / lookup">
           <p>
             <code>u-record-picker</code> is one component with two entry points into the same
             <code>search</code> callback. Typing filters an inline dropdown (partial-match list →
@@ -301,7 +301,7 @@ export class DataPatternsSection extends LitElement {
           ></u-record-picker>
         </u-group-box>
 
-        <u-group-box title="Edit form — assembled, not a dedicated kit">
+        <u-group-box level="2" title="Edit form — assembled, not a dedicated kit">
           <p>
             Same story as the list screen: no purpose-built "edit-form kit" component
             exists. This is <code>u-drawer</code> — its existing header/body/footer
@@ -322,7 +322,7 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-edit-form></house-data-patterns-edit-form>
         </u-group-box>
 
-        <u-group-box title="Unimplemented feature — shown, not hidden">
+        <u-group-box level="2" title="Unimplemented feature — shown, not hidden">
           <p>
             Two of the three actions below aren't built yet. They still render —
             disabled, with a reason attached — instead of disappearing from the
@@ -341,7 +341,7 @@ export class DataPatternsSection extends LitElement {
           <p><small>Grayed-out actions above are planned, not hidden — not yet built.</small></p>
         </u-group-box>
 
-        <u-group-box title="Not yet built — by design">
+        <u-group-box level="2" title="Not yet built — by design">
           <p>
             A status-history timeline is not a missing implementation — it's a
             deliberate hold. <code>@iyulab/modern-app</code>'s own charter already

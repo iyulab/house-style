@@ -181,7 +181,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               </ActionBar>
             )}
 
-            <GroupBox title="Items">
+            <GroupBox level={2} title="Items">
               {items.length === 0 && (
                 <EmptyState
                   variant="no-data"

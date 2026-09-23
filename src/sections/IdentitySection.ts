@@ -53,7 +53,7 @@ export class IdentitySection extends LitElement {
         subtitle="Type scale, radius, and elevation — read live from the tokens loaded on this page"
       ></u-page-header>
 
-      <u-group-box title="Type scale">
+      <u-group-box level="2" title="Type scale">
           <p>
             Seven stages, each carrying size, weight, line-height and letter-tracking.
           </p>
@@ -72,7 +72,7 @@ export class IdentitySection extends LitElement {
           </u-info-section>
         </u-group-box>
 
-        <u-group-box title="Korean (CJK) text — width is what decides line count">
+        <u-group-box level="2" title="Korean (CJK) text — width is what decides line count">
           <p>
             The type scale above is demonstrated with <code>Aa 가나 123</code> for a reason: this
             stack ships Korean products. Three rules come out of measuring it, and the first one
@@ -115,7 +115,7 @@ export class IdentitySection extends LitElement {
           </p>
         </u-group-box>
 
-        <u-group-box title="Radius">
+        <u-group-box level="2" title="Radius">
           <p>
             The control-level radius ladder is one notch rounder than the neutral
             default — the blueprint's own finding was that sharp corners contribute more
@@ -132,7 +132,7 @@ export class IdentitySection extends LitElement {
           </u-info-section>
         </u-group-box>
 
-        <u-group-box title="Elevation">
+        <u-group-box level="2" title="Elevation">
           <p>
             Shadows use a blue-black tint rather than pure black. Elevation is the one
             axis in this preset that is redefined per theme — dark mode leans on
@@ -154,7 +154,7 @@ export class IdentitySection extends LitElement {
           </u-info-section>
         </u-group-box>
 
-        <u-group-box title="Icons — pick one set and name it">
+        <u-group-box level="2" title="Icons — pick one set and name it">
           <p>
             Which icon set is a brand decision and is still open (below). That does not leave
             consumers without a rule, because the failure it causes is silent: pass a name
@@ -169,7 +169,7 @@ export class IdentitySection extends LitElement {
           </p>
         </u-group-box>
 
-        <u-group-box title="Not yet decided">
+        <u-group-box level="2" title="Not yet decided">
           <p>
             A dedicated illustration/icon-set policy is on hold pending a brand
             decision — it is intentionally out of scope here rather than improvised.

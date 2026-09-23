@@ -27,7 +27,7 @@ export class DepthSection extends LitElement {
         subtitle="Surfaces and controls at the standard radius and elevation"
       ></u-page-header>
 
-      <u-group-box title="Surfaces">
+      <u-group-box level="2" title="Surfaces">
         <u-info-section min="220">
           <u-card>
             <strong slot="header">Default card</strong>
@@ -44,7 +44,7 @@ export class DepthSection extends LitElement {
         </u-info-section>
       </u-group-box>
 
-      <u-group-box title="Controls">
+      <u-group-box level="2" title="Controls">
         <u-info-section min="140">
           <u-button color="primary">Primary</u-button>
           <u-button variant="outlined">Outlined</u-button>
@@ -52,7 +52,7 @@ export class DepthSection extends LitElement {
         </u-info-section>
       </u-group-box>
 
-      <u-group-box title="Not yet decided">
+      <u-group-box level="2" title="Not yet decided">
         <p>
           The current border weight on flat surfaces is a deliberate, already-settled
           choice, not an open question — it is kept as-is here.

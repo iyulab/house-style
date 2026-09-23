@@ -24,7 +24,7 @@ export class HouseStylePage extends LitElement {
         subtitle="What is decided, cited live from source — and what is not, said plainly"
       ></u-page-header>
 
-      <u-group-box title="How to read this page">
+      <u-group-box level="2" title="How to read this page">
         <p>
           Seven categories, graded the same way the design audit behind this site graded
           them: some are shown live, generated from the actual tokens and components
@@ -35,7 +35,7 @@ export class HouseStylePage extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="From graded categories to a real screen">
+      <u-group-box level="2" title="From graded categories to a real screen">
         <a slot="actions" href="${base}app/">See it assembled into a real app →</a>
         <p>
           Every category above is graded in isolation. The same tokens and components
@@ -45,7 +45,7 @@ export class HouseStylePage extends LitElement {
         </p>
       </u-group-box>
 
-      <u-group-box title="Using these components from React">
+      <u-group-box level="2" title="Using these components from React">
         <p>
           Everything on this site is a Lit web component, but it doesn't have to stay
           that way for consumers — <code>@iyulab/components</code>,
