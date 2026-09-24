@@ -150,7 +150,11 @@ export class FeedbackSection extends LitElement {
           client no longer matches — are all banners by this rule. None of them blocks,
           and none of them ends on a timer. They belong to the shell rather than to a
           screen, so the shell owns where they sit; a screen that positions its own
-          fixed banner will collide with the next one the app adds.
+          fixed banner will collide with the next one the app adds. In
+          <code>u-sidebar-layout</code> that place is <code>slot="notice"</code>: put each
+          notice there as an open <code>u-alert</code> and the shell stacks them at the top of
+          the route content, full width, scrolling away with it rather than holding a strip
+          of a small screen.
         </p>
       </u-group-box>
 
