@@ -19,12 +19,12 @@
     "node": ">=22.13.0"
   },
   "devDependencies": {
-    "@iyulab/components": "^1.37.1",
-    "@iyulab/data-components": "^0.25.0",
+    "@iyulab/components": "^1.47.0",
+    "@iyulab/data-components": "^0.26.0",
     "@iyulab/enterprise": "^0.19.0",
     "@iyulab/modern-app": "^0.30.0",
     "@iyulab/router": "^0.16.0",
-    "@iyulab/u-widgets": "^0.21.0",
+    "@iyulab/u-widgets": "^0.22.0",
     "@lit/react": "^1.0.8",
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.14",
