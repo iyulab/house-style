@@ -24,7 +24,7 @@ export class VoiceA11ySection extends LitElement {
     return html`
       <u-page-header
         title="Voice, tone & accessibility"
-        subtitle="Focus visibility and keyboard interaction"
+        subtitle="Focus visibility, where focus lands, and keyboard interaction"
       ></u-page-header>
 
       <u-group-box level="2" title="Focus visibility">
@@ -42,6 +42,28 @@ export class VoiceA11ySection extends LitElement {
         <p>
           The component library ships its own contrast-ramp generation tooling,
           used when deriving new color ramps rather than picking values by eye.
+        </p>
+      </u-group-box>
+
+      <u-group-box level="2" title="Where focus lands when a screen opens">
+        <p>
+          A screen whose job starts with typing — a scan field, a search box, a sign-in form, a
+          new-record form — marks that one control with <code>autofocus</code>. Nothing else is
+          needed: the app shell focuses it when the route finishes (through component shadow roots,
+          after the screen has rendered, for Lit and React screens alike), and a modal
+          <code>u-dialog</code> or <code>u-drawer</code> does the same when it opens. A screen that
+          marks nothing gets the content area, so the keyboard scrolls it straight away.
+        </p>
+        <p>
+          Two places move no focus on their own, by design: a route outside the shell (a sign-in
+          page with no sidebar), and a <code>non-modal</code> drawer or dialog, which leaves the page
+          behind it usable. There the screen calls <code>focus()</code> itself — the reference app's
+          sign-in page does exactly that when its panel opens.
+        </p>
+        <p>
+          Mark one control per screen, and only where typing is the first thing a person does — on a
+          dashboard or a record page, pulling focus into a field skips everything a screen-reader
+          user would otherwise hear first.
         </p>
       </u-group-box>
 
