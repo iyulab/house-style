@@ -180,3 +180,36 @@ pre code {
   color: var(--u-txt-color-strong);
   font-weight: 600;
 }
+
+/* «Show code» under each data-pattern demo (house-demo-source). */
+.demo-source {
+  margin-top: var(--u-space-sm, 8px);
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-md);
+}
+.demo-source > summary {
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  color: var(--u-primary-color-strong);
+  font-weight: 600;
+  cursor: pointer;
+}
+.demo-source__file {
+  margin-left: var(--u-space-sm, 8px);
+  color: var(--u-txt-color-weak);
+  font-family: var(--u-font-mono);
+  font-size: var(--u-text-caption-size);
+  font-weight: 400;
+}
+.demo-source__bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--u-space-sm, 8px);
+}
+.demo-source pre {
+  max-height: 28rem;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--u-border-color);
+  border-radius: 0 0 var(--u-radius-md) var(--u-radius-md);
+  font-size: var(--u-text-caption-size);
+}

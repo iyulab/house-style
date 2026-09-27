@@ -20,6 +20,13 @@ import './data-patterns/CrossPageSelectionDemo.js';
 import './data-patterns/MasterDetailDemo.js';
 import './data-patterns/FilterEmptyStateDemo.js';
 import './data-patterns/EditFormDemo.js';
+import '../internals/DemoSource.js';
+import listScreenSrc from './data-patterns/ListScreenDemo.ts?raw';
+import searchScreenSrc from './data-patterns/SearchScreenDemo.ts?raw';
+import crossPageSrc from './data-patterns/CrossPageSelectionDemo.ts?raw';
+import masterDetailSrc from './data-patterns/MasterDetailDemo.ts?raw';
+import filterEmptySrc from './data-patterns/FilterEmptyStateDemo.ts?raw';
+import editFormSrc from './data-patterns/EditFormDemo.ts?raw';
 
 /**
  * Capabilities the UI names but hasn't built yet. A missing feature checked against
@@ -140,6 +147,7 @@ export class DataPatternsSection extends LitElement {
             heavier component than they wanted.
           </p>
           <house-data-patterns-list-screen></house-data-patterns-list-screen>
+          <house-demo-source label="ListScreenDemo.ts" .source=${listScreenSrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="Search screen — criteria form, then a server-paged result">
@@ -185,6 +193,7 @@ export class DataPatternsSection extends LitElement {
             letter.
           </p>
           <house-data-patterns-search-screen></house-data-patterns-search-screen>
+          <house-demo-source label="SearchScreenDemo.ts" .source=${searchScreenSrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="Cross-page selection — the bulk-action count isn't what's checked">
@@ -197,6 +206,7 @@ export class DataPatternsSection extends LitElement {
             unchecked.
           </p>
           <house-data-patterns-cross-page-selection></house-data-patterns-cross-page-selection>
+          <house-demo-source label="CrossPageSelectionDemo.ts" .source=${crossPageSrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="Master›detail — a list and its record detail, side by side">
@@ -212,6 +222,7 @@ export class DataPatternsSection extends LitElement {
             that's the component's own responsive behavior, not extra code here.
           </p>
           <house-data-patterns-master-detail></house-data-patterns-master-detail>
+          <house-demo-source label="MasterDetailDemo.ts" .source=${masterDetailSrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="Status → tag convention">
@@ -254,6 +265,7 @@ export class DataPatternsSection extends LitElement {
             button in that state to get back to the list.
           </p>
           <house-data-patterns-filter-empty-state></house-data-patterns-filter-empty-state>
+          <house-demo-source label="FilterEmptyStateDemo.ts" .source=${filterEmptySrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="No data yet">
@@ -330,6 +342,7 @@ export class DataPatternsSection extends LitElement {
             scenario below, then Save, to see both.
           </p>
           <house-data-patterns-edit-form></house-data-patterns-edit-form>
+          <house-demo-source label="EditFormDemo.ts" .source=${editFormSrc}></house-demo-source>
         </u-group-box>
 
         <u-group-box level="2" title="Unimplemented feature — shown, not hidden">
