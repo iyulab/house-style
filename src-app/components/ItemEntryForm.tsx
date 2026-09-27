@@ -79,7 +79,7 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
         disabled={disabled}
         onChange={(e) => setUnitPrice((e.target as UInputElement).value ?? '')}
       />
-      <UButton onClick={add} disabled={disabled || !productId}>Add item</UButton>
+      <UButton variant="outlined" onClick={add} disabled={disabled || !productId}>Add item</UButton>
     </div>
   );
 }

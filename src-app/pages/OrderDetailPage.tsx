@@ -4,6 +4,7 @@ import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 // 227회 쓰는 동안 이 레퍼런스 앱은 0회 썼고, 그 어긋남을 `예제 정합` 자가 지목했다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 import { StatusTag } from '../components/StatusTag.js';
+import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 import './OrderDetailPage.css';
 import { InfoSection } from '@iyulab/modern-app/react/InfoSection.js';
 import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
@@ -119,6 +120,13 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
 
   async function cancelOrder() {
     if (!order) return;
+    const ok = await Dialog.confirm(`Cancel order ${order.Id}? This cannot be undone.`, {
+      title: 'Cancel order',
+      confirmLabel: 'Cancel order',
+      cancelLabel: 'Keep order',
+      confirmColor: 'danger',
+    });
+    if (!ok) return;
     await svc.odataPatch<Order>('Orders', order.Id, { Status: 'cancelled' });
     await reload();
   }
@@ -181,7 +189,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
 
             {canEdit && order.Status !== 'cancelled' && (
               <ActionBar>
-                <UButton slot="danger" color="danger" onClick={cancelOrder}>Cancel order</UButton>
+                <UButton slot="danger" color="danger" variant="outlined" onClick={cancelOrder}>Cancel order</UButton>
                 <UButton color="primary" onClick={openEdit}>Edit order</UButton>
               </ActionBar>
             )}
@@ -221,7 +229,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   />
                   <span>₩{(item.Quantity * item.UnitPrice).toLocaleString()}</span>
                   {canEdit && order.Status !== 'cancelled' && (
-                    <UButton color="danger" onClick={() => removeItem(item.Id)}>Remove</UButton>
+                    <UButton color="danger" variant="ghost" size="sm" onClick={() => removeItem(item.Id)}>Remove</UButton>
                   )}
                 </div>
               ))}
@@ -265,7 +273,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               </FormSection>
               {saveError && <UAlert open status="error">{saveError}</UAlert>}
               <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
-                <UButton onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
+                <UButton variant="ghost" onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
                 <UButton color="primary" onClick={saveEdit} loading={saving} disabled={saving}>
                   Save
                 </UButton>

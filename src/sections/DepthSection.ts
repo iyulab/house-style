@@ -6,6 +6,7 @@ import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
+import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 
 /**
  * §3 Component graphics & depth.
@@ -19,6 +20,15 @@ export class DepthSection extends LitElement {
   protected createRenderRoot() {
     return this;
   }
+
+  private confirmCancel = () => {
+    void Dialog.confirm('Cancel order G-2026-0512? This cannot be undone.', {
+      title: 'Cancel order',
+      confirmLabel: 'Cancel order',
+      cancelLabel: 'Keep order',
+      confirmColor: 'danger',
+    });
+  };
 
   render() {
     return html`
@@ -44,11 +54,40 @@ export class DepthSection extends LitElement {
         </u-info-section>
       </u-group-box>
 
-      <u-group-box level="2" title="Controls">
+      <u-group-box level="2" title="Action hierarchy — one primary per region">
+        <p>
+          Colour says <em>which</em> action this region exists for; the variant says how loud the
+          others are. A screen where every button is a solid block has no hierarchy — the eye has
+          nowhere to land. Note that a bare <code>&lt;u-button&gt;</code> is <strong>not</strong> a quiet
+          button: its default colour, <code>neutral</code>, follows the brand colour, so it draws
+          exactly like <code>color="primary"</code>. Give every non-primary action a variant.
+        </p>
+        <div class="table-scroll" role="region" aria-label="Action hierarchy" tabindex="0">
+        <table>
+          <!-- Declared widths — see the note on the same kind of table in Feedback & motion. -->
+          <colgroup>
+            <col style="width: 11rem" />
+            <col style="width: 20rem" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr><th>Role</th><th>Markup</th><th>When</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Primary</td><td><code>color="primary"</code></td><td>The one action the region exists for — Save, Create, Search. One per region.</td></tr>
+            <tr><td>Secondary</td><td><code>variant="outlined"</code></td><td>Other actions of the same region — Export, Back, "New order with items".</td></tr>
+            <tr><td>Tertiary</td><td><code>variant="ghost"</code></td><td>Dismissive or low-stakes — Cancel in a form, Reset.</td></tr>
+            <tr><td>Destructive</td><td><code>color="danger" variant="outlined"</code></td><td>Deletes or cancels something. Never solid on the page.</td></tr>
+            <tr><td>Destructive, per row</td><td><code>color="danger" variant="ghost" size="sm"</code></td><td>Repeated on every row (Remove) — quiet until it is the one you reach for.</td></tr>
+            <tr><td>Destructive, confirmed</td><td><code>Dialog.confirm(…, { confirmColor: 'danger' })</code></td><td>The confirmation is the only place a destructive action is solid — and the only place it runs from.</td></tr>
+          </tbody>
+        </table>
+        </div>
         <u-info-section min="140">
-          <u-button color="primary">Primary</u-button>
-          <u-button variant="outlined">Outlined</u-button>
-          <u-button variant="ghost">Ghost</u-button>
+          <u-button color="primary">Save</u-button>
+          <u-button variant="outlined">Export</u-button>
+          <u-button variant="ghost">Cancel</u-button>
+          <u-button color="danger" variant="outlined" @click=${this.confirmCancel}>Cancel order</u-button>
         </u-info-section>
       </u-group-box>
 

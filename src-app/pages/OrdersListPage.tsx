@@ -9,6 +9,7 @@ import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { svc } from '../lib/odata.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import { StatusTag } from '../components/StatusTag.js';
+import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
 
 // `URichTableReact` widens `render` to accept a React node (that is the whole point of
@@ -77,6 +78,15 @@ export default function OrdersListPage() {
 
   async function cancelSelected() {
     const ids = selectedIds;
+    // Irreversible, so it runs only from a confirmation — the one place it is drawn solid (the
+    // guide's action hierarchy). The page button stays outlined.
+    const ok = await Dialog.confirm(`Cancel ${ids.length} order(s)? This cannot be undone.`, {
+      title: 'Cancel orders',
+      confirmLabel: 'Cancel orders',
+      cancelLabel: 'Keep orders',
+      confirmColor: 'danger',
+    });
+    if (!ok) return;
     await Promise.all(ids.map((id) => svc.odataPatch<Order>('Orders', id, { Status: 'cancelled' })));
     // Clear selection, then reload, then set the message — in that order, so the confirmation
     // text never appears before the table has visibly updated.
@@ -90,13 +100,13 @@ export default function OrdersListPage() {
       <PageHeader title="Orders" subtitle={orders ? `${filteredRows.length} of ${orders.length}` : undefined} />
 
       <ActionBar>
-        <UButton slot="danger" disabled={selectedIds.length === 0} onClick={cancelSelected}>
+        <UButton slot="danger" color="danger" variant="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
           Cancel selected ({selectedIds.length})
         </UButton>
         <UButton color="primary" onClick={() => setNewOrderOpen(true)}>
           New order
         </UButton>
-        <UButton onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
+        <UButton variant="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
           New order with items
         </UButton>
       </ActionBar>

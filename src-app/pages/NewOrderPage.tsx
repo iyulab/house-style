@@ -114,7 +114,7 @@ export default function NewOrderPage() {
             {partialFailure.saved} of {partialFailure.total} items were saved. Add the rest from the order's detail page.
           </p>
         )}
-        <UButton onClick={() => {
+        <UButton variant="outlined" onClick={() => {
           setDone(null);
           setPartialFailure(null);
           setActive(0);
@@ -146,7 +146,7 @@ export default function NewOrderPage() {
             >
               <span style={{ flex: '1 1 10rem', minWidth: 0 }}>{line.productName} × {line.quantity}</span>
               <span>₩{(line.quantity * line.unitPrice).toLocaleString()}</span>
-              <UButton color="danger" onClick={() => removeLine(i)}>Remove</UButton>
+              <UButton color="danger" variant="ghost" size="sm" onClick={() => removeLine(i)}>Remove</UButton>
             </div>
           ))}
           <ItemEntryForm products={products} onAdd={addLine} />
@@ -168,7 +168,7 @@ export default function NewOrderPage() {
         // default actions on the review step; steps 0/1 keep the wizard's own Back/Next
         // (which is what drives `step-change` and the validation gates above).
         <span slot="actions">
-          <UButton onClick={() => setActive(1)} disabled={submitting}>Back</UButton>
+          <UButton variant="outlined" onClick={() => setActive(1)} disabled={submitting}>Back</UButton>
           <UButton color="primary" onClick={submit} loading={submitting} disabled={submitting}>
             Create order
           </UButton>
