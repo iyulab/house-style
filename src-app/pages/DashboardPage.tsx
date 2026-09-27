@@ -3,8 +3,9 @@ import '@iyulab/u-widgets/charts';
 // The widgets ship their own neutral token defaults so they work standalone. This app also
 // loads @iyulab/components, and without this sheet the two disagree on five axes at once
 // (primary color, body text, secondary text, font family, corner radius). The sheet binds one
-// token set to the other by reference, so the chart below follows the same palette as
-// everything around it.
+// token set to the other by reference — including the chart palette, slot for slot — so the chart
+// below draws its series in the house chart colours (`--u-chart-color-*`), starting with the same
+// blue as everything around it.
 import '@iyulab/u-widgets/themes/components.css';
 import { UWidget } from '@iyulab/u-widgets/react';
 import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
@@ -55,6 +56,8 @@ export default function DashboardPage() {
         <UWidget
           spec={{
             widget: 'chart.bar',
+            // One series, so the title names it — no legend box (a legend with one entry says nothing).
+            title: 'Orders this week',
             data: [
               { name: 'Mon', value: 3 }, { name: 'Tue', value: 5 }, { name: 'Wed', value: 2 },
               { name: 'Thu', value: 6 }, { name: 'Fri', value: 4 },
