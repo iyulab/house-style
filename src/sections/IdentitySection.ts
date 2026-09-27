@@ -13,6 +13,36 @@ const RADIUS_STEPS = ['sm', 'md', 'lg', 'xl'] as const;
 const SHADOW_STEPS = ['sm', 'md', 'lg', 'xl'] as const;
 const SHADOW_COLOR_STEPS = ['weaker', 'weak', 'normal', 'strong', 'stronger'] as const;
 
+const COLOUR_ROLES = ['primary', 'info', 'success', 'warning', 'danger'] as const;
+const ROLE_STEPS = [
+  { suffix: '-color', job: 'fill' },
+  { suffix: '-bg-color', job: 'soft surface' },
+  { suffix: '-color-strong', job: 'text & icons' },
+] as const;
+const SURFACE_TOKENS = [
+  ['--u-bg-color', 'page'],
+  ['--u-bg-color-raised', 'raised: cards, table heads'],
+  ['--u-panel-bg-color', 'panel'],
+  ['--u-bg-color-hover', 'hover'],
+  ['--u-border-color', 'dividers, borders'],
+] as const;
+const INK_TOKENS = [
+  ['--u-txt-color-strong', 'emphasis'],
+  ['--u-txt-color', 'body'],
+  ['--u-txt-color-weak', 'secondary, captions'],
+] as const;
+const TOKEN_PLACES = [
+  ['Secondary text, captions', '--u-txt-color-weak'],
+  ['Error message text', '--u-danger-color-strong'],
+  ['Soft alert / notice background', '--u-{role}-bg-color'],
+  ['Divider, card border', '--u-border-color'],
+  ['Row hover', '--u-bg-color-hover'],
+  ['Selected row, current item', '--u-primary-bg-color'],
+  ['Focus outline', '--u-primary-color'],
+  ['Code', '--u-font-mono'],
+] as const;
+const CHART_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+
 /**
  * §1 Visual identity & tokens.
  *
@@ -50,7 +80,7 @@ export class IdentitySection extends LitElement {
     return html`
       <u-page-header
         title="Visual identity & tokens"
-        subtitle="Type scale, radius, and elevation — read live from the tokens loaded on this page"
+        subtitle="Type scale, colour, radius, and elevation — read live from the tokens loaded on this page"
       ></u-page-header>
 
       <u-group-box level="2" title="Type scale">
@@ -113,6 +143,100 @@ export class IdentitySection extends LitElement {
             <code>OK</code> at 50px and <code>Search</code> at 68px. The control's padding already
             gives short Korean labels a sensible minimum.
           </p>
+        </u-group-box>
+
+        <u-group-box level="2" title="Colour roles — use the role, never the hue">
+          <p>
+            Components and screens colour things by <strong>role</strong> — what the colour
+            means — not by hue. A role has three steps, each for a different job: the
+            <em>fill</em> (a solid surface; its text is the matching <code>--u-{role}-txt-color</code>, white for all but warning), the <em>soft</em> surface
+            (a tinted background under body text) and the <em>strong</em> step (text and icons
+            on the page). Values below are read from this page, so they follow the theme toggle.
+          </p>
+          <div class="swatch-table">
+            ${COLOUR_ROLES.map(role => html`
+              <div class="swatch-row">
+                <span class="swatch-role">${role}</span>
+                ${ROLE_STEPS.map(step => {
+                  const token = `--u-${role}${step.suffix}`;
+                  return html`<span class="swatch">
+                    <span class="swatch-chip" style="background: var(${token})"></span>
+                    <code>${token}</code>
+                    <span class="swatch-note">${step.job} · ${readToken(token) || '—'}</span>
+                  </span>`;
+                })}
+              </div>
+            `)}
+          </div>
+          <p>
+            Re-brand by redefining the role tokens (<code>--u-primary-color</code> and its
+            steps) in your own sheet, loaded after the preset — not by painting components with
+            a ramp hue like <code>--u-blue-700</code>. A ramp colour is the colour itself; a
+            role follows the brand and keeps its contrast pairs.
+          </p>
+        </u-group-box>
+
+        <u-group-box level="2" title="Surfaces and ink">
+          <p>
+            Most of a screen is not a role colour at all — it is surfaces stacked by height and
+            text in three strengths.
+          </p>
+          <div class="swatch-grid">
+            ${SURFACE_TOKENS.map(([token, job]) => html`
+              <span class="swatch">
+                <span class="swatch-chip" style="background: var(${token})"></span>
+                <code>${token}</code>
+                <span class="swatch-note">${job} · ${readToken(token) || '—'}</span>
+              </span>
+            `)}
+            ${INK_TOKENS.map(([token, job]) => html`
+              <span class="swatch">
+                <span class="swatch-chip swatch-chip--ink" style="color: var(${token})">Aa</span>
+                <code>${token}</code>
+                <span class="swatch-note">${job} · ${readToken(token) || '—'}</span>
+              </span>
+            `)}
+          </div>
+        </u-group-box>
+
+        <u-group-box level="2" title="Which token goes where">
+          <p>
+            The places people most often guess. A guessed name that does not exist still
+            renders — its fallback colour is drawn — and then silently ignores the theme and
+            the brand. Use these.
+          </p>
+          <div class="table-scroll" role="region" aria-label="Which token goes where" tabindex="0">
+          <table>
+            <colgroup>
+              <col style="width: 16rem" />
+              <col />
+            </colgroup>
+            <thead><tr><th>Place</th><th>Token</th></tr></thead>
+            <tbody>
+              ${TOKEN_PLACES.map(([place, token]) => html`<tr><td>${place}</td><td><code>${token}</code></td></tr>`)}
+            </tbody>
+          </table>
+          </div>
+        </u-group-box>
+
+        <u-group-box level="2" title="Chart colours — eight, in order">
+          <p>
+            Charts colour <strong>series</strong> with <code>--u-chart-color-1</code> …
+            <code>-8</code>: series one takes slot one, and so on. Never cycle — a ninth series
+            is folded into "Other" or split into small multiples — and a series keeps its colour
+            when a filter hides the others. The eight were chosen together (similar lightness,
+            separable under red–green colour-vision deficiency), so they do not follow the brand
+            colour, and none of them is a status colour. Slot six is light on white: a chart with
+            six or more series needs a legend or direct labels.
+          </p>
+          <div class="chart-swatches">
+            ${CHART_SLOTS.map(n => html`
+              <span class="chart-swatch">
+                <span class="swatch-chip" style="background: var(--u-chart-color-${n})"></span>
+                <span class="swatch-note">${n} · ${readToken(`--u-chart-color-${n}`) || '—'}</span>
+              </span>
+            `)}
+          </div>
         </u-group-box>
 
         <u-group-box level="2" title="Radius">

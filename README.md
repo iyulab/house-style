@@ -14,7 +14,7 @@ separate docs site; the page above is the only place to read it.
 
 The live page is organized into sections:
 
-- **Visual identity & tokens** — type scale, radius, elevation
+- **Visual identity & tokens** — type scale, colour roles, surfaces and ink, chart colours, radius, elevation
 - **Layout & viewport** — the responsive sidebar shell, nav/routes, breakpoints
 - **Component depth** — surfaces and controls at the standard radius and elevation
 - **Data patterns** — how tabular/record data is presented

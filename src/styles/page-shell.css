@@ -90,3 +90,93 @@ pre code {
 .table-scroll > table {
   min-width: 36rem;
 }
+
+/* Colour swatches on the identity page. The chip paints the token itself (`var(--token)`), and
+ * the note beside it prints the resolved value — both read live, so the page follows the theme.
+ */
+.swatch-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-md, 12px);
+}
+.swatch-row {
+  display: grid;
+  grid-template-columns: 6rem repeat(3, minmax(0, 1fr));
+  gap: var(--u-space-md, 12px);
+  align-items: center;
+}
+.swatch-role {
+  font-weight: 600;
+}
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--u-space-md, 12px);
+}
+.swatch {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  column-gap: var(--u-space-sm, 8px);
+  align-items: center;
+}
+.swatch > code,
+.swatch > .swatch-note {
+  grid-column: 2;
+  justify-self: start;
+  overflow-wrap: anywhere;
+}
+.swatch-chip {
+  grid-row: span 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-md);
+}
+.swatch-chip--ink {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: var(--u-bg-color);
+}
+.swatch-note {
+  color: var(--u-txt-color-weak);
+  font-size: var(--u-text-caption-size);
+}
+.chart-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: var(--u-space-sm, 8px);
+}
+.chart-swatch {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+}
+.chart-swatch .swatch-chip {
+  flex: none;
+}
+@media (max-width: 640px) {
+  .swatch-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Prose tables — the guide's decision tables. Without these rules they drew in the browser's
+ * default look: centred headers, no row rules, cramped cells.
+ */
+.table-scroll > table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  border-bottom: 1px solid var(--u-border-color);
+  text-align: start;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--u-bg-color-raised);
+  color: var(--u-txt-color-strong);
+  font-weight: 600;
+}
