@@ -133,7 +133,7 @@ export default function NewOrderPage() {
       <div>
         <FormSection title="Customer">
           <FormRow full>
-            <UInput label="Customer name" value={customer} onChange={(e) => setCustomer((e.target as UInputElement).value ?? '')} />
+            <UInput autofocus label="Customer name" value={customer} onChange={(e) => setCustomer((e.target as UInputElement).value ?? '')} />
           </FormRow>
         </FormSection>
       </div>
