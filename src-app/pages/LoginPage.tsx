@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react';
 import type { UInput as UInputElement } from '@iyulab/components';
 import { UAlert, UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
@@ -13,12 +13,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const usernameRef = useRef<UInputElement>(null);
 
   useEffect(() => {
     const t1 = window.setTimeout(() => setBrandIn(true), 300);
     const t2 = window.setTimeout(() => setDrawerOpen(true), 700);
     return () => { window.clearTimeout(t1); window.clearTimeout(t2); };
   }, []);
+
+  // Sign-in is the one thing this screen is for, so the username field takes focus as soon as
+  // the panel opens. Nothing else places it: this route sits outside the app shell (which does
+  // this for its routes), and the panel is a non-modal drawer, which by design does not move
+  // focus when it opens.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const field = usernameRef.current;
+    void field?.updateComplete.then(() => field.focus());
+  }, [drawerOpen]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -75,6 +86,7 @@ export default function LoginPage() {
           </p>
 
           <UInput
+            ref={usernameRef}
             label="Username"
             name="username"
             type="text"
