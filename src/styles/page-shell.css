@@ -213,3 +213,66 @@ pre code {
   border-radius: 0 0 var(--u-radius-md) var(--u-radius-md);
   font-size: var(--u-text-caption-size);
 }
+
+/* Landing page ("Start here") — numbered steps with a copyable code block each, and the
+ * three-tier map of the guide. */
+.start-steps,
+.start-recipe {
+  margin: 0;
+  padding-inline-start: var(--u-space-xl, 24px);
+  display: grid;
+  gap: var(--u-space-md, 12px);
+}
+.start-steps > li,
+.start-recipe > li {
+  min-width: 0; /* grid items default to min-content — a long code line would widen the page */
+}
+.start-steps p,
+.start-recipe li {
+  margin: 0 0 var(--u-space-xs, 4px);
+}
+.start-code {
+  display: flex;
+  flex-wrap: wrap; /* on a narrow screen the copy button goes under the code, not beside it */
+  align-items: flex-start;
+  gap: var(--u-space-sm, 8px);
+}
+.start-code pre {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+.start-tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--u-space-xl, 24px);
+}
+.start-tier h3 {
+  margin: 0 0 var(--u-space-sm, 8px);
+  font-size: var(--u-text-title-size, 1rem);
+  font-weight: var(--u-text-title-weight, 600);
+}
+.start-tier ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--u-space-md, 12px);
+}
+.start-tier li {
+  display: grid;
+  gap: 2px;
+}
+.start-tier li span {
+  color: var(--u-txt-color-weak, #616161);
+  font-size: var(--u-text-caption-size, 0.875rem);
+}
+house-style-page a {
+  color: var(--u-link-txt-color);
+}
+.start-tier a {
+  font-weight: 500;
+  text-decoration: none;
+}
+.start-tier a:hover {
+  text-decoration: underline;
+}

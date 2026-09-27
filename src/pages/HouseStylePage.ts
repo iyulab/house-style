@@ -3,13 +3,29 @@ import { customElement } from 'lit/decorators.js';
 
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
+import '@iyulab/components/dist/components/copy-button/UCopyButton.js';
+import '../internals/DemoSource.js';
+import { CATEGORIES, TIERS } from '../categories.js';
+import listScreenSrc from '../sections/data-patterns/ListScreenDemo.ts?raw';
 
 const base = import.meta.env.BASE_URL;
 
+const INSTALL = `npm install @iyulab/components @iyulab/modern-app @iyulab/enterprise`;
+
+const BOOT = `import { html } from 'lit';
+import { app } from '@iyulab/modern-app';
+import '@iyulab/enterprise/styles/preset.css';   // the house style: tokens, type, density
+
+await app.load({
+  root: document.body,
+  layout: { type: 'sidebar', title: 'Orders', main: [{ type: 'link', label: 'Orders', href: '/orders' }] },
+  routes: [{ path: '/orders', render: () => html\`<orders-page></orders-page>\` }],
+});`;
+
 /**
- * The landing page — an introduction to how this site is graded. The seven
- * categories used to be stacked below this page's scroll; they now live at
- * their own routes (see main.ts) and are reached through the sidebar.
+ * The landing page — the way in for someone about to build a screen: install, boot, build one
+ * list screen, then where each kind of answer lives. How the guide came to be (the design audit
+ * it grew out of) is at the bottom, not the top: it is not what a new reader asks first.
  */
 @customElement('house-style-page')
 export class HouseStylePage extends LitElement {
@@ -21,28 +37,70 @@ export class HouseStylePage extends LitElement {
     return html`
       <u-page-header
         title="iyulab House Style"
-        subtitle="What is decided, cited live from source — and what is not, said plainly"
+        subtitle="How iyulab business screens look and behave — and the parts that build them"
       ></u-page-header>
 
-      <u-group-box level="2" title="How to read this page">
-        <p>
-          Seven categories, graded the same way the design audit behind this site graded
-          them: some are shown live, generated from the actual tokens and components
-          currently loaded on this site, so this site cannot drift out of sync with its
-          own source. Others are described from what the code does today. A few are
-          named as open questions rather than answered — this page does not invent a
-          design decision just to fill a section.
-        </p>
+      <u-group-box level="2" title="Start here">
+        <ol class="start-steps">
+          <li>
+            <p><strong>Install</strong> the components, the app shell, and the house preset.</p>
+            <div class="start-code">
+              <pre><code>${INSTALL}</code></pre>
+              <u-copy-button .value=${INSTALL} label="Copy command"></u-copy-button>
+            </div>
+          </li>
+          <li>
+            <p>
+              <strong>Load the preset and start the app.</strong> The preset is one stylesheet —
+              every component on this site reads its tokens, so importing it is what makes a
+              screen look like this one.
+            </p>
+            <div class="start-code">
+              <pre><code>${BOOT}</code></pre>
+              <u-copy-button .value=${BOOT} label="Copy code"></u-copy-button>
+            </div>
+          </li>
+          <li>
+            <p>
+              <strong>Build your first screen</strong> from a working one — below.
+            </p>
+          </li>
+        </ol>
       </u-group-box>
 
-      <u-group-box level="2" title="From graded categories to a real screen">
-        <a slot="actions" href="${base}app/">See it assembled into a real app →</a>
+      <u-group-box level="2" title="Recipe: a list screen">
+        <a slot="actions" href="${base}data-patterns">See it running →</a>
         <p>
-          Every category above is graded in isolation. The same tokens and components
-          also sit inside a small assembled reference app — sign in, browse and cancel
-          orders, walk a multi-step wizard — built the way a real consumer app would use
-          them rather than the way a grading page displays them.
+          Most business apps start with a list: a table with a filter row and actions on the
+          selected rows. This is the one the Data patterns page runs live — copy it whole, then
+          replace the columns and the data. The "no data yet" and "no matches" states that go
+          with it are on the same page.
         </p>
+        <ol class="start-recipe">
+          <li><strong>Table</strong> — <code>u-rich-table</code> with columns, a filter row and row selection switched on; status renders as <code>u-tag</code> through the column's <code>render</code>.</li>
+          <li><strong>Filtering</strong> — the table emits <code>filter-change</code> and leaves the data to you: filter in place, as here, or turn it into a server query.</li>
+          <li><strong>Bulk actions</strong> — in the <code>bulk-actions</code> slot, shown only while rows are selected, with how many.</li>
+          <li><strong>On a route</strong> — put a <code>u-page-header</code> above it to name the screen; the shell already gives the content area its gutter.</li>
+        </ol>
+        <house-demo-source label="ListScreenDemo.ts" .source=${listScreenSrc}></house-demo-source>
+      </u-group-box>
+
+      <u-group-box level="2" title="Where to find what">
+        <div class="start-tiers">
+          ${TIERS.map(tier => html`
+            <section class="start-tier">
+              <h3>${tier}</h3>
+              <ul>
+                ${CATEGORIES.filter(c => c.tier === tier).map(c => html`
+                  <li><a href="${base}${c.path}">${c.label}</a><span>${c.summary}</span></li>
+                `)}
+                ${tier === 'Screens' ? html`
+                  <li><a href="${base}app/">Reference app</a><span>A small complete app — sign in, browse and cancel orders, a multi-step wizard — built the way your app would be.</span></li>
+                ` : ''}
+              </ul>
+            </section>
+          `)}
+        </div>
       </u-group-box>
 
       <u-group-box level="2" title="Using these components from React">
@@ -64,6 +122,16 @@ function Form() {
         <p>
           <code>@lit/react</code> and <code>react</code> are peer dependencies — install
           them alongside whichever package's <code>/react</code> subpath you import.
+        </p>
+      </u-group-box>
+
+      <u-group-box level="2" title="About this guide">
+        <p>
+          This guide grew out of a design audit that graded seven categories. Where a decision
+          exists it is shown live — generated from the tokens and components loaded on this
+          site, so the guide cannot drift from its own source. Where the code decides something
+          without a written rule, the page describes what the code does today. Where nothing is
+          decided yet, the page says so under "Not yet decided" rather than inventing an answer.
         </p>
       </u-group-box>
     `;

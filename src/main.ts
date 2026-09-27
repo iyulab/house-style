@@ -13,6 +13,7 @@ import '@iyulab/components/dist/components/popover/UPopover.js';
 import '@iyulab/components/dist/components/menu/UMenu.js';
 import '@iyulab/components/dist/components/menu-item/UMenuItem.js';
 import './styles/page-shell.css';
+import { CATEGORIES, TIERS } from './categories.js';
 import './pages/HouseStylePage.js';
 import './sections/IdentitySection.js';
 import './sections/LayoutSection.js';
@@ -24,22 +25,16 @@ import './sections/VoiceA11ySection.js';
 
 const base = import.meta.env.BASE_URL;
 
-/**
- * The single source for the seven categories — everything that used to require
- * editing two hand-paired arrays (`routes` below, and the sidebar's `main` links)
- * every time a category was added, renamed, or reordered. One array generates both,
- * the same way a real app would generate a nav menu and its routes from one list of
- * screens instead of maintaining the pairing by hand.
- */
-const CATEGORIES = [
-  { path: 'identity', label: 'Visual identity & tokens', icon: 'identity', render: () => html`<house-identity-section></house-identity-section>` },
-  { path: 'layout', label: 'Layout & viewport', icon: 'layout', render: () => html`<house-layout-section></house-layout-section>` },
-  { path: 'depth', label: 'Component depth', icon: 'layers', render: () => html`<house-depth-section></house-depth-section>` },
-  { path: 'data-patterns', label: 'Data patterns', icon: 'table', render: () => html`<house-data-patterns-section></house-data-patterns-section>` },
-  { path: 'flows', label: 'User flows', icon: 'flow', render: () => html`<house-flows-section></house-flows-section>` },
-  { path: 'feedback', label: 'Feedback & motion', icon: 'pulse', render: () => html`<house-feedback-section></house-feedback-section>` },
-  { path: 'voice-a11y', label: 'Voice, tone & accessibility', icon: 'message', render: () => html`<house-voice-a11y-section></house-voice-a11y-section>` },
-];
+/** Each category's page — keyed by the path `categories.ts` declares. */
+const SECTIONS: Record<string, () => unknown> = {
+  identity: () => html`<house-identity-section></house-identity-section>`,
+  layout: () => html`<house-layout-section></house-layout-section>`,
+  depth: () => html`<house-depth-section></house-depth-section>`,
+  'data-patterns': () => html`<house-data-patterns-section></house-data-patterns-section>`,
+  flows: () => html`<house-flows-section></house-flows-section>`,
+  feedback: () => html`<house-feedback-section></house-feedback-section>`,
+  'voice-a11y': () => html`<house-voice-a11y-section></house-voice-a11y-section>`,
+};
 
 const navLinkStyles = { host: { '--link-icon-color': 'var(--u-primary-color)' } };
 
@@ -52,7 +47,7 @@ app.load({
   // navigation under GitHub Pages' subpath deployment.
   routes: [
     { index: true, render: () => html`<house-style-page></house-style-page>` },
-    ...CATEGORIES.map(c => ({ path: c.path, render: c.render })),
+    ...CATEGORIES.map(c => ({ path: c.path, render: SECTIONS[c.path] })),
   ],
 
   theme: {
@@ -73,9 +68,15 @@ app.load({
     // highlight) comes for free from SidebarLayout's own URLPattern matching,
     // no extra wiring needed.
     main: [
-      { type: 'link', label: 'Overview', icon: 'home', lib: 'house', styles: navLinkStyles, href: base },
-      ...CATEGORIES.map(c => ({
-        type: 'link' as const, label: c.label, icon: c.icon, lib: 'house', styles: navLinkStyles, href: `${base}${c.path}`,
+      { type: 'link', label: 'Start here', icon: 'home', lib: 'house', styles: navLinkStyles, href: base },
+      // Three tiers, the order design-system docs are read in — foundations, then patterns built
+      // from them, then whole screens. The same `TIERS` list drives the landing page's map.
+      ...TIERS.map(tier => ({
+        type: 'section' as const,
+        title: tier,
+        items: CATEGORIES.filter(c => c.tier === tier).map(c => ({
+          type: 'link' as const, label: c.label, icon: c.icon, lib: 'house', styles: navLinkStyles, href: `${base}${c.path}`,
+        })),
       })),
       // `type: 'group'` (collapsible sub-nav) is a real `SidebarItem` variant this guide's
       // own sidebar had never exercised — a real app groups external/secondary links this
