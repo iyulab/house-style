@@ -8,7 +8,7 @@ import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 
-import { COLUMNS, ROWS, renderStatusBadge } from './constants.js';
+import { COLUMNS, ROWS, renderStatusTag } from './constants.js';
 
 /**
  * `u-master-detail-layout` doesn't manage selection — it only shows or hides its
@@ -66,7 +66,7 @@ export class MasterDetailDemo extends LitElement {
               <u-info-field label="Customer" .value=${this.selectedRow.customer}></u-info-field>
               <u-info-field label="Total" .value=${this.selectedRow.total}></u-info-field>
             </u-info-section>
-            ${renderStatusBadge(this.selectedRow.status)}
+            ${renderStatusTag(this.selectedRow.status)}
           </div>
         ` : ''}
       </u-master-detail-layout>

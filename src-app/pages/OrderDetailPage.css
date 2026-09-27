@@ -1,0 +1,55 @@
+/* The master list of the master-detail screen. A plain list of links drew in the browser's own
+ * link colours (blue, underlined, purple once visited) — the one place in the app that did not
+ * look like the rest of it. Each row now carries the two things you pick an order by (number,
+ * customer) plus its status, and the open order is marked the way the sidebar marks the current
+ * page: a filled surface, not bold text alone.
+ */
+.order-master {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--u-space-sm);
+}
+
+.order-master__item {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-sm);
+  padding: var(--u-space-sm) var(--u-space-md);
+  border-radius: var(--u-radius-md);
+  color: var(--u-txt-color);
+  text-decoration: none;
+}
+
+.order-master__item:hover {
+  background: var(--u-bg-color-hover);
+}
+
+.order-master__item:focus-visible {
+  outline: 2px solid var(--u-primary-color);
+  outline-offset: -2px;
+}
+
+.order-master__item[aria-current='page'] {
+  background: var(--u-primary-bg-color);
+}
+
+.order-master__text {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.order-master__id {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-master__customer {
+  overflow: hidden;
+  color: var(--u-txt-color-weak);
+  font-size: var(--u-text-label-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

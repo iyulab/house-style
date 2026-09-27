@@ -17,7 +17,7 @@ import type { UInput } from '@iyulab/components/dist/components/input/UInput.js'
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 import type { UDatePicker } from '@iyulab/components/dist/components/date-picker/UDatePicker.js';
 
-import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusBadge } from './constants.js';
+import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
 
 /**
  * Search screen recipe — the shape most internal line-of-business screens take:
@@ -48,7 +48,7 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusBadge } from './constants.js';
 const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '150px' },
   { key: 'customer', label: 'Customer', width: '180px' },
-  { key: 'status', label: 'Status', width: '130px', render: renderStatusBadge },
+  { key: 'status', label: 'Status', width: '130px', render: renderStatusTag },
   { key: 'total', label: 'Total', align: 'right', width: '140px' },
 ];
 

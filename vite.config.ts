@@ -1,5 +1,27 @@
 import { resolve } from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+
+/**
+ * Dev-server twin of the deploy workflow's `404.html`: a deep link under `/house-style/app/`
+ * (`/app/orders/G-2026-0512`, a reload on any app screen) is served the reference app's
+ * `app/index.html`, not the guide's `index.html`. Without it, Vite's single SPA fallback answered
+ * every unknown path with the guide, whose router found no such page and rendered nothing — the
+ * published site worked and the dev server did not.
+ */
+function appDeepLinkFallback(): Plugin {
+  return {
+    name: 'house-style-app-deep-link-fallback',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const url = req.url ?? ''
+        const path = url.split('?')[0]
+        const isAppRoute = path.startsWith('/house-style/app/') && !/\.[a-z0-9]+$/i.test(path)
+        if (isAppRoute && req.headers.accept?.includes('text/html')) req.url = '/house-style/app/index.html'
+        next()
+      })
+    },
+  }
+}
 
 export default defineConfig({
   // GitHub Pages project-site subpath: https://iyulab.github.io/house-style/
@@ -34,5 +56,5 @@ export default defineConfig({
     exclude: ['@iyulab/router', '@iyulab/components', '@iyulab/data-components'],
     include: ['react-dom/client'],
   },
-  plugins: [],
+  plugins: [appDeepLinkFallback()],
 })

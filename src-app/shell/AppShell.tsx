@@ -43,7 +43,7 @@ async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
 async function signOut() {
   await auth.logout();
   // A hard `location.href` navigation would reload the page — and with it, the MSW mock
-  // backend's in-memory session (see mocks/handlers.ts). Route client-side instead, same
+  // backend's in-memory orders (see mocks/handlers.ts). Route client-side instead, same
   // idiom as LoginPage.tsx's post-login redirect.
   history.pushState({}, '', base + 'login');
   window.dispatchEvent(new PopStateEvent('popstate'));

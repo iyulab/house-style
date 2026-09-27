@@ -58,8 +58,23 @@ pre {
   background: var(--u-bg-color-raised, #FAFAFA);
   overflow-x: auto;
 }
+/* Every code span on the guide — not only blocks — reads the house monospace token. Before, only
+ * `pre code` had a font stack, so the ~100 inline `<code>` spans (token names, type-scale specs)
+ * fell back to the browser's generic `monospace`, which on a Korean Windows install is a
+ * legacy bitmap-era face: narrow, uneven, and visibly unlike the rest of the page.
+ */
+code,
+kbd,
+samp {
+  font-family: var(--u-font-mono);
+  font-size: 0.9em;
+}
+:not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--u-radius-sm);
+  background: var(--u-bg-color-hover);
+}
 pre code {
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   background: none;
   padding: 0;
 }

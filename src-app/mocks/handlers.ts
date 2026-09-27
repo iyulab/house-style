@@ -1,9 +1,21 @@
 import { http, HttpResponse } from 'msw';
 import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, PRODUCTS, ORDER_ITEMS, type Order, type OrderItem } from './data.js';
 
-// In-memory session + mutable order list, scoped to one page load — this is a demo backend,
-// not a persistence layer. Reset on every reload, same as the fixture arrays it wraps.
-let session: typeof DEMO_USER | null = null;
+// A demo backend, not a persistence layer: the order list lives in memory and resets on reload.
+// The sign-in does not — it is kept in `sessionStorage` (this tab only), so a reload or a deep link
+// to an app screen lands on that screen instead of the login page. A real backend keeps its session
+// across a reload, and a reference app that logged you out on every refresh taught the opposite.
+const SESSION_KEY = 'house-style-demo-session';
+const readSession = (): typeof DEMO_USER | null => {
+  try { return sessionStorage.getItem(SESSION_KEY) ? DEMO_USER : null; } catch { return null; }
+};
+const writeSession = (on: boolean): void => {
+  try {
+    if (on) sessionStorage.setItem(SESSION_KEY, '1');
+    else sessionStorage.removeItem(SESSION_KEY);
+  } catch { /* storage unavailable — the session lasts this page load */ }
+};
+let session: typeof DEMO_USER | null = readSession();
 const orders: Order[] = ORDERS.map((o) => ({ ...o }));
 let nextOrderSeq = orders.length;
 const orderItems: OrderItem[] = ORDER_ITEMS.map((i) => ({ ...i }));
@@ -20,6 +32,7 @@ export const handlers = [
     const body = (await request.json()) as { Username?: string; Password?: string };
     if (body.Username === DEMO_CREDENTIALS.Username && body.Password === DEMO_CREDENTIALS.Password) {
       session = DEMO_USER;
+      writeSession(true);
       return HttpResponse.json(DEMO_USER);
     }
     return new HttpResponse(null, { status: 401 });
@@ -27,6 +40,7 @@ export const handlers = [
 
   http.post('*/api/auth/logout', () => {
     session = null;
+    writeSession(false);
     return new HttpResponse(null, { status: 204 });
   }),
 

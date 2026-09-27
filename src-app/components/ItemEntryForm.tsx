@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { UButton, UInput, USelect } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import type { Product } from '../mocks/data.js';
@@ -42,7 +42,19 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 'var(--u-space-md, 16px)', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+    // A grid with declared tracks, not a wrapping flex row: an empty `u-select` has no intrinsic
+    // width (nothing is selected yet, so it measured the chevron alone — 45px), and flex sized it to
+    // that. Each control fills its track (`--u-*-display: block`), so the row reads as one form line.
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(12rem, 2fr) minmax(7rem, 1fr) minmax(8rem, 1fr) auto',
+        gap: 'var(--u-space-md, 16px)',
+        alignItems: 'end',
+        ['--u-select-display' as string]: 'block',
+        ['--u-input-display' as string]: 'block',
+      } as CSSProperties}
+    >
       <USelect
         label="Product"
         value={productId}

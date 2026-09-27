@@ -1,4 +1,6 @@
 import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+// `renderStatusTag` creates the element, so this module is what registers it.
+import '@iyulab/components/dist/components/tag/UTag.js';
 
 export const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
@@ -11,23 +13,25 @@ export const COLUMNS: ColumnDef[] = [
       { value: 'shipped', label: 'Shipped' },
       { value: 'delivered', label: 'Delivered' },
     ],
-    render: renderStatusBadge,
+    render: renderStatusTag,
   },
   { key: 'total', label: 'Total', align: 'right', width: '120px' },
 ];
 
-const STATUS_BADGE_COLOR: Record<string, 'neutral' | 'info' | 'success'> = {
-  pending: 'neutral',
+const STATUS_TAG_COLOR: Record<string, 'gray' | 'info' | 'success'> = {
+  pending: 'gray',
   shipped: 'info',
   delivered: 'success',
 };
 
-export function renderStatusBadge(value: unknown): HTMLElement {
+/** A status is a label, so it is a `u-tag` with the tinted fill — see the guide's status convention. */
+export function renderStatusTag(value: unknown): HTMLElement {
   const status = String(value);
-  const badge = document.createElement('u-badge');
-  badge.setAttribute('color', STATUS_BADGE_COLOR[status] ?? 'neutral');
-  badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-  return badge;
+  const tag = document.createElement('u-tag');
+  tag.setAttribute('variant', 'filled');
+  tag.setAttribute('color', STATUS_TAG_COLOR[status] ?? 'neutral');
+  tag.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+  return tag;
 }
 
 export const ROWS = [

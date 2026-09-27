@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   display: block;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--u-primary-color) 85%, black) 0%, var(--u-primary-color) 50%, color-mix(in srgb, var(--u-primary-color) 85%, black) 100%);
+  background: linear-gradient(135deg, var(--u-primary-color-strong) 0%, var(--u-primary-color) 60%, color-mix(in srgb, var(--u-primary-color) 80%, white) 100%);
   overflow: hidden;
 }
 
@@ -11,9 +11,9 @@
   left: clamp(24px, 5vw, 80px);
   bottom: clamp(40px, 8vh, 100px);
   max-width: min(640px, 70vw);
-  color: white;
-  font-family: Georgia, 'Times New Roman', serif;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+  color: var(--u-primary-txt-color, #fff);
+  /* 하우스 글꼴 그대로 — 첫 화면이 가이드와 다른 서체를 쓰면 «이 앱은 하우스 스타일로 지었다» 는 말이 첫 장부터 틀린다. */
+  font-family: var(--u-font-base);
   transform: translateY(120%);
   opacity: 0;
   transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease-out;
@@ -25,17 +25,17 @@
 }
 
 .login-page__brand h1 {
-  font-size: clamp(36px, 5.5vw, 64px);
-  font-weight: 600;
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0;
-  line-height: 1;
+  line-height: 1.15;
 }
 
 .login-page__brand p {
-  font-size: clamp(14px, 1.4vw, 18px);
+  font-size: clamp(14px, 1.3vw, 17px);
   margin: var(--u-space-md, 16px) 0 0;
-  font-style: italic;
-  opacity: 0.92;
+  opacity: 0.88;
 }
 
 .login-page__panel::part(panel) {
@@ -68,8 +68,9 @@
 }
 
 .login-page__form h2 {
-  font-size: var(--u-font-size-title, 22px);
-  font-weight: 600;
+  font-size: var(--u-text-title-size);
+  font-weight: var(--u-text-title-weight);
+  letter-spacing: var(--u-text-title-tracking);
   margin: 0 0 var(--u-space-xs, 6px);
 }
 
@@ -85,8 +86,8 @@
   padding: var(--u-space-sm, 10px) var(--u-space-md, 12px);
   background: var(--u-bg-color-hover, #f3f4f6);
   border-radius: var(--u-radius-md, 6px);
-  color: var(--u-text-color-secondary, #5b6777);
-  font-size: var(--u-font-size-sm, 13px);
+  color: var(--u-txt-color-weak);
+  font-size: var(--u-text-label-size);
 }
 
 .login-page__hint code {
@@ -94,13 +95,4 @@
   background: var(--u-bg-color-raised, white);
   border-radius: var(--u-radius-sm, 4px);
   font-size: 0.95em;
-}
-
-.login-page__error {
-  padding: var(--u-space-sm, 10px) var(--u-space-md, 12px);
-  background: var(--u-color-danger-bg, #fef2f2);
-  border: 1px solid var(--u-color-danger-border, #fecaca);
-  border-radius: var(--u-radius-md, 6px);
-  color: var(--u-color-danger, #b91c1c);
-  font-size: var(--u-font-size-sm, 13px);
 }

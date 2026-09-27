@@ -126,7 +126,7 @@ export class DataPatternsSection extends LitElement {
             with its own filter row, selection tracking and bulk-action slot switched on.
             Nothing here is a house-style-specific component; the assembly itself is the
             answer to "how do these already-built pieces fit together." The Status column
-            renders through <code>ColumnDef.render</code> as <code>u-badge</code> — see the
+            renders through <code>ColumnDef.render</code> as <code>u-tag</code> — see the
             convention below for which color means what.
           </p>
           <p>
@@ -214,23 +214,33 @@ export class DataPatternsSection extends LitElement {
           <house-data-patterns-master-detail></house-data-patterns-master-detail>
         </u-group-box>
 
-        <u-group-box level="2" title="Status → badge convention">
+        <u-group-box level="2" title="Status → tag convention">
           <p>
             Color is reserved for state a user needs to notice at a glance — the table
             above renders <code>status</code> through a <code>ColumnDef.render</code> hook
             that maps each value to a role token, never a raw hue.
           </p>
+          <p>
+            A status is a <strong>label</strong>, so it is a <code>u-tag</code> with
+            <code>variant="filled"</code> — a tinted fill that gives every state the same
+            weight, so the colour carries the meaning and no state shouts over the row.
+            <code>u-badge</code> is for counts and notifications ("3 selected", an unread
+            dot); a solid badge per row turns a column of statuses into a column of alarms.
+            A state that should carry no colour is <code>color="gray"</code>, not
+            <code>neutral</code> — <code>neutral</code> follows the brand colour, which here is
+            the same blue as <code>info</code>, so "Pending" and "Shipped" would look alike.
+          </p>
           <u-info-section min="200">
             <u-info-field label="pending">
-              <u-badge color="neutral">Pending</u-badge>
-              <div>Waiting — no action needed yet, so it stays neutral rather than a warning color.</div>
+              <u-tag variant="filled" color="gray">Pending</u-tag>
+              <div>Waiting — no action needed yet, so it stays gray rather than a warning color.</div>
             </u-info-field>
             <u-info-field label="shipped">
-              <u-badge color="info">Shipped</u-badge>
+              <u-tag variant="filled" color="info">Shipped</u-tag>
               <div>In transit — informational, not a call to action.</div>
             </u-info-field>
             <u-info-field label="delivered">
-              <u-badge color="success">Delivered</u-badge>
+              <u-tag variant="filled" color="success">Delivered</u-tag>
               <div>Done — the one state worth a positive color, not just "no longer pending."</div>
             </u-info-field>
           </u-info-section>

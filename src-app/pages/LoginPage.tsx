@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import type { UInput as UInputElement } from '@iyulab/components';
-import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
+import { UAlert, UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
 import { DEMO_CREDENTIALS } from '../mocks/data.js';
 import './LoginPage.css';
@@ -35,10 +35,9 @@ export default function LoginPage() {
       setPassword('');
       return;
     }
-    // A hard `location.href` redirect would reload the page — and with it, the
-    // MSW mock backend's in-memory session (see mocks/handlers.ts), stranding
-    // the freshly-authenticated user back on /login. Route client-side instead
-    // so the Router's own popstate handler re-runs the auth guard in place.
+    // Route client-side rather than with a hard `location.href` redirect: a reload restarts the
+    // whole app (and resets the MSW mock backend's in-memory orders — see mocks/handlers.ts) for no
+    // reason. The Router's own popstate handler re-runs the auth guard in place.
     history.pushState({}, '', import.meta.env.BASE_URL + 'app/');
     window.dispatchEvent(new PopStateEvent('popstate'));
   }
@@ -94,7 +93,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword((e.target as UInputElement).value ?? '')}
           />
 
-          {error && <div className="login-page__error" role="alert">{error}</div>}
+          {error && <UAlert open status="error">{error}</UAlert>}
 
           <UButton type="submit" color="primary" loading={loading} disabled={loading}>
             Sign in

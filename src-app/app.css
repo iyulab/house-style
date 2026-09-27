@@ -1,0 +1,9 @@
+/* App-wide rules the components cannot set for us: code spans read the house monospace token
+ * rather than the browser's generic `monospace` (see the guide's page-shell.css for why).
+ */
+code,
+kbd,
+samp {
+  font-family: var(--u-font-mono);
+  font-size: 0.9em;
+}

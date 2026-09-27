@@ -3,13 +3,15 @@ import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 // 하우스 스타일이 «화면을 무엇으로 조립하는가» 로 가르치는 프리미티브들 — 가이드(`src/`)가
 // 227회 쓰는 동안 이 레퍼런스 앱은 0회 썼고, 그 어긋남을 `예제 정합` 자가 지목했다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
+import { StatusTag } from '../components/StatusTag.js';
+import './OrderDetailPage.css';
 import { InfoSection } from '@iyulab/modern-app/react/InfoSection.js';
 import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
 import { GroupBox } from '@iyulab/modern-app/react/GroupBox.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { FormSection, FormRow } from '@iyulab/enterprise';
-import { UButton, UBadge, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
+import { UButton, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';
 import { svc } from '../lib/odata.js';
@@ -149,24 +151,27 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
       {/* Default (unnamed) slot = the master pane; the detail pane is the named "detail"
           slot below — confirmed against MasterDetailLayout's own template, which is the
           reverse of what the prop names might suggest at a glance. */}
-      <div style={{ padding: 'var(--u-space-md, 16px)' }}>
+      <nav className="order-master" aria-label="Orders">
         {orders.map((o) => (
           <a
             key={o.Id}
+            className="order-master__item"
             href={`${import.meta.env.BASE_URL}app/orders/${o.Id}`}
-            style={{ display: 'block', padding: 'var(--u-space-sm, 10px) 0', fontWeight: o.Id === orderId ? 600 : 400 }}
+            aria-current={o.Id === orderId ? 'page' : undefined}
           >
-            {o.Id} — {o.Customer}
+            <span className="order-master__text">
+              <span className="order-master__id">{o.Id}</span>
+              <span className="order-master__customer">{o.Customer}</span>
+            </span>
+            <StatusTag status={o.Status} />
           </a>
         ))}
-      </div>
+      </nav>
       <div slot="detail" style={{ padding: 'var(--u-space-lg, 18px)' }}>
         {order ? (
           <>
             <PageHeader title={order.Id} subtitle={order.Customer}>
-              <UBadge slot="status" color={order.Status === 'cancelled' ? 'danger' : 'neutral'}>
-                {order.Status}
-              </UBadge>
+              <StatusTag slot="status" status={order.Status} />
             </PageHeader>
 
             <InfoSection min={200}>

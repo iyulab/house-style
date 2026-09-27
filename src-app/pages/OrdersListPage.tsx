@@ -1,37 +1,24 @@
 import { useEffect, useState } from 'react';
 import { URichTableReact } from '@iyulab/data-components/react';
 import type { ColumnDefReact, FilterState } from '@iyulab/data-components/react';
-import { UBadge, UButton, UAlert } from '../lib/ui-react.js';
+import { UButton, UAlert } from '../lib/ui-react.js';
 // 화면 제목·액션 줄·결과 메시지·빈 상태는 손으로 짜지 않는다 — 가이드가 이름을 준 자리다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { svc } from '../lib/odata.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
+import { StatusTag } from '../components/StatusTag.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
 
-const STATUS_COLOR: Record<OrderStatus, 'neutral' | 'info' | 'success' | 'danger'> = {
-  pending: 'neutral',
-  shipped: 'info',
-  delivered: 'success',
-  cancelled: 'danger',
-};
-
 // `URichTableReact` widens `render` to accept a React node (that is the whole point of
-// `ColumnDefReact` over the vanilla `ColumnDef`) — so this returns JSX through the shared
-// `UBadge` wrapper instead of hand-building an element, and the wrapper's own class import
-// is what registers `<u-badge>`.
-function renderStatusBadge(value: unknown) {
-  const status = String(value) as OrderStatus;
-  return (
-    <UBadge color={STATUS_COLOR[status] ?? 'neutral'}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
-    </UBadge>
-  );
+// `ColumnDefReact` over the vanilla `ColumnDef`) — so this returns the shared badge as JSX.
+function renderStatusTag(value: unknown) {
+  return <StatusTag status={String(value) as OrderStatus} />;
 }
 
 // A hard `location.href` navigation would reload the page — and with it, the MSW mock
-// backend's in-memory session (see mocks/handlers.ts) and the Router's client-side state.
+// backend's in-memory orders (see mocks/handlers.ts) and the Router's client-side state.
 // Route client-side instead, same idiom as LoginPage.tsx's post-login redirect.
 function navigate(path: string) {
   history.pushState({}, '', path);
@@ -53,7 +40,7 @@ const COLUMNS: ColumnDefReact[] = [
       { value: 'delivered', label: 'Delivered' },
       { value: 'cancelled', label: 'Cancelled' },
     ],
-    render: renderStatusBadge,
+    render: renderStatusTag,
   },
   { key: 'Total', label: 'Total', width: '140px', align: 'right', render: (v) => `₩${Number(v).toLocaleString()}` },
 ];
