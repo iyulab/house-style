@@ -59,8 +59,26 @@ jobs:
           path: publish
           retention-days: 1
 
+  # The landing page's "Start here" path, run in a fresh project against the published packages.
+  # A guide whose copy-paste path does not render a screen is not deployed.
+  start-here:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - run: npm install
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run check:start-here
+
   deploy:
-    needs: build
+    needs: [build, start-here]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment:

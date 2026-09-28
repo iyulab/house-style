@@ -13,7 +13,8 @@
     "start": "vite",
     "build": "npm run typecheck && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:start-here": "node scripts/check-start-here.mjs"
   },
   "engines": {
     "node": ">=22.13.0"
@@ -32,6 +33,7 @@
     "echarts": "^6.1.0",
     "lit": "^3.3.2",
     "msw": "^2.7.0",
+    "playwright": "^1.62.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "typescript": "^6.0.2",

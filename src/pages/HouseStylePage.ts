@@ -6,21 +6,11 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/components/dist/components/copy-button/UCopyButton.js';
 import '../internals/DemoSource.js';
 import { CATEGORIES, TIERS } from '../categories.js';
+import { BOOT, CREATE, INDEX_HTML, INSTALL } from '../start-here.js';
 import listScreenSrc from '../sections/data-patterns/ListScreenDemo.ts?raw';
+import listConstantsSrc from '../sections/data-patterns/constants.ts?raw';
 
 const base = import.meta.env.BASE_URL;
-
-const INSTALL = `npm install @iyulab/components @iyulab/modern-app @iyulab/enterprise`;
-
-const BOOT = `import { html } from 'lit';
-import { app } from '@iyulab/modern-app';
-import '@iyulab/enterprise/styles/preset.css';   // the house style: tokens, type, density
-
-await app.load({
-  root: document.body,
-  layout: { type: 'sidebar', title: 'Orders', main: [{ type: 'link', label: 'Orders', href: '/orders' }] },
-  routes: [{ path: '/orders', render: () => html\`<orders-page></orders-page>\` }],
-});`;
 
 /**
  * The landing page — the way in for someone about to build a screen: install, boot, build one
@@ -33,6 +23,15 @@ export class HouseStylePage extends LitElement {
     return this;
   }
 
+  private renderCode(code: string, label: string) {
+    return html`
+      <div class="start-code">
+        <u-copy-button .value=${code} label=${label}></u-copy-button>
+        <pre><code>${code}</code></pre>
+      </div>
+    `;
+  }
+
   render() {
     return html`
       <u-page-header
@@ -43,26 +42,26 @@ export class HouseStylePage extends LitElement {
       <u-group-box level="2" title="Start here">
         <ol class="start-steps">
           <li>
-            <p><strong>Install</strong> the components, the app shell, and the house preset.</p>
-            <div class="start-code">
-              <pre><code>${INSTALL}</code></pre>
-              <u-copy-button .value=${INSTALL} label="Copy command"></u-copy-button>
-            </div>
+            <p><strong>Create the project</strong> — Vite with Lit and TypeScript. The template already sets the decorator options Lit components need.</p>
+            ${this.renderCode(CREATE, 'Copy commands')}
+          </li>
+          <li>
+            <p><strong>Install</strong> the components, the table, the app shell, and the house preset.</p>
+            ${this.renderCode(INSTALL, 'Copy command')}
           </li>
           <li>
             <p>
-              <strong>Load the preset and start the app.</strong> The preset is one stylesheet —
-              every component on this site reads its tokens, so importing it is what makes a
-              screen look like this one.
+              <strong>Load the preset and start the app.</strong> Replace <code>index.html</code>, then write
+              <code>src/main.ts</code>. The preset is one stylesheet — every component on this site reads its
+              tokens, so importing it is what makes a screen look like this one.
             </p>
-            <div class="start-code">
-              <pre><code>${BOOT}</code></pre>
-              <u-copy-button .value=${BOOT} label="Copy code"></u-copy-button>
-            </div>
+            ${this.renderCode(INDEX_HTML, 'Copy index.html')}
+            ${this.renderCode(BOOT, 'Copy main.ts')}
           </li>
           <li>
             <p>
-              <strong>Build your first screen</strong> from a working one — below.
+              <strong>Build your first screen</strong> from a working one — copy both files of the recipe below into
+              <code>src/</code>, then run <code>npm run dev</code>.
             </p>
           </li>
         </ol>
@@ -72,7 +71,7 @@ export class HouseStylePage extends LitElement {
         <a slot="actions" href="${base}data-patterns">See it running →</a>
         <p>
           Most business apps start with a list: a table with a filter row and actions on the
-          selected rows. This is the one the Data patterns page runs live — copy it whole, then
+          selected rows. This is the one the Data patterns page runs live — copy both files whole, then
           replace the columns and the data. The "no data yet" and "no matches" states that go
           with it are on the same page.
         </p>
@@ -83,6 +82,7 @@ export class HouseStylePage extends LitElement {
           <li><strong>On a route</strong> — put a <code>u-page-header</code> above it to name the screen; the shell already gives the content area its gutter.</li>
         </ol>
         <house-demo-source label="ListScreenDemo.ts" .source=${listScreenSrc}></house-demo-source>
+        <house-demo-source label="constants.ts" .source=${listConstantsSrc}></house-demo-source>
       </u-group-box>
 
       <u-group-box level="2" title="Where to find what">

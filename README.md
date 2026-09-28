@@ -47,6 +47,15 @@ npm install
 npm run start -w @iyulab/house-style
 ```
 
+The landing page's "Start here" path is checked end to end: a fresh `create-vite` project, the
+published packages, the page's own `index.html` / `main.ts` / recipe files, a production build,
+and a browser that must find table rows on `/`. The deploy workflow runs it before publishing the
+site; run it locally with (needs network and Playwright's Chromium):
+
+```bash
+npm run check:start-here -w @iyulab/house-style
+```
+
 ## License
 
 MIT

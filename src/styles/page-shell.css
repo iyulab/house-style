@@ -229,17 +229,23 @@ pre code {
 }
 .start-steps p,
 .start-recipe li {
-  margin: 0 0 var(--u-space-xs, 4px);
+  margin: 0 0 var(--u-space-xs, 6px);
 }
+/* The copy button sits above its block, right-aligned — the same shape as a demo's "Show code" bar —
+   so every block on the page is full width whatever its button's label says. */
 .start-code {
   display: flex;
-  flex-wrap: wrap; /* on a narrow screen the copy button goes under the code, not beside it */
-  align-items: flex-start;
-  gap: var(--u-space-sm, 8px);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--u-space-xs, 6px);
+}
+.start-code + .start-code {
+  margin-top: var(--u-space-sm, 8px);
 }
 .start-code pre {
-  flex: 1 1 280px;
+  align-self: stretch;
   min-width: 0;
+  margin: 0;
 }
 .start-tiers {
   display: grid;
