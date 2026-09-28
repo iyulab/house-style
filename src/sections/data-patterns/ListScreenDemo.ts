@@ -4,16 +4,16 @@ import { customElement, state } from 'lit/decorators.js';
 import '@iyulab/components/dist/components/badge/UBadge.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
-import type { RichTableEventMap, FilterState } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+import type { RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 
 import { COLUMNS, ROWS } from './constants.js';
 
 /**
- * List screen recipe. `u-rich-table` renders the filter row and emits `filter-change`,
- * but does not filter its own `.data` — that's the host's job (the same contract
- * server-paged consumers rely on to turn a filter into an API query instead of a
- * client-side operation). This demo's data is static, so filtering happens here.
+ * List screen recipe. The list is already loaded, so the table does the narrowing itself:
+ * `data-mode="client"` makes `u-rich-table` apply its filter row, sorting and paging to
+ * `.data` as the whole set. When the query goes to the server instead, leave the mode at its
+ * default and answer `filter-change` / `page-change` with a request.
  */
 @customElement('house-data-patterns-list-screen')
 export class ListScreenDemo extends LitElement {
@@ -22,26 +22,10 @@ export class ListScreenDemo extends LitElement {
   }
 
   @state() private selectedCount = 0;
-  @state() private filters: FilterState = {};
   @state() private cancelMessage = '';
 
   private handleSelectionChange(e: RichTableEventMap['selection-change']) {
     this.selectedCount = e.detail.selectedIds.length;
-  }
-
-  private handleFilterChange(e: RichTableEventMap['filter-change']) {
-    this.filters = e.detail.filters;
-  }
-
-  private get filteredRows() {
-    return ROWS.filter(row =>
-      Object.entries(this.filters).every(([field, value]) => {
-        const cell = String((row as Record<string, unknown>)[field] ?? '');
-        const column = COLUMNS.find(c => c.key === field);
-        return column?.filterType === 'select'
-          ? cell === value
-          : cell.toLowerCase().includes(value.toLowerCase());
-      }));
   }
 
   /**
@@ -68,14 +52,13 @@ export class ListScreenDemo extends LitElement {
       <u-rich-table
         id="list-screen-table"
         .columns=${COLUMNS}
-        .data=${this.filteredRows}
-        .totalCount=${this.filteredRows.length}
+        data-mode="client"
+        .data=${ROWS}
         selectable
         filterable
         .filterPlaceholder=${'Filter…'}
         .filterAllLabel=${'All statuses'}
         @selection-change=${this.handleSelectionChange}
-        @filter-change=${this.handleFilterChange}
       >
         <span slot="bulk-actions">
           ${this.selectedCount > 0

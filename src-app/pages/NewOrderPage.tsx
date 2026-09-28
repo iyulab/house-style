@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Wizard } from '@iyulab/modern-app/react';
 import type { WizardStep, WizardStepChangeDetail } from '@iyulab/modern-app/react';
-import { FormSection, FormRow } from '@iyulab/enterprise';
+import { FormSection, FormRow } from '@iyulab/enterprise/react';
 import { UInput, UButton } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';

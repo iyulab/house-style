@@ -11,7 +11,7 @@ import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
 import { GroupBox } from '@iyulab/modern-app/react/GroupBox.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
-import { FormSection, FormRow } from '@iyulab/enterprise';
+import { FormSection, FormRow } from '@iyulab/enterprise/react';
 import { UButton, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';

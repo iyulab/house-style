@@ -101,7 +101,7 @@ async function renderCheck(dir) {
       // Data rows only: the filter row lives in <tbody> too, and loading/empty states are one
       // spanning cell — counting those would pass a table that shows no data.
       const n = [...(table?.shadowRoot?.querySelectorAll('tbody tr') ?? [])]
-        .filter(tr => !/(filter-row|detail-row|new-row)/.test(tr.className) && tr.children.length > 1).length;
+        .filter(tr => !/\b(filter-row|detail-row|new-row)\b/.test(tr.className) && tr.children.length > 1).length;
       return n > 0 ? n : false;
     }, null, { timeout: 15000 }).then(h => h.jsonValue()).catch(() => 0);
     steps.push('render');

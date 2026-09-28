@@ -77,7 +77,7 @@ export class HouseStylePage extends LitElement {
         </p>
         <ol class="start-recipe">
           <li><strong>Table</strong> — <code>u-rich-table</code> with columns, a filter row and row selection switched on; status renders as <code>u-tag</code> through the column's <code>render</code>.</li>
-          <li><strong>Filtering</strong> — the table emits <code>filter-change</code> and leaves the data to you: filter in place, as here, or turn it into a server query.</li>
+          <li><strong>Filtering</strong> — the list is already loaded, so <code>data-mode="client"</code> lets the table filter, sort and page it itself. When the query belongs to the server, leave the default and answer <code>filter-change</code> with a request.</li>
           <li><strong>Bulk actions</strong> — in the <code>bulk-actions</code> slot, shown only while rows are selected, with how many.</li>
           <li><strong>On a route</strong> — put a <code>u-page-header</code> above it to name the screen; the shell already gives the content area its gutter.</li>
         </ol>

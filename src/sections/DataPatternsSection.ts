@@ -137,8 +137,9 @@ export class DataPatternsSection extends LitElement {
             convention below for which color means what.
           </p>
           <p>
-            This demo loads the full result set once and filters client-side, which suits a
-            small-to-medium, row-CRUD-focused list like this one. <strong>That is a property of
+            This demo loads the full result set once and sets <code>data-mode="client"</code>, so
+            the table applies its own filter row, sorting and paging — no filtering code in the
+            screen. That suits a small-to-medium, row-CRUD-focused list like this one. <strong>That is a property of
             this demo, not a limit of the component</strong> — <code>u-rich-table</code> pages
             from a server perfectly well; see the search screen below, which does exactly that.
             Reach for <code>@iyulab/flex-table</code> when you need <em>cell-level editing</em> or

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FormSection, FormRow } from '@iyulab/enterprise';
+import { FormSection, FormRow } from '@iyulab/enterprise/react';
 import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
 import { svc } from '../lib/odata.js';
