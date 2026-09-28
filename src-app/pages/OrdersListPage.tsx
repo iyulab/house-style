@@ -44,7 +44,7 @@ const COLUMNS: ColumnDefReact[] = [
     ],
     render: renderStatusTag,
   },
-  { key: 'Total', label: 'Total', width: '140px', align: 'right', render: (v) => `₩${Number(v).toLocaleString()}` },
+  { key: 'Total', label: 'Total', width: '140px', align: 'end', render: (v) => `₩${Number(v).toLocaleString()}` },
 ];
 
 export default function OrdersListPage() {

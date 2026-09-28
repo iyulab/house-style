@@ -15,7 +15,7 @@ export const COLUMNS: ColumnDef[] = [
     ],
     render: renderStatusTag,
   },
-  { key: 'total', label: 'Total', align: 'right', width: '120px' },
+  { key: 'total', label: 'Total', align: 'end', width: '120px' },
 ];
 
 const STATUS_TAG_COLOR: Record<string, 'gray' | 'info' | 'success'> = {

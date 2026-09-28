@@ -49,7 +49,7 @@ const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '150px' },
   { key: 'customer', label: 'Customer', width: '180px' },
   { key: 'status', label: 'Status', width: '130px', render: renderStatusTag },
-  { key: 'total', label: 'Total', align: 'right', width: '140px' },
+  { key: 'total', label: 'Total', align: 'end', width: '140px' },
 ];
 
 interface Criteria {

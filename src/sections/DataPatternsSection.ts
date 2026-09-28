@@ -39,9 +39,9 @@ const MISSING_FEATURES = new Set(['export-accounting', 'bulk-print']);
 
 const LINE_ITEM_COLUMNS: ColumnDef[] = [
   { key: 'item', label: 'Item', width: '240px', filterable: false },
-  { key: 'qty', label: 'Qty', align: 'right', width: '80px' },
-  { key: 'unitPrice', label: 'Unit price', align: 'right', width: '120px' },
-  { key: 'subtotal', label: 'Subtotal', align: 'right', width: '120px' },
+  { key: 'qty', label: 'Qty', align: 'end', width: '80px' },
+  { key: 'unitPrice', label: 'Unit price', align: 'end', width: '120px' },
+  { key: 'subtotal', label: 'Subtotal', align: 'end', width: '120px' },
 ];
 
 const LINE_ITEMS = [
@@ -147,6 +147,23 @@ export class DataPatternsSection extends LitElement {
             are independent, and conflating them sends screens that only need paging to a
             heavier component than they wanted.
           </p>
+          <p>
+            Both tables describe a column with the same words, so moving a screen from one to the
+            other keeps its column list:
+          </p>
+          <table class="prose-table">
+            <colgroup><col style="width: 22%" /><col style="width: 39%" /><col style="width: 39%" /></colgroup>
+            <thead>
+              <tr><th>Column field</th><th><code>u-rich-table</code> (<code>@iyulab/data-components</code>)</th><th><code>flex-table</code> (<code>@iyulab/flex-table</code>)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Header text</td><td><code>label</code></td><td><code>label</code></td></tr>
+              <tr><td>Cell content</td><td><code>render(value, row)</code> — returns a string or an element</td><td><code>render</code> — the same name; see the component's reference for its arguments</td></tr>
+              <tr><td>Alignment</td><td><code>align</code> · <code>headerAlign</code>: <code>'start' | 'center' | 'end'</code></td><td><code>align</code> · <code>headerAlign</code>: <code>'start' | 'center' | 'end'</code></td></tr>
+              <tr><td>Width</td><td><code>width</code>: a number (px) or a CSS length</td><td><code>width</code>: a number (px)</td></tr>
+              <tr><td>Where it fits</td><td>Row-level CRUD, filter row, client or server paging</td><td>Cell-level editing, very large or wide data (virtualised rows and columns)</td></tr>
+            </tbody>
+          </table>
           <house-data-patterns-list-screen></house-data-patterns-list-screen>
           <house-demo-source label="ListScreenDemo.ts" .source=${listScreenSrc}></house-demo-source>
         </u-group-box>
