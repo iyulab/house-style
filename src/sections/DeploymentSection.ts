@@ -57,8 +57,9 @@ export class DeploymentSection extends LitElement {
               <td><code>www.google.com</code></td>
               <td><code>@iyulab/chat-components</code> — <code>u-ref-card</code> with <code>type="web"</code></td>
               <td>
-                For each web reference card, to fetch the site's favicon. There is no option to point
-                it elsewhere yet — on a closed network the image fails and the card shows without it.
+                Only when the app opts in with <code>URefCard.defaultFaviconUrl = googleFaviconUrl</code>
+                (0.13.0 and later). By default a card requests no favicon; give it a resolver that points
+                at your own host instead.
               </td>
             </tr>
             <tr>
