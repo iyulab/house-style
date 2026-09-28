@@ -78,11 +78,26 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
+      <u-group-box level="2" title="Stacking and Escape">
+        <p>
+          Surfaces that overlap across the page stack in three named layers — the shell, floating
+          surfaces (popovers, lists, menus) and overlays (dialogs, drawers, lightboxes) — read from
+          <code>--u-layer-shell</code>, <code>--u-layer-floating</code> and
+          <code>--u-layer-overlay</code> (<code>@iyulab/components</code> 1.49.0 and later). A surface
+          of your own that overlaps the page reads the token rather than a number.
+        </p>
+        <p>
+          Escape closes <em>the most recently opened</em> layer, and only that one — a list inside a
+          drawer inside the shell's detail panel closes first, then the drawer, then the panel. A
+          surface of your own joins the same order with <code>OverlayManager.openLayer</code>
+          instead of listening for Escape itself.
+        </p>
+      </u-group-box>
+
       <u-group-box level="2" title="Not yet decided">
         <p>
           Beyond the breakpoint computation itself, there is no written rule yet for
-          exactly which width converts the sidebar into a drawer, or a documented
-          z-index layering convention for slide-over panels stacked above it.
+          exactly which width converts the sidebar into a drawer.
         </p>
         <p>
           Density is only half-answered: <code>--u-density</code> moves type and control heights,
