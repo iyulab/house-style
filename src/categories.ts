@@ -21,6 +21,7 @@ export const CATEGORIES: readonly Category[] = [
   { path: 'identity', tier: 'Foundations', label: 'Visual identity & tokens', icon: 'identity', summary: 'Colour, type, spacing and radius — the tokens every screen reads, and which colour means what.' },
   { path: 'layout', tier: 'Foundations', label: 'Layout & viewport', icon: 'layout', summary: 'The app shell, content width and breakpoints.' },
   { path: 'voice-a11y', tier: 'Foundations', label: 'Voice, tone & accessibility', icon: 'message', summary: 'How labels, messages and errors are worded, and the accessibility floor.' },
+  { path: 'deployment', tier: 'Foundations', label: 'Deployment & network', icon: 'code', summary: 'What the packages load from outside your origin, and how to keep it inside a closed network.' },
   { path: 'depth', tier: 'Patterns', label: 'Component depth', icon: 'layers', summary: 'Buttons, fields and the rest — which variant for which job.' },
   { path: 'data-patterns', tier: 'Patterns', label: 'Data patterns', icon: 'table', summary: 'Lists, search, master›detail, empty states — each with its source to copy.' },
   { path: 'feedback', tier: 'Patterns', label: 'Feedback & motion', icon: 'pulse', summary: 'Toasts, confirmations, progress and motion.' },

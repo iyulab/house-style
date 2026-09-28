@@ -22,6 +22,7 @@ import './sections/DataPatternsSection.js';
 import './sections/FlowsSection.js';
 import './sections/FeedbackSection.js';
 import './sections/VoiceA11ySection.js';
+import './sections/DeploymentSection.js';
 
 const base = import.meta.env.BASE_URL;
 
@@ -34,6 +35,7 @@ const SECTIONS: Record<string, () => unknown> = {
   flows: () => html`<house-flows-section></house-flows-section>`,
   feedback: () => html`<house-feedback-section></house-feedback-section>`,
   'voice-a11y': () => html`<house-voice-a11y-section></house-voice-a11y-section>`,
+  deployment: () => html`<house-deployment-section></house-deployment-section>`,
 };
 
 const navLinkStyles = { host: { '--link-icon-color': 'var(--u-primary-color)' } };
