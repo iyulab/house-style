@@ -37,6 +37,12 @@ await app.load({
   routes: [{ path: '/', render: () => html\`<house-data-patterns-list-screen></house-data-patterns-list-screen>\` }],
 });`;
 
+/** The finished result of the steps, checked in as `examples/list-app` (kept equal by the check). */
+export const STARTER = `npx degit iyulab/house-style/examples/list-app my-app
+cd my-app
+npm install
+npm run dev`;
+
 /**
  * Step 4 — the list-screen recipe: these files, copied whole into `src/`. Paths are relative to
  * this module; the landing page imports the same files with `?raw` to show them.

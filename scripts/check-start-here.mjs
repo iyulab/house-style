@@ -14,9 +14,14 @@
  *   node scripts/check-start-here.mjs [--keep]
  *
  * `--keep` leaves the generated project in place (it is always kept on failure).
+ *
+ * The starter in `examples/list-app/` is this same project, checked in: after the render passes,
+ * its files are compared with the ones just built, and any difference fails the check. Run with
+ * `--write-starter` to refresh it from a passing run — so the starter is always a project this
+ * script has walked, never a hand-kept copy.
  */
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -26,6 +31,15 @@ import { BOOT, CREATE, INDEX_HTML, INSTALL, RECIPE_FILES } from '../src/start-he
 const here = dirname(fileURLToPath(import.meta.url));
 const srcDir = resolve(here, '../src');
 const keep = process.argv.includes('--keep');
+const writeStarter = process.argv.includes('--write-starter');
+const starterDir = resolve(here, '../examples/list-app');
+
+/**
+ * The starter's files. `package.json` is compared by shape (scripts and dependency names), not
+ * by version: create-vite and the registry move on, and the ranges are kept current by the
+ * monorepo's range follower. Everything else must match byte for byte (line endings aside).
+ */
+const STARTER_FILES = ['index.html', 'tsconfig.json', '.gitignore', 'src/main.ts', 'src/ListScreenDemo.ts', 'src/constants.ts'];
 const isWin = process.platform === 'win32';
 
 // npm 10's arborist crashes on some lock-less installs (`edgesOut` of null); CI runs npm 11.
@@ -66,6 +80,8 @@ try {
   }
 
   await renderCheck(project);
+  step(writeStarter ? 'starter: write examples/list-app' : 'starter: examples/list-app matches', () =>
+    (writeStarter ? writeStarterFrom(project) : compareStarter(project)));
   console.log(`\n✓ Start here: ${steps.length} steps passed — the path renders a table.`);
   if (keep) console.log(`  project kept: ${project}`);
   else cleanup();
@@ -115,6 +131,41 @@ async function renderCheck(dir) {
     await browser.close();
     await new Promise(r => server.httpServer.close(r));
   }
+}
+
+function norm(s) { return s.replace(/\r\n/g, '\n'); }
+
+function packageShape(json) {
+  const j = JSON.parse(json);
+  return JSON.stringify({
+    type: j.type,
+    scripts: j.scripts,
+    dependencies: Object.keys(j.dependencies ?? {}).sort(),
+    devDependencies: Object.keys(j.devDependencies ?? {}).sort(),
+  });
+}
+
+function writeStarterFrom(dir) {
+  for (const f of STARTER_FILES) {
+    mkdirSync(dirname(join(starterDir, f)), { recursive: true });
+    copyFileSync(join(dir, f), join(starterDir, f));
+  }
+  const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+  pkg.name = 'list-app';
+  writeFileSync(join(starterDir, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
+}
+
+function compareStarter(dir) {
+  const drift = [];
+  if (!existsSync(join(starterDir, 'package.json'))) throw new Error(`no starter at ${starterDir} — run with --write-starter`);
+  if (packageShape(readFileSync(join(dir, 'package.json'), 'utf8')) !== packageShape(readFileSync(join(starterDir, 'package.json'), 'utf8'))) {
+    drift.push('package.json (scripts or dependency names)');
+  }
+  for (const f of STARTER_FILES) {
+    const want = join(starterDir, f);
+    if (!existsSync(want) || norm(readFileSync(want, 'utf8')) !== norm(readFileSync(join(dir, f), 'utf8'))) drift.push(f);
+  }
+  if (drift.length) throw new Error(`examples/list-app differs from the path the guide describes: ${drift.join(', ')} — run with --write-starter`);
 }
 
 /** Best effort: on Windows the preview server's native bindings stay loaded until this process exits. */

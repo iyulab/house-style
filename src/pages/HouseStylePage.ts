@@ -6,7 +6,7 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/components/dist/components/copy-button/UCopyButton.js';
 import '../internals/DemoSource.js';
 import { CATEGORIES, TIERS } from '../categories.js';
-import { BOOT, CREATE, INDEX_HTML, INSTALL } from '../start-here.js';
+import { BOOT, CREATE, INDEX_HTML, INSTALL, STARTER } from '../start-here.js';
 import listScreenSrc from '../sections/data-patterns/ListScreenDemo.ts?raw';
 import listConstantsSrc from '../sections/data-patterns/constants.ts?raw';
 
@@ -65,6 +65,11 @@ export class HouseStylePage extends LitElement {
             </p>
           </li>
         </ol>
+        <p class="start-shortcut">
+          Or take the finished result of these four steps — the same files, built and opened in a browser
+          before every deploy of this guide:
+        </p>
+        ${this.renderCode(STARTER, 'Copy commands')}
       </u-group-box>
 
       <u-group-box level="2" title="Recipe: a list screen">
