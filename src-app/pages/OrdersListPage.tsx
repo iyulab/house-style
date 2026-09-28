@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { URichTableReact } from '@iyulab/data-components/react';
-import type { ColumnDefReact, FilterState } from '@iyulab/data-components/react';
+import type { ColumnDefReact } from '@iyulab/data-components/react';
+import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import { UButton, UAlert } from '../lib/ui-react.js';
 // 화면 제목·액션 줄·결과 메시지·빈 상태는 손으로 짜지 않는다 — 가이드가 이름을 준 자리다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
@@ -48,11 +49,11 @@ const COLUMNS: ColumnDefReact[] = [
 
 export default function OrdersListPage() {
   const [orders, setOrders] = useState<Order[] | null>(null);
-  // `u-rich-table` renders the filter row and emits `filter-change` but does not filter its
-  // own `data` (the component leaves that to the consumer, so a server-backed table can turn a
-  // filter into an API query instead of a client-side operation). This demo's data is static,
-  // so filtering happens here — same shape as the existing house-style Data Patterns recipe.
-  const [filters, setFilters] = useState<FilterState>({});
+  // The whole list is loaded, so the table filters it itself (`dataMode="client"`). The page only
+  // keeps the count for its subtitle and empty state: `filter-change` reports it when a filter
+  // changes, and `filteredRowCount` is read after new data has reached the table.
+  const tableRef = useRef<URichTable>(null);
+  const [filteredCount, setFilteredCount] = useState(0);
   // `selection-change`'s `detail.selectedIds` is cumulative across every filter/page visited so
   // far (confirmed against the component's source) — this page just displays that count,
   // instead of re-deriving a "which rows are checked right now" set itself.
@@ -66,15 +67,8 @@ export default function OrdersListPage() {
   }
 
   useEffect(() => { reload(); }, []);
-
-  const filteredRows = (orders ?? []).filter((row) =>
-    Object.entries(filters).every(([field, value]) => {
-      if (!value) return true;
-      const cell = String((row as unknown as Record<string, unknown>)[field] ?? '');
-      const column = COLUMNS.find((c) => c.key === field);
-      return column?.filterType === 'select' ? cell === value : cell.toLowerCase().includes(value.toLowerCase());
-    }),
-  );
+  // Runs after the commit that handed `orders` to the table, so the getter sees the new rows.
+  useEffect(() => { if (tableRef.current) setFilteredCount(tableRef.current.filteredRowCount); }, [orders]);
 
   async function cancelSelected() {
     const ids = selectedIds;
@@ -97,7 +91,7 @@ export default function OrdersListPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--u-space-md, 16px)' }}>
-      <PageHeader title="Orders" subtitle={orders ? `${filteredRows.length} of ${orders.length}` : undefined} />
+      <PageHeader title="Orders" subtitle={orders ? `${filteredCount} of ${orders.length}` : undefined} />
 
       <ActionBar>
         <UButton slot="danger" color="danger" variant="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
@@ -113,23 +107,22 @@ export default function OrdersListPage() {
 
       {message && <UAlert open status="success">{message}</UAlert>}
 
-      {/* 가이드가 가르치는 두 갈래를 지킨다 — 데이터가 아예 없는 것(`no-data`)과
-          필터가 걸러낸 것(`no-results`)은 사용자에게 다른 상황이고 다음 행동도 다르다.
-          `u-rich-table` 은 자기 데이터를 스스로 거르지 않으므로 이 구분도 여기서 한다. */}
-      {orders && filteredRows.length === 0 && (
-        <EmptyState
-          variant={orders.length === 0 ? 'no-data' : 'no-results'}
-          title={orders.length === 0 ? 'No orders yet' : 'No orders match these filters'}
-          description={orders.length === 0 ? 'Create the first one to get started.' : 'Clear a filter to see more.'}
-        />
+      {/* 가이드가 가르치는 두 갈래 — 데이터가 아예 없는 것(`no-data`)과 필터가 걸러낸 것은
+          다른 상황이고 다음 행동도 다르다. 앞의 것은 화면의 빈 상태가, 뒤의 것은 표가 방금
+          입력한 필터 바로 아래에서 말한다(`noMatchMessage`) — 같은 안내를 두 곳에 두지 않는다. */}
+      {orders && orders.length === 0 && (
+        <EmptyState variant="no-data" title="No orders yet" description="Create the first one to get started." />
       )}
 
       <URichTableReact
-        data={filteredRows as unknown as Record<string, unknown>[]}
+        ref={tableRef}
+        dataMode="client"
+        data={(orders ?? []) as unknown as Record<string, unknown>[]}
         columns={COLUMNS}
+        noMatchMessage="No orders match these filters — clear a filter to see more."
         selectable
         filterable
-        onFilterChange={(e) => { setFilters(e.detail.filters); setMessage(''); }}
+        onFilterChange={(e) => { setFilteredCount(e.detail.filteredCount ?? 0); setMessage(''); }}
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)}
       />

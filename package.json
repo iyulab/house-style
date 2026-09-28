@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@iyulab/components": "^1.47.0",
-    "@iyulab/data-components": "^0.27.0",
+    "@iyulab/data-components": "^0.28.0",
     "@iyulab/enterprise": "^0.20.0",
     "@iyulab/modern-app": "^0.31.0",
     "@iyulab/router": "^0.17.0",
