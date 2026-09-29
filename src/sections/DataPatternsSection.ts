@@ -195,6 +195,16 @@ export class DataPatternsSection extends LitElement {
             splits the condition across two places and neither one shows all of it.
           </p>
           <p>
+            <strong>Reset returns to the defaults, not to empty.</strong> A search screen opens
+            with defaults — here the period starts on the first of this month — and Reset puts
+            every criterion back to that starting point. An emptied period means "all time",
+            which is a different query from the one the screen opened with. To empty a single
+            field, use its own <code>clearable</code> button. If your criteria live in a native
+            <code>&lt;form&gt;</code> with <code>value</code> attributes, a
+            <code>u-button type="reset"</code> does this for you — form controls return to their
+            <code>value</code> attribute on a form reset, as native inputs do.
+          </p>
+          <p>
             <strong>Three wiring details worth copying.</strong> Editing a field does not move the
             table — the screen holds the draft criteria separately from the applied ones, so
             results only change when Search runs. Applying new criteria returns to page 1; staying

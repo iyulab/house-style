@@ -23,7 +23,7 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
  * Search screen recipe — the shape most internal line-of-business screens take:
  * a criteria form, a search that queries the server, and a server-paged result table.
  *
- * Two things this demo is deliberately showing, because they are the decisions a
+ * Three things this demo is deliberately showing, because they are the decisions a
  * consumer has to make and neither is visible from the component APIs alone:
  *
  * 1. **The criteria form is the same `u-info-section` + `u-field` grid the edit-form
@@ -37,6 +37,11 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
  *    This screen turns the table's filter row off, because the criteria above already
  *    own the query. Running both means two places narrow the same result set and
  *    neither shows the whole condition.
+ *
+ * 3. **Reset returns to the defaults, not to empty.** The period starts on the first of
+ *    this month when the screen opens, and Reset puts it back there — an empty period
+ *    would mean "all time", which is not where the screen started. Emptying one field is
+ *    that field's own `clearable` button.
  *
  * Every column declares an absolute width, which is what makes the declared widths
  * hold when there are more columns than fit (see `u-rich-table`'s column-width
@@ -58,7 +63,14 @@ interface Criteria {
   from: string;
 }
 
-const EMPTY: Criteria = { keyword: '', status: '', from: '' };
+/** The first day of the current month, as the date picker's `YYYY-MM-DD` value. */
+function startOfThisMonth(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+}
+
+/** Where the screen starts — and where Reset returns. Not the same as empty. */
+const DEFAULTS: Criteria = { keyword: '', status: '', from: startOfThisMonth() };
 
 @customElement('house-data-patterns-search-screen')
 export class SearchScreenDemo extends LitElement {
@@ -67,7 +79,7 @@ export class SearchScreenDemo extends LitElement {
   }
 
   /** What the form currently holds — not yet a query. */
-  @state() private draft: Criteria = { ...EMPTY };
+  @state() private draft: Criteria = { ...DEFAULTS };
   /** What the last search actually ran with. The table reflects this, never `draft`. */
   @state() private applied: Criteria | null = null;
   @state() private page = 1;
@@ -104,7 +116,7 @@ export class SearchScreenDemo extends LitElement {
   }
 
   private reset() {
-    this.draft = { ...EMPTY };
+    this.draft = { ...DEFAULTS };
     this.applied = null;
     this.page = 1;
     this.message = '';
