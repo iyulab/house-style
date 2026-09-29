@@ -27,6 +27,11 @@ function isApiError(value: unknown): value is ApiError {
  * composition a full-page edit screen already uses elsewhere in this framework, so
  * a field keeps the same column rhythm whether it sits on a page or inside a drawer.
  *
+ * While a save is in flight the form is locked: one `<fieldset disabled>` around the fields
+ * (`display: contents` — it is a disable boundary, not a visual group, so the grid is unchanged),
+ * and the footer actions disabled with the same flag. A field edited during the request would
+ * otherwise be silently left out of what was saved. On an error the lock lifts and the message shows.
+ *
  * Saving also demonstrates a two-tier error split: a typed API error (a server-shaped
  * `{ code, message }`) shows its `message` as-is, because the server wrote it to be
  * read. Anything else — a raw `TypeError` from a failed `fetch`, or any other
@@ -91,6 +96,7 @@ export class EditFormDemo extends LitElement {
       <u-button color="primary" @click=${this.openEditDrawer}>Edit order</u-button>
       <u-drawer id="edit-drawer" placement="right" closable>
         <span slot="header">Edit order G-2026-0512</span>
+        <fieldset ?disabled=${this.saveStatus === 'saving'} style="display: contents">
         <u-info-section min="200">
           <u-field label="Customer" required>
             <u-input value="Aster Trading"></u-input>
@@ -126,7 +132,7 @@ export class EditFormDemo extends LitElement {
           ? html`<u-badge color="danger">${this.saveError}</u-badge>`
           : ''}
         <div slot="footer">
-          <u-button variant="ghost" @click=${this.closeEditDrawer}>Cancel</u-button>
+          <u-button variant="ghost" ?disabled=${this.saveStatus === 'saving'} @click=${this.closeEditDrawer}>Cancel</u-button>
           <u-button color="primary" ?disabled=${this.saveStatus === 'saving'} @click=${this.handleSave}>
             ${this.saveStatus === 'saving' ? 'Saving…' : 'Save'}
           </u-button>

@@ -352,6 +352,16 @@ export class DataPatternsSection extends LitElement {
             page or inside a drawer.
           </p>
           <p>
+            <strong>While a save is in flight, lock the form.</strong> Wrap the fields in one
+            <code>&lt;fieldset disabled&gt;</code> and disable the footer actions with the same
+            flag — every control inside the fieldset turns disabled, looks disabled and cannot
+            take focus, exactly as with its own <code>disabled</code>. Give the fieldset
+            <code>style="display: contents"</code>: here it is a disable boundary, not a visual
+            group, so it draws no border and leaves the grid alone. Without the lock, a field
+            edited during the request is quietly left out of what was saved. On an error the lock
+            lifts and the message shows.
+          </p>
+          <p>
             Saving also demonstrates a two-tier error split: a typed API error (a
             server-shaped <code>{ code, message }</code>) shows its <code>message</code>
             as-is, because the server wrote it to be read. Anything else — a raw

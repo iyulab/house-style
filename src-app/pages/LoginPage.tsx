@@ -85,6 +85,8 @@ export default function LoginPage() {
             <code>{DEMO_CREDENTIALS.Username}</code> / <code>{DEMO_CREDENTIALS.Password}</code>.
           </p>
 
+          {/* One lock for the whole form while signing in — a disable boundary, not a visual group. */}
+          <fieldset disabled={loading} style={{ display: 'contents' }}>
           <UInput
             ref={usernameRef}
             label="Username"
@@ -92,7 +94,6 @@ export default function LoginPage() {
             type="text"
             autocomplete="username"
             value={username}
-            disabled={loading}
             onChange={(e) => setUsername((e.target as UInputElement).value ?? '')}
           />
           <UInput
@@ -101,15 +102,15 @@ export default function LoginPage() {
             type="password"
             autocomplete="current-password"
             value={password}
-            disabled={loading}
             onChange={(e) => setPassword((e.target as UInputElement).value ?? '')}
           />
 
           {error && <UAlert open status="error">{error}</UAlert>}
 
-          <UButton type="submit" color="primary" loading={loading} disabled={loading}>
+          <UButton type="submit" color="primary" loading={loading}>
             Sign in
           </UButton>
+          </fieldset>
         </form>
       </UDrawer>
     </div>

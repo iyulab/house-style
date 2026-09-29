@@ -50,16 +50,17 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
   return (
     <UDrawer open={open} placement="right" closable onHide={onClose}>
       <span slot="header">New order</span>
+      <fieldset disabled={saving} style={{ display: 'contents' }}>
       <FormSection title="Details">
         <FormRow full>
           <UInput
             label="Customer"
             value={customer}
-            disabled={saving}
             onChange={(e) => setCustomer((e.target as UInputElement).value ?? '')}
           />
         </FormRow>
       </FormSection>
+      </fieldset>
       {error && <p role="alert">{error}</p>}
       <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
         <UButton variant="ghost" onClick={onClose} disabled={saving}>Cancel</UButton>

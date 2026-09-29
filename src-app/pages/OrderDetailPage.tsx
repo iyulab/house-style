@@ -246,12 +246,12 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               onHide={() => setEditOpen(false)}
             >
               <span slot="header">Edit order {order.Id}</span>
+              <fieldset disabled={saving} style={{ display: 'contents' }}>
               <FormSection title="Details">
                 <FormRow full>
                   <UInput
                     label="Customer"
                     value={editCustomer}
-                    disabled={saving}
                     onChange={(e) => setEditCustomer((e.target as UInputElement).value ?? '')}
                   />
                 </FormRow>
@@ -259,7 +259,6 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   <USelect
                     label="Status"
                     value={editStatus}
-                    disabled={saving}
                     onChange={(e) => setEditStatus((e.target as USelectElement).value as OrderStatus)}
                   >
                     {EDITABLE_STATUSES.map((s) => (
@@ -271,6 +270,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   <UInput label="Total" description="Read-only — set from the order's items" value={`₩${order.Total.toLocaleString()}`} disabled />
                 </FormRow>
               </FormSection>
+              </fieldset>
               {saveError && <UAlert open status="error">{saveError}</UAlert>}
               <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
                 <UButton variant="ghost" onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
