@@ -196,13 +196,22 @@ export class DataPatternsSection extends LitElement {
           </p>
           <p>
             <strong>Reset returns to the defaults, not to empty.</strong> A search screen opens
-            with defaults — here the period starts on the first of this month — and Reset puts
+            with defaults — here the period is this month so far — and Reset puts
             every criterion back to that starting point. An emptied period means "all time",
             which is a different query from the one the screen opened with. To empty a single
             field, use its own <code>clearable</code> button. If your criteria live in a native
             <code>&lt;form&gt;</code> with <code>value</code> attributes, a
             <code>u-button type="reset"</code> does this for you — form controls return to their
             <code>value</code> attribute on a form reset, as native inputs do.
+          </p>
+          <p>
+            <strong>A period is one field.</strong> Ask for it with one
+            <code>u-date-range-picker</code>, not a "from" picker beside a "to" picker. The user
+            picks both ends in one calendar, the range cannot come out with the end before the
+            start, and the periods people search by most — today, the last seven days, this month,
+            last month — are one click away through <code>presets</code>. The query reads the
+            picker's <code>start</code> and <code>end</code>. Periods your organisation defines,
+            such as fiscal quarters, go in as presets of your own; they are not built in.
           </p>
           <p>
             <strong>Three wiring details worth copying.</strong> Editing a field does not move the

@@ -4,7 +4,7 @@ import { customElement, state } from 'lit/decorators.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
 import '@iyulab/components/dist/components/option/UOption.js';
-import '@iyulab/components/dist/components/date-picker/UDatePicker.js';
+import '@iyulab/components/dist/components/date-range-picker/UDateRangePicker.js';
 import '@iyulab/components/dist/components/field/UField.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/alert/UAlert.js';
@@ -15,7 +15,7 @@ import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
-import type { UDatePicker } from '@iyulab/components/dist/components/date-picker/UDatePicker.js';
+import type { UDateRangePicker } from '@iyulab/components/dist/components/date-range-picker/UDateRangePicker.js';
 
 import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
 
@@ -38,10 +38,14 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
  *    own the query. Running both means two places narrow the same result set and
  *    neither shows the whole condition.
  *
- * 3. **Reset returns to the defaults, not to empty.** The period starts on the first of
- *    this month when the screen opens, and Reset puts it back there — an empty period
- *    would mean "all time", which is not where the screen started. Emptying one field is
- *    that field's own `clearable` button.
+ * 3. **Reset returns to the defaults, not to empty.** The period is this month so far
+ *    when the screen opens, and Reset puts it back there — an empty period would mean
+ *    "all time", which is not where the screen started. Emptying one field is that
+ *    field's own `clearable` button.
+ *
+ * The period is one `u-date-range-picker`, not a "from" and a "to" picker: the user
+ * picks both ends in one calendar, the range cannot come out reversed, and the usual
+ * periods are one click away as presets. The query receives `start` and `end`.
  *
  * Every column declares an absolute width, which is what makes the declared widths
  * hold when there are more columns than fit (see `u-rich-table`'s column-width
@@ -60,17 +64,19 @@ const COLUMNS: ColumnDef[] = [
 interface Criteria {
   keyword: string;
   status: string;
-  from: string;
+  /** The range picker's value — `YYYY-MM-DD/YYYY-MM-DD`, start first. */
+  period: string;
 }
 
-/** The first day of the current month, as the date picker's `YYYY-MM-DD` value. */
-function startOfThisMonth(): string {
+/** This month so far — the first of the month to today, as the range picker's value. */
+function thisMonthSoFar(): string {
   const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+  const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  return `${ym}-01/${ym}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
 /** Where the screen starts — and where Reset returns. Not the same as empty. */
-const DEFAULTS: Criteria = { keyword: '', status: '', from: startOfThisMonth() };
+const DEFAULTS: Criteria = { keyword: '', status: '', period: thisMonthSoFar() };
 
 @customElement('house-data-patterns-search-screen')
 export class SearchScreenDemo extends LitElement {
@@ -149,12 +155,13 @@ export class SearchScreenDemo extends LitElement {
             <u-option value="delivered">Delivered</u-option>
           </u-select>
         </u-field>
-        <u-field label="Ordered from">
-          <u-date-picker
-            .value=${this.draft.from}
+        <u-field label="Ordered">
+          <u-date-range-picker
+            .value=${this.draft.period}
+            presets="today last7Days thisMonth lastMonth"
             clearable
-            @change=${(e: Event) => { this.draft = { ...this.draft, from: (e.target as UDatePicker).value ?? '' }; }}
-          ></u-date-picker>
+            @change=${(e: Event) => { this.draft = { ...this.draft, period: (e.target as UDateRangePicker).value ?? '' }; }}
+          ></u-date-range-picker>
         </u-field>
       </u-info-section>
 
