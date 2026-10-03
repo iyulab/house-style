@@ -196,7 +196,7 @@ export class FlowsSection extends LitElement {
           <div>
             ${FlowsSection.TASKS.map(task => html`
               <u-button
-                variant=${this.pickedTask === task.id ? 'filled' : 'ghost'}
+                appearance=${this.pickedTask === task.id ? 'soft' : 'plain'}
                 style="display: block; width: 100%"
                 @click=${() => { this.pickedTask = task.id; }}
               >${task.id} &mdash; ${task.title}</u-button>
@@ -265,7 +265,7 @@ export class FlowsSection extends LitElement {
               <u-info-field label="Notify by" .value=${this.wizardNotifyBy}></u-info-field>
             </u-info-section>
             <p>Setup complete.</p>
-            <u-button variant="outlined" @click=${this.resetWizard}>Start over</u-button>
+            <u-button appearance="outlined" @click=${this.resetWizard}>Start over</u-button>
           `
           : html`
             <u-wizard
@@ -307,7 +307,7 @@ export class FlowsSection extends LitElement {
               </div>
               ${this.wizardActive === 2 ? html`
                 <span slot="actions">
-                  <u-button variant="ghost" @click=${this.handleWizardBack}>Back</u-button>
+                  <u-button appearance="plain" @click=${this.handleWizardBack}>Back</u-button>
                   <u-button color="primary" @click=${this.handleWizardFinish}>Finish setup</u-button>
                 </span>
               ` : ''}

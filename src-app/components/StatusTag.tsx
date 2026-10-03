@@ -23,7 +23,7 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
 
 export function StatusTag({ status, slot }: { status: OrderStatus; slot?: string }) {
   return (
-    <UTag slot={slot} variant="filled" color={STATUS_COLOR[status] ?? 'neutral'}>
+    <UTag slot={slot} appearance="soft" color={STATUS_COLOR[status] ?? 'neutral'}>
       {STATUS_LABEL[status] ?? status}
     </UTag>
   );

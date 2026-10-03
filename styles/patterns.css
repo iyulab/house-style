@@ -14,7 +14,7 @@
  *   edit   = side sheet with .hs-fieldset sections and a pinned .hs-sheet-footer
  *
  * Rules the patterns encode:
- *   · one ink (primary) button per view — the rest are outlined, ghost or in a menu
+ *   · one ink (primary) button per view — the rest are outlined, plain or in a menu
  *   · conditions fold, results open — the table starts in the top third of the screen
  *   · numbers right-aligned in tabular figures; an empty value is an em dash
  *   · row actions appear on hover or selection, never as a red trash can on every row

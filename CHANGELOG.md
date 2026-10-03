@@ -6,6 +6,11 @@ First release as a package. Until now `@iyulab/house-style` was only the guide s
 
 ### Added
 
+- **Speaks `@iyulab/components` 2.0's appearance vocabulary** — the guide, the reference app and
+  the example use `appearance` (`plain` for the former `ghost`, `soft` for `filled`), status tags
+  are `soft` with a `dot`, `color="neutral"` is the grey label. Text fields get the same three
+  heights as buttons (28 / 32 / 40) through `size`.
+
 - **The house theme, CSS only, in the `iyu.house` cascade layer** (requires `@iyulab/components`
   2.0, whose defaults sit in `iyu.base`; unlayered application CSS always wins):
   - `styles/tokens.css` — warm-grey neutrals, ink primary action, blue reserved for links and

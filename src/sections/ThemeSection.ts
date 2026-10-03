@@ -106,8 +106,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
               <p class="hs-page-head__description">Select an order number to open its details on the right.</p>
             </div>
             <div class="hs-page-head__actions">
-              <u-button variant="outlined">Season 2027</u-button>
-              <u-button variant="outlined">Export</u-button>
+              <u-button appearance="outlined">Season 2027</u-button>
+              <u-button appearance="outlined">Export</u-button>
               <u-button>New order</u-button>
             </div>
           </div>
@@ -123,8 +123,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…"></u-input>
             <u-select value="all"><u-option value="all">Channel: all</u-option></u-select>
             <u-select value="all"><u-option value="all">Status: all</u-option></u-select>
-            <u-button variant="outlined">Filters · 1</u-button>
-            <u-button class="hs-filter-bar__end" variant="ghost">Save view</u-button>
+            <u-button appearance="outlined">Filters · 1</u-button>
+            <u-button class="hs-filter-bar__end" appearance="plain">Save view</u-button>
           </div>
 
           <div class="hs-stats">
@@ -138,8 +138,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <div class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
               <span class="hs-table-toolbar__title">${this.selected.size ? `${this.selected.size} selected` : '4 orders'}</span>
               <div class="hs-page-head__actions">
-                <u-button size="sm" variant="outlined">Advance step</u-button>
-                <u-button size="sm" variant="outlined">Print</u-button>
+                <u-button size="sm" appearance="outlined">Advance step</u-button>
+                <u-button size="sm" appearance="outlined">Print</u-button>
               </div>
             </div>
             <table class="hs-table">
@@ -160,13 +160,13 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
                     <td class="hs-num">${r.qty.toLocaleString('en-US')}</td>
                     <td class="hs-num">${won(r.amount)}</td>
                     <td class="hs-num"><span class="hs-row-actions">
-                      <u-button size="sm" variant="ghost" aria-label="Edit ${r.id}"><u-icon lib="bootstrap" name="pencil"></u-icon></u-button>
-                      <u-button size="sm" variant="ghost" aria-label="More for ${r.id}"><u-icon lib="bootstrap" name="three-dots"></u-icon></u-button>
+                      <u-button size="sm" appearance="plain" aria-label="Edit ${r.id}"><u-icon lib="bootstrap" name="pencil"></u-icon></u-button>
+                      <u-button size="sm" appearance="plain" aria-label="More for ${r.id}"><u-icon lib="bootstrap" name="three-dots"></u-icon></u-button>
                     </span></td>
                   </tr>`)}
               </tbody>
             </table>
-            <div class="hs-pager"><span>1–4 / 962</span><span><u-button size="sm" variant="outlined">Previous</u-button> <u-button size="sm" variant="outlined">Next</u-button></span></div>
+            <div class="hs-pager"><span>1–4 / 962</span><span><u-button size="sm" appearance="outlined">Previous</u-button> <u-button size="sm" appearance="outlined">Next</u-button></span></div>
           </div>
         </div>
         <p>
@@ -181,7 +181,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           <div class="hs-callout hs-callout--warning">
             <span class="hs-callout__icon"><u-icon lib="bootstrap" name="exclamation-triangle"></u-icon></span>
             <div><div class="hs-callout__title">Some customers need their due date checked</div><div class="hs-callout__body">Due dates are not computed for barter and offset accounts.</div></div>
-            <div class="hs-callout__actions"><u-button size="sm" variant="outlined">Show them</u-button></div>
+            <div class="hs-callout__actions"><u-button size="sm" appearance="outlined">Show them</u-button></div>
           </div>
           <div class="hs-callout hs-callout--info">
             <span class="hs-callout__icon"><u-icon lib="bootstrap" name="info-circle"></u-icon></span>
@@ -191,7 +191,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           <div class="hs-callout hs-callout--note">
             <span class="hs-callout__icon"><u-icon lib="bootstrap" name="pencil"></u-icon></span>
             <div><div class="hs-callout__title">Note</div><div class="hs-callout__body">Customer asked for the same cover as last year; only the logo changes.</div></div>
-            <div class="hs-callout__actions"><u-button size="sm" variant="ghost">Edit</u-button></div>
+            <div class="hs-callout__actions"><u-button size="sm" appearance="plain">Edit</u-button></div>
           </div>
         </div>
         <p>
@@ -220,7 +220,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           </div>
           <div class="hs-sheet-footer">
             <span class="hs-sheet-footer__summary">1 change · Order number</span>
-            <span class="hs-sheet-footer__actions"><u-button variant="outlined" size="lg">Cancel</u-button><u-button size="lg">Save</u-button></span>
+            <span class="hs-sheet-footer__actions"><u-button appearance="outlined" size="lg">Cancel</u-button><u-button size="lg">Save</u-button></span>
           </div>
         </div>
         <p>

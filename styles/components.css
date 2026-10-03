@@ -3,7 +3,7 @@
  * ==========================================================================
  * Element-level house defaults for `@iyulab/*` components, written only against their public
  * surface: component custom properties (`--btn-*`, `--ft-*`, `--card-*`), `::part()` and the host.
- * Nothing here changes what an attribute means — a `variant="solid"` button stays solid; the
+ * Nothing here changes what an attribute means — an `appearance="solid"` button stays solid; the
  * house only sets size, density and finish.
  *
  * Everything sits in `@layer iyu.house`, so an application rule always wins. Rules aimed at a
@@ -40,19 +40,23 @@ u-button[size='lg'] {
   --btn-padding-block: 8.5px;    /* 21 + 17 + 2 = 40 */
   --btn-padding-inline: 16px;
 }
-u-button[variant='link'] {
+u-button[appearance='link'] {
   --btn-padding-inline: 0;
 }
 
-/* ── Text fields — one size wherever they sit. They inherit font-size by default, so a field
- *    dropped into larger prose grew taller than the buttons beside it; 14px gives the same 32px
- *    row as a medium button. ── */
-:is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker) {
+/* ── Text fields — the same three heights as buttons: 28 / 32 / 40.
+ *    (Components 2.0 renders fields at 14px by default, so a field no longer grows with the
+ *    surrounding text; the house sets the box padding per size.) ── */
+:is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='sm'] {
+  --u-field-padding-block: 4px;     /* 12px → 18 + 8 + 2 = 28 */
+}
+:is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='lg'] {
   font-size: 14px;
+  --u-field-padding-block: 8.5px;   /* 21 + 17 + 2 = 40 */
 }
 
 /* ── Tag — 22px labels (12px text · 1px block padding · hairline) to sit inside 40px rows.
- *    A status label is the default `filled` variant (tint, no outline) with `dot`. ── */
+ *    A status label is the default `soft` appearance (tint, no outline) with `dot`. ── */
 u-tag {
   --tag-padding-block: 1px;
   --tag-padding-inline: 8px;

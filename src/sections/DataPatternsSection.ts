@@ -270,25 +270,25 @@ export class DataPatternsSection extends LitElement {
           </p>
           <p>
             A status is a <strong>label</strong>, so it is a <code>u-tag</code> with
-            <code>variant="filled"</code> — a tinted fill that gives every state the same
+            <code>appearance="soft"</code> (the default) and a <code>dot</code> — a tinted fill that gives every state the same
             weight, so the colour carries the meaning and no state shouts over the row.
             <code>u-badge</code> is for counts and notifications ("3 selected", an unread
             dot); a solid badge per row turns a column of statuses into a column of alarms.
-            A state that should carry no colour is <code>color="gray"</code>, not
-            <code>neutral</code> — <code>neutral</code> follows the brand colour, which here is
-            the same blue as <code>info</code>, so "Pending" and "Shipped" would look alike.
+            A state that should carry no colour is <code>color="neutral"</code> — the
+            achromatic label, on every component. The brand colour is <code>primary</code>; keep it
+            off statuses, or "Pending" and a brand-tinted state would compete.
           </p>
           <u-info-section min="200">
             <u-info-field label="pending">
-              <u-tag variant="filled" color="gray">Pending</u-tag>
+              <u-tag dot color="neutral">Pending</u-tag>
               <div>Waiting — no action needed yet, so it stays gray rather than a warning color.</div>
             </u-info-field>
             <u-info-field label="shipped">
-              <u-tag variant="filled" color="info">Shipped</u-tag>
+              <u-tag dot color="info">Shipped</u-tag>
               <div>In transit — informational, not a call to action.</div>
             </u-info-field>
             <u-info-field label="delivered">
-              <u-tag variant="filled" color="success">Delivered</u-tag>
+              <u-tag appearance="soft" color="success">Delivered</u-tag>
               <div>Done — the one state worth a positive color, not just "no longer pending."</div>
             </u-info-field>
           </u-info-section>
@@ -320,7 +320,7 @@ export class DataPatternsSection extends LitElement {
 
         <u-group-box level="2" title="Line items — order G-2026-0512">
           <span slot="actions">
-            <u-button size="sm" variant="outlined">Add item</u-button>
+            <u-button size="sm" appearance="outlined">Add item</u-button>
           </span>
           <p>
             The one-to-many case: a single order, many line items. No dedicated
@@ -399,13 +399,13 @@ export class DataPatternsSection extends LitElement {
             toolbar. Whether a capability exists at all shouldn't be something a user
             has to guess from its absence.
           </p>
-          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('export-accounting')}>
+          <u-button appearance="outlined" ?disabled=${MISSING_FEATURES.has('export-accounting')}>
             Export to accounting system
           </u-button>
-          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('bulk-print')}>
+          <u-button appearance="outlined" ?disabled=${MISSING_FEATURES.has('bulk-print')}>
             Bulk print shipping labels
           </u-button>
-          <u-button variant="outlined" ?disabled=${MISSING_FEATURES.has('archive')}>
+          <u-button appearance="outlined" ?disabled=${MISSING_FEATURES.has('archive')}>
             Archive selected
           </u-button>
           <p><small>Grayed-out actions above are planned, not hidden — not yet built.</small></p>

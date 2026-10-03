@@ -63,7 +63,7 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
       </fieldset>
       {error && <p role="alert">{error}</p>}
       <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
-        <UButton variant="ghost" onClick={onClose} disabled={saving}>Cancel</UButton>
+        <UButton appearance="plain" onClick={onClose} disabled={saving}>Cancel</UButton>
         <UButton color="primary" onClick={save} loading={saving} disabled={saving}>
           Create
         </UButton>

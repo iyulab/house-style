@@ -86,7 +86,7 @@ export class FeedbackSection extends LitElement {
           keep once enough call sites needed the same lifecycle wired into shared
           state, which is component-library territory, not this recipe's scope.
         </p>
-        <u-button variant="outlined" ?disabled=${this.demoBusy} @click=${this.handleRefresh}>
+        <u-button appearance="outlined" ?disabled=${this.demoBusy} @click=${this.handleRefresh}>
           ${this.demoBusy ? html`<u-spinner></u-spinner> Refreshing…` : 'Refresh'}
         </u-button>
         ${this.demoRefreshedAt ? html`<p><small>Last refreshed at ${this.demoRefreshedAt}.</small></p>` : ''}

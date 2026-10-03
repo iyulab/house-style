@@ -189,7 +189,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
 
             {canEdit && order.Status !== 'cancelled' && (
               <ActionBar>
-                <UButton slot="danger" color="danger" variant="outlined" onClick={cancelOrder}>Cancel order</UButton>
+                <UButton slot="danger" color="danger" appearance="outlined" onClick={cancelOrder}>Cancel order</UButton>
                 <UButton color="primary" onClick={openEdit}>Edit order</UButton>
               </ActionBar>
             )}
@@ -229,7 +229,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   />
                   <span>₩{(item.Quantity * item.UnitPrice).toLocaleString()}</span>
                   {canEdit && order.Status !== 'cancelled' && (
-                    <UButton color="danger" variant="ghost" size="sm" onClick={() => removeItem(item.Id)}>Remove</UButton>
+                    <UButton color="danger" appearance="plain" size="sm" onClick={() => removeItem(item.Id)}>Remove</UButton>
                   )}
                 </div>
               ))}
@@ -273,7 +273,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               </fieldset>
               {saveError && <UAlert open status="error">{saveError}</UAlert>}
               <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
-                <UButton variant="ghost" onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
+                <UButton appearance="plain" onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
                 <UButton color="primary" onClick={saveEdit} loading={saving} disabled={saving}>
                   Save
                 </UButton>

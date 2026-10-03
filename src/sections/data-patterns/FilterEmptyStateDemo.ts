@@ -36,7 +36,7 @@ export class FilterEmptyStateDemo extends LitElement {
         : html`
           <u-empty-state variant="no-results">
             <span slot="actions">
-              <u-button size="sm" variant="outlined" @click=${() => { this.filterText = ''; }}>
+              <u-button size="sm" appearance="outlined" @click=${() => { this.filterText = ''; }}>
                 Clear filter
               </u-button>
             </span>

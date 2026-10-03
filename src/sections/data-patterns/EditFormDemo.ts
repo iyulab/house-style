@@ -132,7 +132,7 @@ export class EditFormDemo extends LitElement {
           ? html`<u-badge color="danger">${this.saveError}</u-badge>`
           : ''}
         <div slot="footer">
-          <u-button variant="ghost" ?disabled=${this.saveStatus === 'saving'} @click=${this.closeEditDrawer}>Cancel</u-button>
+          <u-button appearance="plain" ?disabled=${this.saveStatus === 'saving'} @click=${this.closeEditDrawer}>Cancel</u-button>
           <u-button color="primary" ?disabled=${this.saveStatus === 'saving'} @click=${this.handleSave}>
             ${this.saveStatus === 'saving' ? 'Saving…' : 'Save'}
           </u-button>

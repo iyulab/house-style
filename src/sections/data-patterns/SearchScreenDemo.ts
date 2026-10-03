@@ -166,12 +166,12 @@ export class SearchScreenDemo extends LitElement {
       </u-info-section>
 
       <u-action-bar>
-        <u-button variant="ghost" @click=${this.reset}>Reset</u-button>
+        <u-button appearance="plain" @click=${this.reset}>Reset</u-button>
         <u-button color="primary" @click=${this.search}>Search</u-button>
       </u-action-bar>
 
       ${this.message
-        ? html`<u-alert open status="info" variant="outlined">${this.message}</u-alert>`
+        ? html`<u-alert open status="info" appearance="outlined">${this.message}</u-alert>`
         : ''}
 
       ${!searched
@@ -186,7 +186,7 @@ export class SearchScreenDemo extends LitElement {
           ? html`
               <u-empty-state variant="no-results">
                 <span slot="actions">
-                  <u-button size="sm" variant="outlined" @click=${this.reset}>Reset criteria</u-button>
+                  <u-button size="sm" appearance="outlined" @click=${this.reset}>Reset criteria</u-button>
                 </span>
               </u-empty-state>
             `

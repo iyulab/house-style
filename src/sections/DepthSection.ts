@@ -74,20 +74,20 @@ export class DepthSection extends LitElement {
             <tr><th>Role</th><th>Markup</th><th>When</th></tr>
           </thead>
           <tbody>
-            <tr><td>Primary</td><td><code>color="primary"</code></td><td>The one action the region exists for — Save, Create, Search. One per region.</td></tr>
-            <tr><td>Secondary</td><td><code>variant="outlined"</code></td><td>Other actions of the same region — Export, Back, "New order with items".</td></tr>
-            <tr><td>Tertiary</td><td><code>variant="ghost"</code></td><td>Dismissive or low-stakes — Cancel in a form, Reset.</td></tr>
-            <tr><td>Destructive</td><td><code>color="danger" variant="outlined"</code></td><td>Deletes or cancels something. Never solid on the page.</td></tr>
-            <tr><td>Destructive, per row</td><td><code>color="danger" variant="ghost" size="sm"</code></td><td>Repeated on every row (Remove) — quiet until it is the one you reach for.</td></tr>
+            <tr><td>Primary</td><td><code>appearance="solid"</code> (the default)</td><td>The one action the region exists for — Save, Create, Search. One per region.</td></tr>
+            <tr><td>Secondary</td><td><code>appearance="outlined"</code></td><td>Other actions of the same region — Export, Back, "New order with items".</td></tr>
+            <tr><td>Tertiary</td><td><code>appearance="plain"</code></td><td>Dismissive or low-stakes — Cancel in a form, Reset.</td></tr>
+            <tr><td>Destructive</td><td><code>color="danger" appearance="outlined"</code></td><td>Deletes or cancels something. Never solid on the page.</td></tr>
+            <tr><td>Destructive, per row</td><td>a row menu item, in a <code>flex-table</code> column with <code>reveal: 'hover'</code></td><td>Never a red button repeated on every row — the row's "more" menu holds Remove, the column shows only while the row is hovered, focused or selected, and the confirmation runs it.</td></tr>
             <tr><td>Destructive, confirmed</td><td><code>Dialog.confirm(…, { confirmColor: 'danger' })</code></td><td>The confirmation is the only place a destructive action is solid — and the only place it runs from.</td></tr>
           </tbody>
         </table>
         </div>
         <u-info-section min="140">
           <u-button color="primary">Save</u-button>
-          <u-button variant="outlined">Export</u-button>
-          <u-button variant="ghost">Cancel</u-button>
-          <u-button color="danger" variant="outlined" @click=${this.confirmCancel}>Cancel order</u-button>
+          <u-button appearance="outlined">Export</u-button>
+          <u-button appearance="plain">Cancel</u-button>
+          <u-button color="danger" appearance="outlined" @click=${this.confirmCancel}>Cancel order</u-button>
         </u-info-section>
       </u-group-box>
 

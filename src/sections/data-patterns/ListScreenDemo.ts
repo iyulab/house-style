@@ -63,8 +63,8 @@ export class ListScreenDemo extends LitElement {
         <span slot="bulk-actions">
           ${this.selectedCount > 0
             ? html`<u-badge color="primary">${this.selectedCount} selected</u-badge>
-                   <u-button size="sm" variant="outlined">Export</u-button>
-                   <u-button size="sm" color="danger" variant="outlined" @click=${this.handleCancelOrders}>Cancel orders</u-button>`
+                   <u-button size="sm" appearance="outlined">Export</u-button>
+                   <u-button size="sm" color="danger" appearance="outlined" @click=${this.handleCancelOrders}>Cancel orders</u-button>`
             : ''}
         </span>
       </u-rich-table>

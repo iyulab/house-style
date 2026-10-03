@@ -94,13 +94,13 @@ export default function OrdersListPage() {
       <PageHeader title="Orders" subtitle={orders ? `${filteredCount} of ${orders.length}` : undefined} />
 
       <ActionBar>
-        <UButton slot="danger" color="danger" variant="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
+        <UButton slot="danger" color="danger" appearance="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
           Cancel selected ({selectedIds.length})
         </UButton>
         <UButton color="primary" onClick={() => setNewOrderOpen(true)}>
           New order
         </UButton>
-        <UButton variant="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
+        <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
           New order with items
         </UButton>
       </ActionBar>
