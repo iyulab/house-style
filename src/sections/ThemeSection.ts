@@ -155,7 +155,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
                     <td><input type="checkbox" .checked=${this.selected.has(r.id)} @change=${() => this.toggle(r.id)} aria-label="Select ${r.id}" /></td>
                     <td><a class="hs-id" href="#">${r.id}</a> ${r.tag ? html`<span class="hs-attr">${r.tag}</span>` : ''}</td>
                     <td>${r.customer}</td>
-                    <td><u-tag variant="surface" color=${r.status[1]}>${r.status[0]}</u-tag></td>
+                    <td><u-tag dot color=${r.status[1]}>${r.status[0]}</u-tag></td>
                     <td>${r.due === '—' ? html`<span class="hs-empty">—</span>` : html`<span class="hs-due ${r.dueTone ? `hs-due--${r.dueTone}` : ''}">${r.due}</span>`}</td>
                     <td class="hs-num">${r.qty.toLocaleString('en-US')}</td>
                     <td class="hs-num">${won(r.amount)}</td>

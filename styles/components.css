@@ -51,12 +51,6 @@ u-button[variant='link'] {
   font-size: 14px;
 }
 
-/* ── Status tag — a tinted label without an outline (`surface`); the outline stays for the
- *    `outlined` variant, which is how an attribute (not a status) is marked. ── */
-u-tag[variant='surface'] {
-  --tag-border-color: transparent;
-}
-
 /* ── Card — flat surface, hairline border; shadow is for things that float ── */
 u-card {
   --card-border-color: var(--u-border-color);
