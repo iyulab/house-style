@@ -1,0 +1,11 @@
+/*
+ * @iyulab/house-style — fonts
+ * ==========================================================================
+ * Pretendard Variable, dynamic subset: the browser downloads only the glyph ranges a page
+ * uses. `--u-font-base` (tokens.css) lists it first and falls back to the platform's Korean
+ * and system fonts when it is not loaded.
+ *
+ * Kept separate from the theme so an application that already ships Pretendard (or another
+ * face) can skip it: import `styles/theme.css` instead of `styles/index.css`.
+ * ========================================================================== */
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';

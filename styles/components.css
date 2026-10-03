@@ -1,0 +1,119 @@
+/*
+ * @iyulab/house-style — component recipes
+ * ==========================================================================
+ * Element-level house defaults for `@iyulab/*` components, written only against their public
+ * surface: component custom properties (`--btn-*`, `--ft-*`, `--card-*`), `::part()` and the host.
+ * Nothing here changes what an attribute means — a `variant="solid"` button stays solid; the
+ * house only sets size, density and finish.
+ *
+ * Everything sits in `@layer iyu.house`, so an application rule always wins. Rules aimed at a
+ * host beat the component's own `:host` styles (outer context wins over shadow context).
+ * ========================================================================== */
+
+@layer iyu.base, iyu.house;
+
+@layer iyu.house {
+
+/* ── Body ──────────────────────────────────────────────────────────────── */
+:root {
+  font-family: var(--u-font-base);
+  font-variant-numeric: tabular-nums;   /* amounts, counts, dates line up everywhere */
+  color: var(--u-txt-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Button — 28 / 32 / 40, medium weight ─────────────────────────────── *
+ * Height follows the components' own formula (1.5em line + 2 × padding + 2px border), so
+ * these are padding values, not fixed heights: text and icon-only buttons stay equal.     */
+u-button:not([size]),
+u-button[size='md'] {
+  font-size: 13px;
+  --btn-padding-block: 5.25px;   /* 19.5 + 10.5 + 2 = 32 */
+  --btn-padding-inline: 12px;
+}
+u-button[size='sm'] {
+  --btn-padding-block: 4px;      /* 12px → 18 + 8 + 2 = 28 */
+  --btn-padding-inline: 8px;
+}
+u-button[size='lg'] {
+  font-size: 14px;
+  --btn-padding-block: 8.5px;    /* 21 + 17 + 2 = 40 */
+  --btn-padding-inline: 16px;
+}
+u-button[variant='link'] {
+  --btn-padding-inline: 0;
+}
+
+/* ── Text fields — one size wherever they sit. They inherit font-size by default, so a field
+ *    dropped into larger prose grew taller than the buttons beside it; 14px gives the same 32px
+ *    row as a medium button. ── */
+:is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker) {
+  font-size: 14px;
+}
+
+/* ── Status tag — a tinted label without an outline (`surface`); the outline stays for the
+ *    `outlined` variant, which is how an attribute (not a status) is marked. ── */
+u-tag[variant='surface'] {
+  --tag-border-color: transparent;
+}
+
+/* ── Card — flat surface, hairline border; shadow is for things that float ── */
+u-card {
+  --card-border-color: var(--u-border-color);
+}
+
+/* ── Drawer — the side sheet. Header and footer separated by a hairline,
+ *    body scrollbar always visible so long forms show there is more below. ── */
+u-drawer::part(header) {
+  border-bottom: 1px solid var(--u-border-color);
+}
+u-drawer::part(body) {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--u-border-color-strong) transparent;
+}
+
+/* ── Data table (`@iyulab/flex-table`) — 40px rows, 13px cells, quiet header,
+ *    no zebra (hover and selection carry the row), tabular figures. ──────── */
+flex-table {
+  --ft-font-family: var(--u-font-base);
+  --ft-font-size: 13px;
+  --ft-row-height: var(--hs-row);
+  --ft-cell-padding-inline: 12px;
+  --ft-header-font-size: 12px;
+  --ft-header-font-weight: 500;
+  --ft-header-text-color: var(--u-txt-color-weak);
+  --ft-header-bg: var(--u-bg-color-raised);
+  --ft-row-odd-bg: var(--u-bg-color);
+  --ft-row-odd-hover-bg: var(--u-bg-color-hover);
+  --ft-border-color: var(--u-border-color);
+  --ft-selection-bg: var(--u-primary-bg-color);
+}
+flex-table.hs-compact,
+.hs-compact flex-table {
+  --ft-row-height: var(--hs-row-compact);
+}
+
+/* ── Page header (`@iyulab/modern-app`) — eyebrow · 22px title · one-line description ── */
+u-page-header::part(eyebrow) {
+  font-size: var(--u-text-label-size);
+  color: var(--u-txt-color-weak);
+}
+u-page-header::part(subtitle) {
+  font-size: var(--u-text-label-size);
+  color: var(--u-txt-color-weak);
+}
+
+/* ── Sidebar layout — the sidebar is a surface separated from the canvas by a hairline.
+ *    (The page already sits on `--u-canvas-bg-color`; padding is `--app-main-padding`.) ── */
+u-sidebar-layout::part(sidebar) {
+  border-inline-end: 1px solid var(--u-border-color);
+}
+@media print {
+  u-sidebar-layout::part(main) {
+    background: none;
+    padding: 0;
+  }
+}
+
+} /* @layer iyu.house */

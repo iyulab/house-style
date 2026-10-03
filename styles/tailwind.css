@@ -1,0 +1,65 @@
+/*
+ * @iyulab/house-style — Tailwind CSS v4 preset
+ * ==========================================================================
+ *   @import 'tailwindcss';
+ *   @import '@iyulab/house-style/styles/tailwind.css';
+ *
+ * Maps the house roles onto utilities that read the live `--u-*` tokens (`@theme inline`), so
+ * dark mode and an application's brand overrides reach Tailwind classes with no rebuild:
+ *
+ *   bg-canvas · bg-surface · bg-raised · bg-selected · border-line · border-line-strong
+ *   text-ink · text-ink-weak · text-link · ring-focus
+ *   {text,bg,border}-{info,success,warning,danger} (text = readable step) · bg-{role}-soft
+ *   rounded-control (6) · rounded-card (10) · shadow-raise · shadow-overlay · font-sans
+ *
+ * Tailwind's own palette stays available; prefer the role names so screens follow the theme.
+ * ========================================================================== */
+@theme inline {
+  --color-canvas: var(--u-canvas-bg-color);
+  --color-surface: var(--u-bg-color);
+  --color-raised: var(--u-bg-color-raised);
+  --color-hover: var(--u-bg-color-hover);
+  --color-selected: var(--u-primary-bg-color);
+  --color-line: var(--u-border-color);
+  --color-line-strong: var(--u-border-color-strong);
+  --color-ink: var(--u-txt-color);
+  --color-ink-weak: var(--u-txt-color-weak);
+  --color-ink-disabled: var(--u-txt-color-disabled);
+  --color-link: var(--u-link-txt-color);
+  --color-focus: var(--u-focus-ring-color);
+  --color-action: var(--u-primary-color);
+  --color-on-action: var(--u-primary-txt-color);
+  --color-brand: var(--hs-brand);
+  --color-brand-soft: var(--hs-brand-soft);
+  --color-brand-ink: var(--hs-brand-ink);
+
+  --color-info: var(--u-info-color-strong);
+  --color-info-soft: var(--u-info-bg-color);
+  --color-success: var(--u-success-color-strong);
+  --color-success-soft: var(--u-success-bg-color);
+  --color-warning: var(--u-warning-color-strong);
+  --color-warning-soft: var(--u-warning-bg-color);
+  --color-danger: var(--u-danger-color-strong);
+  --color-danger-soft: var(--u-danger-bg-color);
+
+  --radius-control: var(--u-radius-lg);
+  --radius-card: var(--u-radius-xl);
+  --radius-badge: var(--u-radius-md);
+
+  --shadow-raise: var(--u-shadow-sm);
+  --shadow-overlay: var(--u-shadow-lg);
+
+  --font-sans: var(--u-font-base);
+  --font-mono: var(--u-font-mono);
+}
+
+/* Tailwind v4 draws a bare `border` utility in `currentColor` (near-black); LOB screens draw many
+   hairlines, so a bare border is the house line instead. Scoped to elements that use a border
+   utility — a `*` rule would also reach custom-element hosts and beat their shadow `:host`
+   borders (outer styles win over `:host`). An explicit colour utility still wins (same layer,
+   later utilities layer). */
+@layer base {
+  :where([class*='border']) {
+    border-color: var(--u-border-color);
+  }
+}

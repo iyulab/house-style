@@ -1,3 +1,4 @@
+import '../styles/index.css';
 import './app.css';
 import { startMockWorker } from './mocks/browser.js';
 import { bootTheme } from './lib/theme.js';

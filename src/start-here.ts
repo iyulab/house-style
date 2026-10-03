@@ -10,8 +10,8 @@
 export const CREATE = `npm create vite@latest my-app -- --template lit-ts
 cd my-app`;
 
-/** Step 2 — the components, the table, the app shell, and the house preset. */
-export const INSTALL = `npm install @iyulab/components @iyulab/data-components @iyulab/modern-app @iyulab/enterprise`;
+/** Step 2 — the components, the table, the app shell, and the house theme. */
+export const INSTALL = `npm install @iyulab/components @iyulab/data-components @iyulab/modern-app @iyulab/house-style`;
 
 /** Step 3a — `index.html`, replacing the template's (which loads its own demo element and CSS). */
 export const INDEX_HTML = `<!doctype html>
@@ -25,10 +25,10 @@ export const INDEX_HTML = `<!doctype html>
   <body></body>
 </html>`;
 
-/** Step 3b — `src/main.ts`: load the preset, start the shell, route to the list screen. */
+/** Step 3b — `src/main.ts`: load the house theme, start the shell, route to the list screen. */
 export const BOOT = `import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
-import '@iyulab/enterprise/styles/preset.css';   // the house style: tokens, type, density
+import '@iyulab/house-style';                     // the house theme: tokens, type, density, patterns
 import './ListScreenDemo.ts';                    // the recipe below — rename its tag when it is yours
 
 await app.load({

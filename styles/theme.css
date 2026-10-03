@@ -1,0 +1,7 @@
+/*
+ * @iyulab/house-style — the theme without fonts
+ *   import '@iyulab/house-style/styles/theme.css';
+ */
+@import './tokens.css';
+@import './components.css';
+@import './patterns.css';

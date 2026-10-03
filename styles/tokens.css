@@ -1,0 +1,315 @@
+/*
+ * @iyulab/house-style — tokens
+ * ==========================================================================
+ * The house values for the token axes `@iyulab/components` opens. Axes (names, steps) belong
+ * to the libraries; this sheet only fills them in. Everything lives in `@layer iyu.house`, so:
+ *
+ *   built-in defaults (iyu.base)  <  this theme (iyu.house)  <  your application (unlayered)
+ *
+ * An application brands the house by overriding a handful of tokens with plain `:root` rules —
+ * see "Brand" below. No specificity tricks are needed.
+ *
+ * Character — a quiet, dense line-of-business look:
+ *   · neutral first: warm greys carry ~90% of the screen; colour is for status and brand only
+ *   · one ink action per view (`--u-primary-*` is ink, not blue)
+ *   · blue is reserved for interaction: links, focus, selection
+ *   · depth by surface and a hairline, shadows only on things that float
+ *   · numbers first: tabular figures everywhere
+ *
+ * Contrast (light, against the surface #FFFFFF unless noted): body ink 17.4 · secondary 6.5 ·
+ * tertiary 5.6 · link 6.2 · status text on its own tint ≥ 5.5 · input border 3.2 (WCAG 1.4.11).
+ * The numbers are re-measured by `tests/contrast.test.mjs`.
+ * ========================================================================== */
+
+@layer iyu.base, iyu.house;
+
+@layer iyu.house {
+
+/* ── light (and no theme attribute) ─────────────────────────────────────── */
+:root {
+  /* Neutral ramp — warm grey. Most role tokens derive from it. */
+  --u-neutral-0:    #FFFFFF;
+  --u-neutral-50:   #F6F6F4;
+  --u-neutral-100:  #F1F1EF;
+  --u-neutral-200:  #EAEAE7;
+  --u-neutral-300:  #E3E3DF;
+  --u-neutral-400:  #C8C9C5;
+  --u-neutral-500:  #8F9296;
+  --u-neutral-600:  #666970;
+  --u-neutral-700:  #5B5E63;
+  --u-neutral-800:  #34363A;
+  --u-neutral-900:  #18191B;
+  --u-neutral-1000: #0E0F10;
+
+  /* Depth — canvas (page) < surface (cards, tables, controls) < floating (shadow) */
+  --u-canvas-bg-color:       #F6F6F4;
+  --u-bg-color:              #FFFFFF;
+  --u-panel-bg-color:        #FFFFFF;
+  --u-input-bg-color:        #FFFFFF;
+  --u-bg-color-raised:       #F1F1EF;   /* table header, toolbar strip, read-only field */
+  --u-bg-color-raised-hover: #EAEAE7;
+  --u-bg-color-hover:        #F1F1EF;
+  --u-bg-color-active:       #EAEAE7;
+  --u-bg-color-disabled:     #F1F1EF;
+  --u-overlay-bg-color:      rgba(24, 25, 27, 0.32);
+
+  /* Lines */
+  --u-border-color:              #E3E3DF;
+  --u-border-color-weak:         #ECECE9;
+  --u-border-color-strong:       #8F9296;
+  --u-border-color-hover:        #8F9296;
+  --u-input-border-color:        #8F9296;
+  --u-input-border-color-hover:  #5B5E63;
+  --u-input-border-color-focus:  #2F6FEB;
+
+  /* Ink */
+  --u-txt-color:           #18191B;
+  --u-txt-color-strong:    #0E0F10;
+  --u-txt-color-weak:      #5B5E63;
+  --u-txt-color-hover:     #18191B;
+  --u-txt-color-active:    #18191B;
+  --u-txt-color-disabled:  #A3A5A9;
+  --u-icon-color:          #5B5E63;
+  --u-icon-color-hover:    #18191B;
+  --u-icon-color-active:   #18191B;
+
+  /* Action — ink. The primary button is near-black; selection stays blue. */
+  --u-primary-color-weakest: #E3E3DF;
+  --u-primary-color-weaker:  #C8C9C5;
+  --u-primary-color-weak:    #5B5E63;
+  --u-primary-color:         #18191B;
+  --u-primary-color-strong:  #18191B;
+  --u-primary-txt-color:     #FFFFFF;
+  --u-primary-bg-color:      #EEF3FD;   /* selected rows, current item */
+
+  /* Interaction — blue, for links and focus only */
+  --u-link-txt-color:   #1F5FCC;
+  --u-focus-ring-color: #2F6FEB;
+
+  /* Status — `-color-strong` is the text step (on surface and on its own tint), `-bg-color`
+     the tint, `-color` the solid fill (with `-txt-color` on top). */
+  --u-info-color-weakest:    #D6E3FB;
+  --u-info-color-weaker:     #A9C4F6;
+  --u-info-color-weak:       #5B8DE8;
+  --u-info-color:            #1F5FCC;
+  --u-info-color-strong:     #1A55B8;
+  --u-info-bg-color:         #E8F0FD;
+  --u-info-txt-color:        #FFFFFF;
+
+  --u-success-color-weakest: #CDEBD9;
+  --u-success-color-weaker:  #A3D8BA;
+  --u-success-color-weak:    #4AA274;
+  --u-success-color:         #1B7A44;
+  --u-success-color-strong:  #1B6E3E;
+  --u-success-bg-color:      #E6F4EC;
+  --u-success-txt-color:     #FFFFFF;
+
+  --u-warning-color-weakest: #FBEBCF;
+  --u-warning-color-weaker:  #F5D9A3;
+  --u-warning-color-weak:    #E8B25A;
+  --u-warning-color:         #E59A24;
+  --u-warning-color-strong:  #8A5100;
+  --u-warning-bg-color:      #FDF3E1;
+  --u-warning-txt-color:     #18191B;
+
+  --u-danger-color-weakest:  #F9D4D0;
+  --u-danger-color-weaker:   #F2AAA2;
+  --u-danger-color-weak:     #DE6A5D;
+  --u-danger-color:          #B42318;
+  --u-danger-color-strong:   #B42318;
+  --u-danger-bg-color:       #FDECEA;
+  --u-danger-txt-color:      #FFFFFF;
+
+  /* Elevation — a hairline lift for surfaces, one real shadow for things that float */
+  --u-shadow-color-weaker:   rgba(16, 17, 19, 0.04);
+  --u-shadow-color-weak:     rgba(16, 17, 19, 0.06);
+  --u-shadow-color-normal:   rgba(16, 17, 19, 0.10);
+  --u-shadow-color-strong:   rgba(16, 17, 19, 0.14);
+  --u-shadow-color-stronger: rgba(16, 17, 19, 0.18);
+  --u-shadow-sm: 0 1px 2px rgba(16, 17, 19, 0.06);
+  --u-shadow-md: 0 1px 2px rgba(16, 17, 19, 0.06);
+  --u-shadow-lg: 0 12px 32px rgba(16, 17, 19, 0.14), 0 2px 6px rgba(16, 17, 19, 0.06);
+  --u-shadow-xl: 0 16px 40px rgba(16, 17, 19, 0.18), 0 2px 8px rgba(16, 17, 19, 0.08);
+
+  /* Shell (`@iyulab/modern-app`) */
+  --app-sidebar-bg:          var(--u-bg-color);
+  --app-sidebar-fg:          var(--u-txt-color-weak);
+  --app-header-bg:           var(--u-bg-color);
+  --app-header-fg:           var(--u-txt-color);
+  --app-sidebar-width:       232px;
+  --app-sidebar-active-bg:   var(--hs-brand-soft);
+  --app-sidebar-active-fg:   var(--hs-brand-ink);
+
+  /* Brand — the application's identity colour. The house default is neutral, so an
+     unbranded app looks finished; an application sets these three and nothing else. */
+  --hs-brand:      #18191B;
+  --hs-brand-soft: #EAEAE7;
+  --hs-brand-ink:  #18191B;
+}
+
+/* ── dark ───────────────────────────────────────────────────────────────── */
+:root[theme="dark"] {
+  --u-neutral-0:    #0E0F10;
+  --u-neutral-50:   #121314;
+  --u-neutral-100:  #1A1B1D;
+  --u-neutral-200:  #222326;
+  --u-neutral-300:  #2E3033;
+  --u-neutral-400:  #45474B;
+  --u-neutral-500:  #6A6D72;
+  --u-neutral-600:  #8C8F95;
+  --u-neutral-700:  #A3A6AB;
+  --u-neutral-800:  #C4C6CA;
+  --u-neutral-900:  #EDEDEC;
+  --u-neutral-1000: #FFFFFF;
+
+  --u-canvas-bg-color:       #121314;
+  --u-bg-color:              #1A1B1D;
+  --u-panel-bg-color:        #1A1B1D;
+  --u-input-bg-color:        #1A1B1D;
+  --u-bg-color-raised:       #222326;
+  --u-bg-color-raised-hover: #2A2B2E;
+  --u-bg-color-hover:        #222326;
+  --u-bg-color-active:       #2A2B2E;
+  --u-bg-color-disabled:     #1F2022;
+  --u-overlay-bg-color:      rgba(0, 0, 0, 0.56);
+
+  --u-border-color:              #2E3033;
+  --u-border-color-weak:         #26282B;
+  --u-border-color-strong:       #6A6D72;
+  --u-border-color-hover:        #6A6D72;
+  --u-input-border-color:        #6A6D72;
+  --u-input-border-color-hover:  #A3A6AB;
+  --u-input-border-color-focus:  #6E9CF7;
+
+  --u-txt-color:           #EDEDEC;
+  --u-txt-color-strong:    #FFFFFF;
+  --u-txt-color-weak:      #A3A6AB;
+  --u-txt-color-hover:     #EDEDEC;
+  --u-txt-color-active:    #EDEDEC;
+  --u-txt-color-disabled:  #5E6166;
+  --u-icon-color:          #A3A6AB;
+  --u-icon-color-hover:    #EDEDEC;
+  --u-icon-color-active:   #EDEDEC;
+
+  --u-primary-color-weakest: #2E3033;
+  --u-primary-color-weaker:  #45474B;
+  --u-primary-color-weak:    #A3A6AB;
+  --u-primary-color:         #EDEDEC;
+  --u-primary-color-strong:  #EDEDEC;
+  --u-primary-txt-color:     #18191B;
+  --u-primary-bg-color:      #1C2638;
+
+  --u-link-txt-color:   #8DB3F7;
+  --u-focus-ring-color: #6E9CF7;
+
+  --u-info-color-weakest:    #1F3152;
+  --u-info-color-weaker:     #2C4A7E;
+  --u-info-color-weak:       #5E8BE0;
+  --u-info-color:            #8DB3F7;
+  --u-info-color-strong:     #8DB3F7;
+  --u-info-bg-color:         #1B2A44;
+  --u-info-txt-color:        #0E0F10;
+
+  --u-success-color-weakest: #1A3826;
+  --u-success-color-weaker:  #2B5A3E;
+  --u-success-color-weak:    #4FB07D;
+  --u-success-color:         #7DD8A5;
+  --u-success-color-strong:  #7DD8A5;
+  --u-success-bg-color:      #16301F;
+  --u-success-txt-color:     #0E0F10;
+
+  --u-warning-color-weakest: #3F2E12;
+  --u-warning-color-weaker:  #5E451A;
+  --u-warning-color-weak:    #C99140;
+  --u-warning-color:         #F2B65A;
+  --u-warning-color-strong:  #F2B65A;
+  --u-warning-bg-color:      #3A2A10;
+  --u-warning-txt-color:     #0E0F10;
+
+  --u-danger-color-weakest:  #4A1F1B;
+  --u-danger-color-weaker:   #6E2C26;
+  --u-danger-color-weak:     #E0675C;
+  --u-danger-color:          #FF8A80;
+  --u-danger-color-strong:   #FF8A80;
+  --u-danger-bg-color:       #3D1A17;
+  --u-danger-txt-color:      #1A0D0B;
+
+  --u-shadow-color-weaker:   rgba(0, 0, 0, 0.24);
+  --u-shadow-color-weak:     rgba(0, 0, 0, 0.32);
+  --u-shadow-color-normal:   rgba(0, 0, 0, 0.40);
+  --u-shadow-color-strong:   rgba(0, 0, 0, 0.50);
+  --u-shadow-color-stronger: rgba(0, 0, 0, 0.60);
+  --u-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --u-shadow-md: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --u-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.40);
+  --u-shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.60), 0 2px 8px rgba(0, 0, 0, 0.45);
+
+  --hs-brand:      #EDEDEC;
+  --hs-brand-soft: #2A2B2E;
+  --hs-brand-ink:  #EDEDEC;
+}
+
+/* ── mode-independent scale: shape, type, spacing ───────────────────────── */
+:root {
+  /* Shape — badge 4 · control 6 · card and table 10 */
+  --u-radius-sm:   3px;
+  --u-radius-md:   4px;
+  --u-radius-lg:   6px;
+  --u-radius-xl:  10px;
+  --u-radius-2xl: 12px;
+  --u-radius-3xl: 16px;
+
+  /* Type — Pretendard; one ladder 22 / 18 / 15 / 14 / 13 / 12 / 11. Korean gets no positive
+     tracking, so only the largest step is tightened and the overline stays near zero. */
+  --u-font-base: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+                 'Noto Sans KR', 'Malgun Gothic', 'Segoe UI', system-ui, sans-serif;
+  --u-font-mono: 'JetBrains Mono', D2Coding, ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+
+  --u-text-display-size:      22px;
+  --u-text-display-weight:    700;
+  --u-text-display-leading:   1.364;
+  --u-text-display-tracking:  -0.01em;
+  --u-text-title-size:        18px;
+  --u-text-title-weight:      700;
+  --u-text-title-leading:     1.444;
+  --u-text-title-tracking:    0;
+  --u-text-subtitle-size:     15px;
+  --u-text-subtitle-weight:   600;
+  --u-text-subtitle-leading:  1.467;
+  --u-text-subtitle-tracking: 0;
+  --u-text-body-size:         14px;
+  --u-text-body-weight:       400;
+  --u-text-body-leading:      1.571;
+  --u-text-body-tracking:     0;
+  --u-text-label-size:        12px;
+  --u-text-label-weight:      500;
+  --u-text-label-leading:     1.333;
+  --u-text-label-tracking:    0;
+  --u-text-caption-size:      12px;
+  --u-text-caption-weight:    400;
+  --u-text-caption-leading:   1.5;
+  --u-text-caption-tracking:  0;
+  --u-text-overline-size:     11px;
+  --u-text-overline-weight:   600;
+  --u-text-overline-leading:  1.455;
+  --u-text-overline-tracking: 0.02em;
+
+  /* House-only scale — control heights and table rows (read by components.css · patterns.css) */
+  --hs-control-sm: 28px;
+  --hs-control-md: 32px;
+  --hs-control-lg: 40px;
+  --hs-row:         40px;
+  --hs-row-compact: 32px;
+  --hs-page-padding: 24px;
+
+  /* Shell (`@iyulab/modern-app`) — 32px navigation rows, 16px icons, a flat current item */
+  --app-main-padding:           var(--hs-page-padding);
+  --app-sidebar-item-radius:    6px;
+  --app-sidebar-item-gap:       8px;
+  --app-sidebar-item-padding:   6px 12px;
+  --app-sidebar-icon-size:      16px;
+  --app-sidebar-active-shadow:  none;
+  --app-sidebar-active-shadow-hover: none;
+}
+
+} /* @layer iyu.house */

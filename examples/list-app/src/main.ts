@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
-import '@iyulab/enterprise/styles/preset.css';   // the house style: tokens, type, density
+import '@iyulab/house-style';                     // the house theme: tokens, type, density, patterns
 import './ListScreenDemo.ts';                    // the recipe below — rename its tag when it is yours
 
 await app.load({

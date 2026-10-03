@@ -1,13 +1,69 @@
 # House Style
 
-A reference guide and living demo for the iyulab house design style, built on
-`@iyulab/components`, `@iyulab/enterprise` and `@iyulab/modern-app`.
+The iyulab house theme for `@iyulab/components`, `@iyulab/modern-app` and `@iyulab/flex-table`,
+and the guide that documents it.
 
-This is not a published npm package — it is a website. Every value shown on it
-(type scale, radius, elevation) is read live from the design tokens actually
-loaded on the page, so the guide cannot drift out of sync with its own source.
-Where a design decision has not been made yet, the page says so plainly instead
-of inventing one.
+- **The theme** (`@iyulab/house-style` on npm) is CSS only: house token values, component
+  recipes, line-of-business layout patterns and a Tailwind CSS v4 preset. One import turns the
+  neutral component defaults into a finished, quiet, dense business UI.
+- **The guide** (the website below) shows every value read live from the theme it loads, so it
+  cannot drift from the files an application imports.
+
+## Use the theme
+
+```bash
+npm install @iyulab/house-style
+```
+
+```ts
+import '@iyulab/house-style';   // fonts + tokens + component recipes + layout patterns
+```
+
+| File | What it holds |
+|---|---|
+| `styles/index.css` (package root) | everything below plus Pretendard |
+| `styles/theme.css` | the theme without fonts (bring your own face) |
+| `styles/tokens.css` | house values for the `--u-*` token axes, light and dark; brand tokens `--hs-brand*` |
+| `styles/components.css` | sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
+| `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
+| `styles/tailwind.css` | Tailwind v4 preset — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
+| `styles/fonts.css` | Pretendard Variable (dynamic subset) |
+
+### Cascade layers — your CSS always wins
+
+```
+@layer iyu.base, iyu.house;
+  iyu.base    @iyulab/components built-in defaults
+  iyu.house   this theme
+  (unlayered) your application
+```
+
+Requires `@iyulab/components` 2.0 or later (the release that put its defaults in `iyu.base`).
+Because the application is unlayered, a plain `:root { … }` rule overrides the theme — no
+specificity tricks, no load-order rules. Scope a mode-specific value with `:root[theme="dark"]`.
+
+### Brand it
+
+The house is neutral on purpose. An application sets its identity colour with three tokens and
+keeps it out of buttons and warnings (a red brand next to a red "danger" reads as one colour):
+
+```css
+:root {
+  --hs-brand: #c8161d;        /* logo mark */
+  --hs-brand-soft: #fcebec;   /* current navigation item */
+  --hs-brand-ink: #a3121a;    /* its text */
+}
+:root[theme="dark"] {
+  --hs-brand-soft: #3a1a1c;
+  --hs-brand-ink: #ff9a9e;
+}
+```
+
+Everything else — warm-grey neutrals, the ink primary action, blue for links and focus, status
+tints, the 22/18/15/14/13/12/11 type ladder, 28/32/40 controls, 40px table rows — comes from the
+theme and can be overridden token by token.
+
+## The guide
 
 **Live**: https://iyulab.github.io/house-style/ — this is the guide. There is no
 separate docs site; the page above is the only place to read it.

@@ -18,6 +18,7 @@ export interface Category {
 }
 
 export const CATEGORIES: readonly Category[] = [
+  { path: 'theme', tier: 'Foundations', label: 'Theme & layout patterns', icon: 'palette', summary: 'Load the house theme, brand it with three tokens, and assemble a screen from the hs-* patterns.' },
   { path: 'identity', tier: 'Foundations', label: 'Visual identity & tokens', icon: 'identity', summary: 'Colour, type, spacing and radius — the tokens every screen reads, and which colour means what.' },
   { path: 'layout', tier: 'Foundations', label: 'Layout & viewport', icon: 'layout', summary: 'The app shell, content width and breakpoints.' },
   { path: 'voice-a11y', tier: 'Foundations', label: 'Voice, tone & accessibility', icon: 'message', summary: 'How labels, messages and errors are worded, and the accessibility floor.' },

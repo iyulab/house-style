@@ -1,0 +1,10 @@
+/*
+ * @iyulab/house-style — everything: fonts + tokens + component recipes + patterns
+ *
+ *   import '@iyulab/house-style';            // same file, via the package "style"/"." entry
+ *   import '@iyulab/house-style/styles/index.css';
+ *
+ * Tailwind CSS v4 users also add `styles/tailwind.css` from their Tailwind entry.
+ */
+@import './fonts.css';
+@import './theme.css';

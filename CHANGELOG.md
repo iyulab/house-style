@@ -1,0 +1,28 @@
+# Changelog
+
+## [Unreleased] — 0.1.0
+
+First release as a package. Until now `@iyulab/house-style` was only the guide site.
+
+### Added
+
+- **The house theme, CSS only, in the `iyu.house` cascade layer** (requires `@iyulab/components`
+  2.0, whose defaults sit in `iyu.base`; unlayered application CSS always wins):
+  - `styles/tokens.css` — warm-grey neutrals, ink primary action, blue reserved for links and
+    focus (`--u-focus-ring-color`), status tints with AA text, canvas vs surface
+    (`--u-canvas-bg-color`), radius 4/6/10, a flat surface lift and one overlay shadow,
+    Pretendard and the 22/18/15/14/13/12/11 type ladder — light and dark. Brand tokens
+    `--hs-brand`, `--hs-brand-soft`, `--hs-brand-ink` (neutral by default).
+  - `styles/components.css` — 28/32/40 buttons, flat cards, side-sheet header and visible body
+    scrollbar, 40px `flex-table` rows with a quiet header and no zebra, page header eyebrow and
+    description, the shell's canvas and page padding.
+  - `styles/patterns.css` — `hs-*` patterns: page head, saved-view tabs with counts, filter bar,
+    stat strip, table card with selection toolbar and pager, plain table with row actions on
+    hover, card and description list, two-column detail, callout (info · success · warning ·
+    danger · note), form sections and fields, side-sheet footer, attribute label, days-left mark.
+  - `styles/tailwind.css` — Tailwind CSS v4 preset mapping the roles to utilities.
+  - `styles/fonts.css` — Pretendard Variable, dynamic subset.
+- Absorbs `@iyulab/enterprise/styles/preset.css` (removed there): the type scale, radius and
+  elevation values now live here with the rest of the house values.
+- `npm test` — token contract: every light colour has a dark value (the house layer would
+  otherwise leak a light value into dark mode) and the promised contrast pairs hold in both modes.

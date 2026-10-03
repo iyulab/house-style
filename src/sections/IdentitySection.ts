@@ -46,11 +46,9 @@ const CHART_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 /**
  * §1 Visual identity & tokens.
  *
- * This section IS the wiring. The blueprint's headline finding was that
- * `@iyulab/enterprise/styles/preset.css` defines a real house type scale, radius
- * ladder and elevation system, but nothing loaded it anywhere — this page loads it
- * (see `main.ts`), and every value shown below is read live from the document via
- * `getComputedStyle`, never retyped, so it can never drift from that source file.
+ * Every value shown below is read live from the document via `getComputedStyle`, never
+ * retyped — the page loads this package's own theme (`styles/`, see `main.ts`), so it can
+ * never drift from the files an application imports.
  */
 @customElement('house-identity-section')
 export class IdentitySection extends LitElement {
@@ -63,7 +61,7 @@ export class IdentitySection extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    // Elevation tokens redeclare per theme (`:root[theme='dark']` in preset.css); the
+    // Colour and elevation tokens redeclare per theme (`:root[theme='dark']` in tokens.css); the
     // typography and radius tokens do not. Re-rendering on theme change keeps every
     // reading below honest about which axes actually move and which don't.
     this.observer = new MutationObserver(() => (this.tick += 1));
@@ -169,10 +167,13 @@ export class IdentitySection extends LitElement {
             `)}
           </div>
           <p>
-            Re-brand by redefining the role tokens (<code>--u-primary-color</code> and its
-            steps) in your own sheet, loaded after the preset — not by painting components with
-            a ramp hue like <code>--u-blue-700</code>. A ramp colour is the colour itself; a
-            role follows the brand and keeps its contrast pairs.
+            Brand the house with three tokens in your own sheet — <code>--hs-brand</code>,
+            <code>--hs-brand-soft</code> and <code>--hs-brand-ink</code> (logo, current navigation item) —
+            and, only if your actions should not be ink, the role tokens (<code>--u-primary-color</code>
+            and its steps). A plain <code>:root</code> rule is enough: the theme sits in a cascade
+            layer, so your unlayered rule always wins. Do not paint components with a ramp hue like
+            <code>--u-blue-700</code> — a ramp colour is the colour itself; a role follows the theme and
+            keeps its contrast pairs.
           </p>
         </u-group-box>
 
@@ -258,8 +259,8 @@ export class IdentitySection extends LitElement {
 
         <u-group-box level="2" title="Elevation">
           <p>
-            Shadows use a blue-black tint rather than pure black. Elevation is the one
-            axis in this preset that is redefined per theme — dark mode leans on
+            Surfaces sit on a hairline and a near-flat lift; only things that float (menus,
+            sheets, dialogs) cast a real shadow. Elevation is redefined per theme — dark mode leans on
             brightness difference between surfaces more than shadow alone, so the values
             below actually change when you toggle the theme; type scale and radius do not.
           </p>

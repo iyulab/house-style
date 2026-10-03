@@ -46,14 +46,15 @@ export class HouseStylePage extends LitElement {
             ${this.renderCode(CREATE, 'Copy commands')}
           </li>
           <li>
-            <p><strong>Install</strong> the components, the table, the app shell, and the house preset.</p>
+            <p><strong>Install</strong> the components, the table, the app shell, and the house theme.</p>
             ${this.renderCode(INSTALL, 'Copy command')}
           </li>
           <li>
             <p>
-              <strong>Load the preset and start the app.</strong> Replace <code>index.html</code>, then write
-              <code>src/main.ts</code>. The preset is one stylesheet — every component on this site reads its
-              tokens, so importing it is what makes a screen look like this one.
+              <strong>Load the house theme and start the app.</strong> Replace <code>index.html</code>, then write
+              <code>src/main.ts</code>. The theme is one stylesheet in its own cascade layer — every component
+              on this site reads its tokens, so importing it is what makes a screen look like this one, and any
+              rule your app writes still wins over it.
             </p>
             ${this.renderCode(INDEX_HTML, 'Copy index.html')}
             ${this.renderCode(BOOT, 'Copy main.ts')}

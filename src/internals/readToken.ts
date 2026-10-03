@@ -2,8 +2,8 @@
  * Reads a design token's current value straight from the live document.
  *
  * This is the whole mechanism behind "cite, don't duplicate": every value shown on
- * this page is read at runtime from whatever `@iyulab/enterprise/styles/preset.css`
- * (layered on `@iyulab/components`'s base sheet) currently declares. No token value
+ * this page is read at runtime from whatever this package's theme (`styles/tokens.css`,
+ * layered on `@iyulab/components`'s base sheet) currently declares. No token value
  * is ever hand-typed into this codebase, so the page cannot drift from its source.
  */
 export function readToken(name: string): string {

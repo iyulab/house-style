@@ -2,12 +2,10 @@ import { html } from 'lit';
 import { app } from '@iyulab/modern-app';
 import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 
-// The canonical house-style preset, loaded the way its own header documents it: a plain
-// static import. Before @iyulab/components 1.44.0 that silently did nothing here —
-// `Theme.init()` appended the base token sheet at the end of `<head>`, so it outran a
-// statically imported sheet at equal specificity. The base sheet now sits ahead of the
-// document's other styles, so no sequencing is needed and none is done.
-import '@iyulab/enterprise/styles/preset.css';
+// The house theme this site documents, loaded the way an application loads it: one static
+// import. It sits in the `iyu.house` cascade layer, so neither its position in the bundle nor
+// the moment `Theme.init()` injects the built-in defaults (`iyu.base`) changes the outcome.
+import '../styles/index.css';
 import '@iyulab/enterprise/icons';
 import '@iyulab/components/dist/components/popover/UPopover.js';
 import '@iyulab/components/dist/components/menu/UMenu.js';
@@ -23,6 +21,7 @@ import './sections/FlowsSection.js';
 import './sections/FeedbackSection.js';
 import './sections/VoiceA11ySection.js';
 import './sections/DeploymentSection.js';
+import './sections/ThemeSection.js';
 
 const base = import.meta.env.BASE_URL;
 
@@ -36,6 +35,7 @@ const SECTIONS: Record<string, () => unknown> = {
   feedback: () => html`<house-feedback-section></house-feedback-section>`,
   'voice-a11y': () => html`<house-voice-a11y-section></house-voice-a11y-section>`,
   deployment: () => html`<house-deployment-section></house-deployment-section>`,
+  theme: () => html`<house-theme-section></house-theme-section>`,
 };
 
 const navLinkStyles = { host: { '--link-icon-color': 'var(--u-primary-color)' } };
@@ -151,10 +151,5 @@ app.load({
       },
     ],
 
-    styles: {
-      main: {
-        background: 'var(--u-bg-color-raised, #FAFAFA)',
-      },
-    },
   },
 });

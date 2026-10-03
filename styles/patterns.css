@@ -1,0 +1,562 @@
+/*
+ * @iyulab/house-style — layout patterns
+ * ==========================================================================
+ * Class-based patterns for the arrangements a line-of-business screen repeats and no single
+ * component owns: the page head, the filter bar, the stat strip, the plain data table, the
+ * callout, the form section, the side-sheet footer. They work in any framework (plain HTML,
+ * Lit, React) and read tokens only — no literal colours.
+ *
+ * Prefix `hs-`. Everything sits in `@layer iyu.house`; an application rule always wins.
+ *
+ * Screen recipes (the guide shows each one):
+ *   list   = .hs-page-head → .hs-filter-bar → .hs-stats → .hs-table-card (toolbar · table · pager)
+ *   detail = side sheet: head (id · status · one primary action) → steps → .hs-stats → tabs → cards
+ *   edit   = side sheet with .hs-fieldset sections and a pinned .hs-sheet-footer
+ *
+ * Rules the patterns encode:
+ *   · one ink (primary) button per view — the rest are outlined, ghost or in a menu
+ *   · conditions fold, results open — the table starts in the top third of the screen
+ *   · numbers right-aligned in tabular figures; an empty value is an em dash
+ *   · row actions appear on hover or selection, never as a red trash can on every row
+ *   · a callout states its conclusion in the title; one callout per screen
+ * ========================================================================== */
+
+@layer iyu.base, iyu.house;
+
+@layer iyu.house {
+
+/* ── Page ──────────────────────────────────────────────────────────────── */
+.hs-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-lg, 16px);
+  min-width: 0;
+}
+
+/* Page head — eyebrow · title · one-line description on the left; on the right a scope
+   picker (data-wide filters such as a season or period), up to two secondary actions and
+   the single primary action, in that order. */
+.hs-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--u-space-lg, 16px);
+  flex-wrap: wrap;
+}
+.hs-page-head__eyebrow {
+  margin: 0 0 2px;
+  font-size: var(--u-text-label-size, 12px);
+  line-height: 16px;
+  color: var(--u-txt-color-weak);
+}
+.hs-page-head__title {
+  margin: 0;
+  font-size: var(--u-text-display-size, 22px);
+  line-height: var(--u-text-display-leading, 1.364);
+  font-weight: var(--u-text-display-weight, 700);
+  letter-spacing: var(--u-text-display-tracking, -0.01em);
+  color: var(--u-txt-color);
+}
+.hs-page-head__description {
+  margin: 2px 0 0;
+  font-size: var(--u-text-label-size, 12px);
+  line-height: 18px;
+  color: var(--u-txt-color-weak);
+}
+.hs-page-head__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+  flex-wrap: wrap;
+}
+
+/* ── Saved views — tabs above the filter bar, each with a count ─────────── */
+.hs-views {
+  display: flex;
+  gap: var(--u-space-2xs, 4px);
+  border-bottom: 1px solid var(--u-border-color);
+  overflow-x: auto;
+}
+.hs-views__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--u-txt-color-weak);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hs-views__tab:hover {
+  color: var(--u-txt-color);
+}
+.hs-views__tab[aria-selected='true'],
+.hs-views__tab[aria-current='page'] {
+  color: var(--u-txt-color);
+  border-bottom-color: var(--u-txt-color);
+  font-weight: 600;
+}
+.hs-views__tab:focus-visible {
+  outline: 2px solid var(--u-focus-ring-color);
+  outline-offset: -2px;
+}
+.hs-count {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--u-radius-pill, 9999px);
+  background: var(--u-bg-color-raised);
+  color: var(--u-txt-color-weak);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Filter bar — search · up to three key filters · "Filters" panel · applied chips ── */
+.hs-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+}
+.hs-filter-bar__search {
+  flex: 0 1 360px;
+  min-width: 240px;
+}
+.hs-filter-bar__end {
+  margin-inline-start: auto;
+}
+.hs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--u-space-xs, 6px);
+}
+.hs-chips:empty {
+  display: none;
+}
+
+/* ── Stat strip — the result's totals as cells, not a sentence ───────────
+ * 3–5 cells: label → value → one supporting line. One hero value per screen at most. */
+.hs-stats {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  background: var(--u-bg-color);
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-xl, 10px);
+}
+.hs-stat {
+  min-width: 0;
+  padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
+  border-inline-start: 1px solid var(--u-border-color);
+}
+.hs-stat:first-child {
+  border-inline-start: 0;
+}
+.hs-stat__label {
+  font-size: var(--u-text-label-size, 12px);
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+}
+.hs-stat__value {
+  margin-top: 2px;
+  font-size: var(--u-text-title-size, 18px);
+  line-height: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--u-txt-color);
+}
+.hs-stat__unit {
+  margin-inline-start: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+}
+.hs-stat__sub {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--u-txt-color-weak);
+}
+.hs-stat--hero .hs-stat__value {
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -0.01em;
+}
+.hs-stat--warning .hs-stat__value { color: var(--u-warning-color-strong); }
+.hs-stat--danger .hs-stat__value { color: var(--u-danger-color-strong); }
+.hs-stat--success .hs-stat__value { color: var(--u-success-color-strong); }
+@container (max-width: 640px) {
+  .hs-stats { grid-auto-flow: row; }
+  .hs-stat { border-inline-start: 0; border-top: 1px solid var(--u-border-color); }
+  .hs-stat:first-child { border-top: 0; }
+}
+
+/* ── Table card — toolbar · table · pager on one surface ──────────────── */
+.hs-table-card {
+  background: var(--u-bg-color);
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-xl, 10px);
+  overflow: hidden;
+  min-width: 0;
+}
+.hs-table-card > flex-table {
+  border: 0;
+}
+.hs-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-sm, 8px);
+  min-height: 48px;
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  border-bottom: 1px solid var(--u-border-color);
+  flex-wrap: wrap;
+}
+/* With a selection the toolbar becomes the bulk-action bar. */
+.hs-table-toolbar[data-selected],
+.hs-table-toolbar--selected {
+  background: var(--u-primary-bg-color);
+}
+.hs-table-toolbar__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.hs-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-sm, 8px);
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  border-top: 1px solid var(--u-border-color);
+  font-size: 12px;
+  color: var(--u-txt-color-weak);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Plain table — for small server-rendered tables that do not need a grid ── */
+.hs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--u-txt-color);
+}
+.hs-table th {
+  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
+  text-align: start;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+  background: var(--u-bg-color-raised);
+  border-bottom: 1px solid var(--u-border-color);
+}
+.hs-table td {
+  height: var(--hs-row, 40px);
+  padding: 0 var(--u-space-md, 12px);
+  border-bottom: 1px solid var(--u-border-color);
+  vertical-align: middle;
+}
+.hs-table tbody tr:last-child td { border-bottom: 0; }
+.hs-table tbody tr:hover td { background: var(--u-bg-color-hover); }
+.hs-table tr[aria-selected='true'] td { background: var(--u-primary-bg-color); }
+.hs-table tfoot td {
+  height: var(--hs-row, 40px);
+  border-top: 1px solid var(--u-border-color);
+  font-weight: 600;
+}
+.hs-table--compact td { height: var(--hs-row-compact, 32px); }
+.hs-table--top td { vertical-align: top; padding-block: var(--u-space-sm, 8px); height: auto; }
+/* Cells (`th` too — header text aligns with its values) */
+.hs-num,
+.hs-table th.hs-num { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hs-center,
+.hs-table th.hs-center { text-align: center; }
+.hs-nowrap { white-space: nowrap; }
+.hs-muted { color: var(--u-txt-color-weak); }
+.hs-strong { font-weight: 600; }
+/* The row's identifier — bold ink, underline on hover; not a blue link repeated on every row. */
+.hs-id {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--u-txt-color);
+  text-decoration: none;
+}
+a.hs-id:hover,
+.hs-id:is(button):hover { text-decoration: underline; text-underline-offset: 3px; }
+/* An empty value is shown, never left blank: `<span class="hs-empty">—</span>` */
+.hs-empty { color: var(--u-txt-color-weak); }
+/* A run of rows that repeat the previous row's leading cells: fade the repeats. */
+.hs-table .hs-continued td { color: var(--u-txt-color-weak); }
+.hs-table .hs-continued td.hs-keep { color: var(--u-txt-color); }
+/* A group header row with its subtotal. */
+.hs-table .hs-group td {
+  height: 32px;
+  background: var(--u-bg-color-raised);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--u-txt-color-weak);
+}
+/* Row actions — present for keyboard and assistive tech, shown on hover, focus or selection. */
+.hs-row-actions {
+  display: inline-flex;
+  gap: 2px;
+  opacity: 0;
+}
+tr:hover .hs-row-actions,
+tr:focus-within .hs-row-actions,
+tr[aria-selected='true'] .hs-row-actions {
+  opacity: 1;
+}
+@media (hover: none) {
+  .hs-row-actions { opacity: 1; }
+}
+@media print {
+  .hs-row-actions { display: none; }
+}
+
+/* ── Card — a titled surface for detail panels and dashboards ─────────── */
+.hs-card {
+  background: var(--u-bg-color);
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-xl, 10px);
+  padding: var(--u-space-lg, 16px);
+  min-width: 0;
+}
+.hs-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-sm, 8px);
+  margin-bottom: var(--u-space-md, 12px);
+}
+.hs-card__title {
+  margin: 0;
+  font-size: var(--u-text-subtitle-size, 15px);
+  line-height: 22px;
+  font-weight: 600;
+}
+.hs-card__link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--u-link-txt-color);
+  text-decoration: none;
+}
+.hs-card__link:hover { text-decoration: underline; }
+a.hs-card,
+.hs-card--link { cursor: pointer; transition: border-color 0.12s ease-out; }
+a.hs-card:hover,
+.hs-card--link:hover { border-color: var(--u-border-color-strong); }
+@media (prefers-reduced-motion: reduce) {
+  a.hs-card, .hs-card--link { transition: none; }
+}
+
+/* Description list — label / value pairs inside a card. */
+.hs-dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px var(--u-space-lg, 16px);
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+.hs-dl > dt { color: var(--u-txt-color-weak); }
+.hs-dl > dd { margin: 0; min-width: 0; }
+
+/* Two-column detail: main column plus a 340px side panel once the container is wide. */
+.hs-detail {
+  container: hs-detail / inline-size;
+}
+.hs-detail__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--u-space-lg, 16px);
+  align-items: start;
+}
+@container hs-detail (min-width: 960px) {
+  .hs-detail__cols { grid-template-columns: minmax(0, 1fr) 340px; }
+}
+.hs-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--u-space-lg, 16px);
+  align-items: start;
+}
+
+/* ── Callout — a conclusion in the title, two lines of body at most ──────
+ * No thick coloured edge: an icon and a tint carry the tone. `--note` is a person's note
+ * (a remark on a record), not a warning — it is neutral on purpose. */
+.hs-callout {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--u-space-md, 12px);
+  align-items: start;
+  padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
+  border-radius: var(--u-radius-xl, 10px);
+  background: var(--u-bg-color-raised);
+  font-size: 13px;
+  line-height: 20px;
+}
+.hs-callout__icon { color: var(--u-txt-color-weak); line-height: 20px; }
+.hs-callout__title { font-weight: 600; color: var(--u-txt-color); }
+.hs-callout__body { color: var(--u-txt-color-weak); }
+.hs-callout__actions { display: flex; gap: var(--u-space-sm, 8px); align-items: center; }
+.hs-callout--info { background: var(--u-info-bg-color); }
+.hs-callout--info .hs-callout__icon { color: var(--u-info-color-strong); }
+.hs-callout--success { background: var(--u-success-bg-color); }
+.hs-callout--success .hs-callout__icon { color: var(--u-success-color-strong); }
+.hs-callout--warning { background: var(--u-warning-bg-color); }
+.hs-callout--warning .hs-callout__icon { color: var(--u-warning-color-strong); }
+.hs-callout--danger { background: var(--u-danger-bg-color); }
+.hs-callout--danger .hs-callout__icon { color: var(--u-danger-color-strong); }
+.hs-callout--note { background: var(--u-bg-color-raised); }
+
+/* ── Form — label above, help below; sections instead of one long grid ── */
+.hs-fieldset {
+  margin: 0;
+  padding: 0 0 var(--u-space-xl, 20px);
+  border: 0;
+  min-width: 0;
+}
+.hs-fieldset + .hs-fieldset {
+  padding-top: var(--u-space-xl, 20px);
+  border-top: 1px solid var(--u-border-color);
+}
+.hs-fieldset > * + * {
+  margin-top: var(--u-space-lg, 16px);
+}
+/* A rendered <legend> sits on the fieldset's top border; floating it puts it inside, as a
+   section heading, and the next child clears it. */
+.hs-fieldset__legend {
+  float: inline-start;
+  width: 100%;
+  margin: 0 0 var(--u-space-md, 12px);
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--u-txt-color);
+}
+.hs-fieldset__legend + * {
+  clear: both;
+  margin-top: 0;
+}
+.hs-field {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  min-width: 0;
+}
+.hs-field__label {
+  font-size: var(--u-text-label-size, 12px);
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+}
+.hs-field__required {
+  margin-inline-start: 2px;
+  color: var(--u-danger-color-strong);
+}
+.hs-field__help {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--u-txt-color-weak);
+}
+.hs-field__error {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--u-danger-color-strong);
+}
+.hs-field :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker) {
+  width: 100%;
+  --u-input-display: block;
+  --u-select-display: block;
+}
+/* Two or three columns — never four or more in a row. */
+.hs-grid-2,
+.hs-grid-3 {
+  display: grid;
+  gap: var(--u-space-md, 12px) var(--u-space-lg, 16px);
+}
+.hs-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hs-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.hs-span-all { grid-column: 1 / -1; }
+@container (max-width: 480px) {
+  .hs-grid-2, .hs-grid-3 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── Side sheet footer — change summary on the left, Cancel / Save on the right ── */
+.hs-sheet-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-sm, 8px);
+  padding: var(--u-space-md, 12px) var(--u-space-xl, 20px);
+  border-top: 1px solid var(--u-border-color);
+  background: var(--u-bg-color);
+}
+.hs-sheet-footer__summary {
+  font-size: 12px;
+  color: var(--u-txt-color-weak);
+}
+.hs-sheet-footer__actions {
+  display: flex;
+  gap: var(--u-space-sm, 8px);
+}
+
+/* ── Small marks ───────────────────────────────────────────────────────── */
+/* A quiet attribute label next to an identifier (not a status — no colour). */
+.hs-attr {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-md, 4px);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+/* Days left: neutral, soon (warning), overdue (danger). */
+.hs-due {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--u-radius-pill, 9999px);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: var(--u-bg-color-raised);
+  color: var(--u-txt-color-weak);
+  white-space: nowrap;
+}
+.hs-due--soon { background: var(--u-warning-bg-color); color: var(--u-warning-color-strong); }
+.hs-due--over { background: var(--u-danger-bg-color); color: var(--u-danger-color-strong); }
+/* A keyboard hint. */
+.hs-kbd {
+  padding: 0 4px;
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-md, 4px);
+  background: var(--u-canvas-bg-color);
+  font: 500 11px/16px var(--u-font-base);
+  color: var(--u-txt-color-weak);
+}
+
+} /* @layer iyu.house */
