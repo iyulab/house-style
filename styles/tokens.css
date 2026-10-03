@@ -304,6 +304,11 @@
   --hs-row-compact: 32px;
   --hs-page-padding: 24px;
 
+  /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections */
+  --u-field-padding-block:  4.5px;
+  --u-field-padding-inline: 12px;
+  --u-field-radius:         6px;
+
   /* Shell (`@iyulab/modern-app`) — 32px navigation rows, 16px icons, a flat current item */
   --app-main-padding:           var(--hs-page-padding);
   --app-sidebar-item-radius:    6px;
