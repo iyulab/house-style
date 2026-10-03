@@ -188,7 +188,7 @@
 .hs-stat__sub {
   font-size: 12px;
   line-height: 18px;
-  color: var(--u-txt-color-weak);
+  color: var(--u-txt-color-weaker);
 }
 .hs-stat--hero .hs-stat__value {
   font-size: 28px;
@@ -299,9 +299,9 @@
 a.hs-id:hover,
 .hs-id:is(button):hover { text-decoration: underline; text-underline-offset: 3px; }
 /* An empty value is shown, never left blank: `<span class="hs-empty">—</span>` */
-.hs-empty { color: var(--u-txt-color-weak); }
+.hs-empty { color: var(--u-txt-color-weaker); }
 /* A run of rows that repeat the previous row's leading cells: fade the repeats. */
-.hs-table .hs-continued td { color: var(--u-txt-color-weak); }
+.hs-table .hs-continued td { color: var(--u-txt-color-weaker); }
 .hs-table .hs-continued td.hs-keep { color: var(--u-txt-color); }
 /* A group header row with its subtotal. */
 .hs-table .hs-group td {
@@ -473,7 +473,7 @@ a.hs-card:hover,
 .hs-field__help {
   font-size: 12px;
   line-height: 18px;
-  color: var(--u-txt-color-weak);
+  color: var(--u-txt-color-weaker);
 }
 .hs-field__error {
   font-size: 12px;

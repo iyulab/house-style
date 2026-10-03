@@ -66,6 +66,7 @@
   --u-txt-color:           #18191B;
   --u-txt-color-strong:    #0E0F10;
   --u-txt-color-weak:      #5B5E63;
+  --u-txt-color-weaker:    #666970;
   --u-txt-color-hover:     #18191B;
   --u-txt-color-active:    #18191B;
   --u-txt-color-disabled:  #A3A5A9;
@@ -184,6 +185,7 @@
   --u-txt-color:           #EDEDEC;
   --u-txt-color-strong:    #FFFFFF;
   --u-txt-color-weak:      #A3A6AB;
+  --u-txt-color-weaker:    #8C8F95;
   --u-txt-color-hover:     #EDEDEC;
   --u-txt-color-active:    #EDEDEC;
   --u-txt-color-disabled:  #5E6166;

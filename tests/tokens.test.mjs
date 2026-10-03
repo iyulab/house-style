@@ -73,6 +73,8 @@ const PAIRS = [
   ['--u-txt-color-weak', '--u-bg-color', TEXT],
   ['--u-txt-color-weak', '--u-canvas-bg-color', TEXT],
   ['--u-txt-color-weak', '--u-bg-color-raised', TEXT],
+  ['--u-txt-color-weaker', '--u-bg-color', TEXT],
+  ['--u-txt-color-weaker', '--u-canvas-bg-color', TEXT],
   ['--u-link-txt-color', '--u-bg-color', TEXT],
   ['--u-primary-txt-color', '--u-primary-color', TEXT],
   ['--u-txt-color', '--u-primary-bg-color', TEXT],
