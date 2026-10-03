@@ -4,7 +4,8 @@
  *   import '@iyulab/house-style';            // same file, via the package "style"/"." entry
  *   import '@iyulab/house-style/styles/index.css';
  *
- * Tailwind CSS v4 users also add `styles/tailwind.css` from their Tailwind entry.
+ * 🔴A Tailwind CSS v4 app imports `styles/tailwind.css` from its Tailwind entry INSTEAD of this
+ * file — Tailwind's preflight layer would otherwise beat the theme (see tailwind.css).
  */
 @import './fonts.css';
 @import './theme.css';

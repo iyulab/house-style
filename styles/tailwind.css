@@ -1,19 +1,31 @@
 /*
- * @iyulab/house-style — Tailwind CSS v4 preset
+ * @iyulab/house-style — Tailwind CSS v4 entry
  * ==========================================================================
+ * A Tailwind v4 app imports this file — and only this file — from its Tailwind entry:
+ *
  *   @import 'tailwindcss';
  *   @import '@iyulab/house-style/styles/tailwind.css';
  *
- * Maps the house roles onto utilities that read the live `--u-*` tokens (`@theme inline`), so
- * dark mode and an application's brand overrides reach Tailwind classes with no rebuild:
+ * 🔴Why not `import '@iyulab/house-style'` from JS in a Tailwind app: Tailwind declares
+ * `@layer theme, base, components, utilities` after `iyu.base, iyu.house`, so its preflight
+ * (`base` — `* { padding: 0; border: 0 }`, `h1 { font-size: inherit }`, `a { color: inherit }`)
+ * would beat every house rule. Here the theme is imported into Tailwind's own `components`
+ * layer, the slot Tailwind defines for third-party component CSS: above preflight, below
+ * utilities (a utility on an element still wins), and still below your unlayered CSS.
+ *
+ * Also maps the house roles onto utilities that read the live `--u-*` tokens (`@theme inline`),
+ * so dark mode and brand overrides reach Tailwind classes with no rebuild:
  *
  *   bg-canvas · bg-surface · bg-raised · bg-selected · border-line · border-line-strong
- *   text-ink · text-ink-weak · text-link · ring-focus
+ *   text-ink · text-ink-weak · text-ink-weaker · text-link · ring-focus
  *   {text,bg,border}-{info,success,warning,danger} (text = readable step) · bg-{role}-soft
  *   rounded-control (6) · rounded-card (10) · shadow-raise · shadow-overlay · font-sans
  *
- * Tailwind's own palette stays available; prefer the role names so screens follow the theme.
+ * Existing markup full of `text-gray-*` / `bg-slate-*`: add `tailwind-neutrals.css` too.
  * ========================================================================== */
+@import './fonts.css';
+@import './theme.css' layer(components);
+
 @theme inline {
   --color-canvas: var(--u-canvas-bg-color);
   --color-surface: var(--u-bg-color);
@@ -24,6 +36,7 @@
   --color-line-strong: var(--u-border-color-strong);
   --color-ink: var(--u-txt-color);
   --color-ink-weak: var(--u-txt-color-weak);
+  --color-ink-weaker: var(--u-txt-color-weaker);
   --color-ink-disabled: var(--u-txt-color-disabled);
   --color-link: var(--u-link-txt-color);
   --color-focus: var(--u-focus-ring-color);

@@ -53,8 +53,18 @@ export class ThemeSection extends LitElement {
           (<code>iyu.base</code>) and below your own CSS, which is unlayered and therefore always wins —
           no specificity tricks, no load-order rules.
         </p>
-        <pre><code>import '@iyulab/house-style';                       // fonts + tokens + recipes + patterns
-@import '@iyulab/house-style/styles/tailwind.css';    // Tailwind v4: bg-canvas, text-ink-weak …</code></pre>
+        <pre><code>// an app without Tailwind — from JS
+import '@iyulab/house-style';                          // fonts + tokens + recipes + patterns
+
+/* a Tailwind v4 app — from its Tailwind stylesheet, instead of the line above */
+@import 'tailwindcss';
+@import '@iyulab/house-style/styles/tailwind.css';     /* theme + bg-canvas, text-ink-weak … */</code></pre>
+        <p>
+          Tailwind declares its own layers after the house layers, so its preflight
+          (<code>* { padding: 0 }</code>, <code>h1 { font-size: inherit }</code>) would beat the theme.
+          The Tailwind entry imports the theme into Tailwind's <code>components</code> layer instead —
+          above preflight, below utilities and your own CSS.
+        </p>
         <table class="prose-table">
           <thead><tr><th>Layer</th><th>Holds</th></tr></thead>
           <tbody>

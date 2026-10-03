@@ -20,7 +20,10 @@ First release as a package. Until now `@iyulab/house-style` was only the guide s
     stat strip, table card with selection toolbar and pager, plain table with row actions on
     hover, card and description list, two-column detail, callout (info · success · warning ·
     danger · note), form sections and fields, side-sheet footer, attribute label, days-left mark.
-  - `styles/tailwind.css` — Tailwind CSS v4 preset mapping the roles to utilities.
+  - `styles/tailwind.css` — the Tailwind CSS v4 entry: imports the theme into Tailwind's
+    `components` layer (Tailwind's preflight would otherwise beat the house layer) and maps the
+    roles to utilities. `styles/tailwind-neutrals.css` (opt-in) points Tailwind's grey ramps at the
+    house neutrals.
   - `styles/fonts.css` — Pretendard Variable, dynamic subset.
 - Absorbs `@iyulab/enterprise/styles/preset.css` (removed there): the type scale, radius and
   elevation values now live here with the rest of the house values.

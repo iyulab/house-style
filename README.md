@@ -19,14 +19,28 @@ npm install @iyulab/house-style
 import '@iyulab/house-style';   // fonts + tokens + component recipes + layout patterns
 ```
 
+**A Tailwind CSS v4 app** imports the Tailwind entry instead, from its Tailwind stylesheet — not
+`@iyulab/house-style` from JS:
+
+```css
+@import 'tailwindcss';
+@import '@iyulab/house-style/styles/tailwind.css';           /* theme + role utilities */
+@import '@iyulab/house-style/styles/tailwind-neutrals.css';  /* optional: gray-*/slate-* follow the theme */
+```
+
+Tailwind declares its own layers (`theme, base, components, utilities`) after the house layers,
+so its preflight would beat the theme; `tailwind.css` imports the theme into Tailwind's
+`components` layer — above preflight, below utilities and your own CSS.
+
 | File | What it holds |
 |---|---|
-| `styles/index.css` (package root) | everything below plus Pretendard |
+| `styles/index.css` (package root) | everything below plus Pretendard — for apps without Tailwind |
 | `styles/theme.css` | the theme without fonts (bring your own face) |
 | `styles/tokens.css` | house values for the `--u-*` token axes, light and dark; brand tokens `--hs-brand*` |
 | `styles/components.css` | sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
 | `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
-| `styles/tailwind.css` | Tailwind v4 preset — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
+| `styles/tailwind.css` | the Tailwind v4 entry: fonts + theme (in Tailwind's `components` layer) + role utilities — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
+| `styles/tailwind-neutrals.css` | optional: Tailwind's grey ramps (`gray`, `slate`, `zinc`, `neutral`, `stone`) follow the house neutrals |
 | `styles/fonts.css` | Pretendard Variable (dynamic subset) |
 
 ### Cascade layers — your CSS always wins
