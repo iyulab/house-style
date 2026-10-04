@@ -7,8 +7,8 @@ import type { OrderStatus } from '../mocks/data.js';
  * `pending` next to the list's `Pending` — so a status looked different depending on where you saw it.
  * A status is a label, so it is a tinted `u-tag`, not a `u-badge` (counts and notifications).
  */
-const STATUS_COLOR: Record<OrderStatus, 'gray' | 'info' | 'success' | 'danger'> = {
-  pending: 'gray',
+const STATUS_COLOR: Record<OrderStatus, 'neutral' | 'info' | 'success' | 'danger'> = {
+  pending: 'neutral',
   shipped: 'info',
   delivered: 'success',
   cancelled: 'danger',
