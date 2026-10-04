@@ -47,8 +47,8 @@ export class DeploymentSection extends LitElement {
               <td>
                 The first time an icon from one of those libraries renders. Serve the icons from
                 your own bundle instead: register your own library name, or replace a built-in one
-                (<code>IconRegistry.unregister('bootstrap')</code>, then <code>register</code> it
-                with a resolver that reads local files). <code>lib="internal"</code> and app-registered
+                (<code>IconRegistry.register('bootstrap', …)</code> again
+                with a resolver that reads local files — registering a name replaces it). <code>lib="internal"</code> and app-registered
                 libraries never leave the origin. The app shell takes its icon library from
                 configuration, so the shell can follow the same choice.
               </td>
