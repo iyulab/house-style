@@ -62,9 +62,12 @@ jobs:
 
   # The landing page's "Start here" path, run in a fresh project against the published packages.
   # A guide whose copy-paste path does not render a screen is not deployed.
+  # It runs twice: with this commit's house-style packed from the working tree (what the next tag
+  # would ship — a push to main comes before the tag, so this is the warning before a release),
+  # then with the registry's packages (what a reader gets today). Both report even if one fails.
   start-here:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
 
@@ -77,7 +80,12 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      - run: npm run check:start-here
+      - name: Start here — this commit's house-style
+        run: npm run check:start-here:local
+
+      - name: Start here — published packages
+        if: success() || failure()
+        run: npm run check:start-here
 
   deploy:
     needs: [build, start-here]

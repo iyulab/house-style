@@ -126,6 +126,10 @@ site; run it locally with (needs network and Playwright's Chromium):
 npm run check:start-here -w @iyulab/house-style
 ```
 
+`check:start-here:local` walks the same path with this working tree's `@iyulab/house-style`
+packed in place of the registry's — run it before tagging a release. The deploy workflow runs
+both on every push to `main`.
+
 ## License
 
 MIT
