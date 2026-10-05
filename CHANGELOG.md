@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.1] - 2026-10-05
+
+### Fixed
+
+- **`import '@iyulab/house-style'` type-checks.** The package entry resolved straight to a `.css`
+  file, which TypeScript cannot read, so a project with `noUncheckedSideEffectImports` (Vite's
+  TypeScript templates turn it on) failed with TS2882. The entry now carries a `types` condition
+  pointing at an empty declaration; bundlers still load `styles/index.css`.
+- The `examples/list-app` starter used the removed `color="gray"` for pending tags; it now uses
+  `neutral`, matching the guide.
+
 ## [0.1.0] - 2026-10-05
 
 First release as a package. Until now `@iyulab/house-style` was only the guide site.

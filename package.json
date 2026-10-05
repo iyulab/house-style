@@ -1,6 +1,6 @@
 {
   "name": "@iyulab/house-style",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The iyulab house theme: a CSS-only theme for @iyulab components — tokens, component recipes, line-of-business layout patterns and a Tailwind CSS v4 preset — plus the guide site that documents it.",
   "license": "MIT",
   "repository": {
@@ -9,8 +9,12 @@
   },
   "type": "module",
   "style": "./styles/index.css",
+  "types": "./styles/index.d.ts",
   "exports": {
-    ".": "./styles/index.css",
+    ".": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/index.css"
+    },
     "./styles/*": "./styles/*",
     "./package.json": "./package.json"
   },
@@ -30,6 +34,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "check:start-here": "node scripts/check-start-here.mjs",
+    "check:start-here:local": "node scripts/check-start-here.mjs --local",
     "test": "node --test \"tests/*.test.mjs\""
   },
   "engines": {

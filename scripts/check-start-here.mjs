@@ -11,9 +11,12 @@
  * green `vite build` whose bundle kept raw `@customElement(...)` syntax and rendered nothing,
  * so "it built" is exactly the claim this check refuses to accept on its own.
  *
- *   node scripts/check-start-here.mjs [--keep]
+ *   node scripts/check-start-here.mjs [--keep] [--local]
  *
  * `--keep` leaves the generated project in place (it is always kept on failure).
+ * `--local` installs this package from a tarball of the working tree instead of the registry —
+ * run it before tagging a release. The registry run (the deploy gate) only sees a defect in
+ * this package after it has shipped: 0.1.0's entry did not type-check in the template project.
  *
  * The starter in `examples/list-app/` is this same project, checked in: after the render passes,
  * its files are compared with the ones just built, and any difference fails the check. Run with
@@ -32,6 +35,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const srcDir = resolve(here, '../src');
 const keep = process.argv.includes('--keep');
 const writeStarter = process.argv.includes('--write-starter');
+const local = process.argv.includes('--local');
 const starterDir = resolve(here, '../examples/list-app');
 
 /**
@@ -62,6 +66,17 @@ try {
 
   // Step 2 — install, verbatim.
   step(`install: ${INSTALL}`, () => npmLine(INSTALL, project));
+
+  // `--local`: replace the registry's house-style with a tarball of this working tree — the
+  // rehearsal of what the next tag would ship. The registry run can only fail after a release.
+  if (local) {
+    step('install: this package from the working tree (--local)', () => {
+      const packed = run(npm[0], [...npm.slice(1), 'pack', '--pack-destination', work], { cwd: resolve(here, '..') });
+      const tgz = packed.stdout.trim().split(/\r?\n/).pop();
+      // `--no-save`: the reader's manifest keeps the registry range — the starter is written from it.
+      run(npm[0], [...npm.slice(1), 'install', '--no-save', join(work, tgz)], { cwd: project });
+    });
+  }
 
   // Step 3 — index.html and src/main.ts, verbatim.
   writeFileSync(join(project, 'index.html'), INDEX_HTML + '\n');

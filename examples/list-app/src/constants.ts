@@ -18,8 +18,8 @@ export const COLUMNS: ColumnDef[] = [
   { key: 'total', label: 'Total', align: 'end', width: '120px' },
 ];
 
-const STATUS_TAG_COLOR: Record<string, 'gray' | 'info' | 'success'> = {
-  pending: 'gray',
+const STATUS_TAG_COLOR: Record<string, 'neutral' | 'info' | 'success'> = {
+  pending: 'neutral',
   shipped: 'info',
   delivered: 'success',
 };
