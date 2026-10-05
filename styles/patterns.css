@@ -90,6 +90,7 @@
   font-size: 13px;
   line-height: 20px;
   color: var(--u-txt-color-weak);
+  text-decoration: none;   /* a tab may be a link (`aria-current="page"`) */
   white-space: nowrap;
   cursor: pointer;
 }
@@ -276,9 +277,10 @@
 .hs-table tr[aria-selected='true'] td { background: var(--u-primary-bg-color); }
 .hs-table tfoot td {
   height: var(--hs-row, 40px);
-  border-top: 1px solid var(--u-border-color);
   font-weight: 600;
 }
+/* One line separates the totals from the body — not one per totals row (subtotal · tax · total). */
+.hs-table tfoot tr:first-child td { border-top: 1px solid var(--u-border-color); }
 .hs-table--compact td { height: var(--hs-row-compact, 32px); }
 .hs-table--top td { vertical-align: top; padding-block: var(--u-space-sm, 8px); height: auto; }
 /* Cells (`th` too — header text aligns with its values) */
@@ -359,6 +361,8 @@ tr[aria-selected='true'] .hs-row-actions {
 .hs-card__link:hover { text-decoration: underline; }
 a.hs-card,
 .hs-card--link { cursor: pointer; transition: border-color 0.12s ease-out; }
+/* A whole card as a link reads as a card: ink text, no underline — the border carries hover. */
+a.hs-card { color: inherit; text-decoration: none; }
 a.hs-card:hover,
 .hs-card--link:hover { border-color: var(--u-border-color-strong); }
 @media (prefers-reduced-motion: reduce) {

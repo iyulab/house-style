@@ -21,6 +21,13 @@
   color: var(--u-txt-color);
   -webkit-font-smoothing: antialiased;
 }
+/* A plain link takes the house link colour instead of the browser's — in light and dark alike.
+ * Zero specificity: a class on the link (`hs-*`, an app's own) and any application rule win.
+ * Visited links keep the same colour (an application, not a document); the underline stays,
+ * so a link in running text is not told apart by colour alone. */
+:where(a:any-link) {
+  color: var(--u-link-txt-color);
+}
 
 /* ── Button — 28 / 32 / 40, medium weight ─────────────────────────────── *
  * Height follows the components' own formula (1.5em line + 2 × padding + 2px border), so

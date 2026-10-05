@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.2] - 2026-10-06
+
+### Fixed
+
+- **Plain links take the house link colour.** The theme defined `--u-link-txt-color` but only
+  `hs-*` classes read it, so a link without a class kept the browser's blue (`#0000EE`, and a
+  different blue again in dark mode). A zero-specificity `:where(a:any-link)` default now applies the
+  token; a class on the link and any application rule still win. The underline stays.
+- **A table's totals get one separating line, not one per row.** `.hs-table tfoot td` drew a top
+  border on every totals row, so subtotal · tax · total read as stripes. The line is now on the first
+  totals row only.
+- A whole card as a link (`a.hs-card`) keeps ink text and no underline, and a `.hs-views__tab`
+  rendered as a link has no underline — both used to take the browser's link styling.
+
 ## [0.1.1] - 2026-10-05
 
 ### Fixed
