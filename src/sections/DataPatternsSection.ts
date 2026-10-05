@@ -38,7 +38,7 @@ import editFormSrc from './data-patterns/EditFormDemo.ts?raw';
 const MISSING_FEATURES = new Set(['export-accounting', 'bulk-print']);
 
 const LINE_ITEM_COLUMNS: ColumnDef[] = [
-  { key: 'item', label: 'Item', width: '240px', filterable: false },
+  { key: 'item', label: 'Item', minWidth: '240px', filterable: false },
   { key: 'qty', label: 'Qty', align: 'end', width: '80px' },
   { key: 'unitPrice', label: 'Unit price', align: 'end', width: '120px' },
   { key: 'subtotal', label: 'Subtotal', align: 'end', width: '120px' },
@@ -223,11 +223,12 @@ export class DataPatternsSection extends LitElement {
             nothing is <code>variant="no-results"</code> with a way back out.
           </p>
           <p>
-            Every column here, and in the shared table above, declares an absolute width — that is
-            what makes those widths hold and lets the table scroll sideways once there are more
-            columns than fit. Leave even one column without a width and the table falls back to
-            auto layout: every column squeezes to fit, and on a phone the headers wrap letter by
-            letter.
+            Every column here, and in the shared table above, declares an absolute width — except the
+            one that should take the rest (item, customer), which declares a floor with
+            <code>minWidth</code> instead. That is what makes the widths hold: the fixed columns stay
+            exact, the flexible one takes the leftover space, and once the columns do not fit the
+            table scrolls sideways. Leave a column with neither and the table falls back to auto
+            layout: every column squeezes to fit, and on a phone the headers wrap letter by letter.
           </p>
           <house-data-patterns-search-screen></house-data-patterns-search-screen>
           <house-demo-source label="SearchScreenDemo.ts" .source=${searchScreenSrc}></house-demo-source>

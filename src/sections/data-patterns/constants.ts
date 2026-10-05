@@ -4,7 +4,7 @@ import '@iyulab/components/dist/components/tag/UTag.js';
 
 export const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
-  { key: 'customer', label: 'Customer', width: '200px', filterable: true, filterType: 'text' },
+  { key: 'customer', label: 'Customer', minWidth: '200px', filterable: true, filterType: 'text' },
   {
     key: 'status', label: 'Status', width: '140px',
     filterable: true, filterType: 'select',

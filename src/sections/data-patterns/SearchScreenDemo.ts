@@ -47,11 +47,11 @@ import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
  * picks both ends in one calendar, the range cannot come out reversed, and the usual
  * periods are one click away as presets. The query receives `start` and `end`.
  *
- * Every column declares an absolute width, which is what makes the declared widths
- * hold when there are more columns than fit (see `u-rich-table`'s column-width
- * contract). The shared demo table elsewhere on this page does the same — leave even
- * one column without a width and the table falls back to auto layout, squeezing
- * every column to fit instead of scrolling sideways.
+ * Every column declares an absolute width — or, for the one that takes the rest, a floor
+ * (`minWidth`) — which is what makes the declared widths hold when there are more columns
+ * than fit (see `u-rich-table`'s column-width contract). The shared demo table elsewhere on
+ * this page does the same. Leave a column with neither and the table falls back to auto
+ * layout, squeezing every column to fit instead of scrolling sideways.
  */
 
 const COLUMNS: ColumnDef[] = [
