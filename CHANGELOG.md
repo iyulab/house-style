@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased] — 0.1.0
+## [0.1.0] - 2026-10-05
 
 First release as a package. Until now `@iyulab/house-style` was only the guide site.
 
@@ -30,7 +30,7 @@ First release as a package. Until now `@iyulab/house-style` was only the guide s
     roles to utilities. `styles/tailwind-neutrals.css` (opt-in) points Tailwind's grey ramps at the
     house neutrals.
   - `styles/fonts.css` — Pretendard Variable, dynamic subset.
-- Absorbs `@iyulab/enterprise/styles/preset.css` (removed there): the type scale, radius and
-  elevation values now live here with the rest of the house values.
+- Absorbs `@iyulab/enterprise/styles/preset.css`: the type scale, radius and elevation values now
+  live here with the rest of the house values (enterprise drops its copy in its next minor).
 - `npm test` — token contract: every light colour has a dark value (the house layer would
   otherwise leak a light value into dark mode) and the promised contrast pairs hold in both modes.
