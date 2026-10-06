@@ -140,6 +140,7 @@
   --app-sidebar-width:       232px;
   --app-sidebar-active-bg:   var(--hs-brand-soft);
   --app-sidebar-active-fg:   var(--hs-brand-ink);
+  --app-sidebar-group-active-fg: var(--hs-brand-ink);
 
   /* Brand — the application's identity colour. The house default is neutral, so an
      unbranded app looks finished; an application sets these three and nothing else. */

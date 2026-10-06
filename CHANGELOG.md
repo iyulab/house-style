@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.3] - 2026-10-06
+
+### Fixed
+
+- **A sidebar group holding the current page keeps a readable header.** `@iyulab/modern-app` derived that header's
+  text from the active background, which this theme makes light (`--hs-brand-soft`), so the text sank into the
+  panel (about 1.6:1 light, 1.1:1 dark). The theme now sets `--app-sidebar-group-active-fg` to `--hs-brand-ink`, the
+  color it already uses for text on that background (`@iyulab/modern-app` 0.39 reads it).
+
 ## [0.1.2] - 2026-10-06
 
 ### Fixed
