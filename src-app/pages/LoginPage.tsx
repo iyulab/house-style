@@ -42,7 +42,7 @@ export default function LoginPage() {
     const result = await auth.login({ Username: username.trim(), Password: password });
     setLoading(false);
     if (!result.ok) {
-      setError(result.message ?? 'Sign-in failed.');
+      setError(result.message);
       setPassword('');
       return;
     }

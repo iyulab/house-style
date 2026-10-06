@@ -36,8 +36,11 @@ function initialSidebarState(): 'default' | 'slim' | 'mobile' {
 
 async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
   if (ctx.pathname === base + 'login') return true;
-  const user = await auth.fetchMe();
-  return user ? true : base + 'login';
+  const session = await auth.fetchMe();
+  // Only a definite «no session» (401) sends the user to sign in. When the session is unknown
+  // (server down, offline) the route fails with the error instead of pretending they logged out.
+  if (session.status === 'unknown') throw session.error;
+  return session.status === 'authenticated' ? true : base + 'login';
 }
 
 async function signOut() {
