@@ -32,10 +32,6 @@ const JUDGED = {
     target: /^u-sidebar-layout,\.skip-link$/,
     reason: 'the shell skip link is the first Tab stop, before every landmark; axe resolves a skip link target only with document.getElementById, which cannot reach the shell shadow root',
   },
-  'scrollable-region-focusable': {
-    target: /^u-sidebar-layout,main$/,
-    reason: 'the shell content region takes focus from the skip link and on every route change (tabindex -1) and scrolls by keyboard from anywhere inside it',
-  },
 };
 
 const axeSource = readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
