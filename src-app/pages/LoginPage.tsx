@@ -54,7 +54,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-page">
+    <main className="login-page">
       <div className={`login-page__brand${brandIn ? ' login-page__brand--in' : ''}`}>
         <h1>Orders Reference</h1>
         <p>A working app built from the iyulab component libraries.</p>
@@ -114,6 +114,6 @@ export default function LoginPage() {
           </fieldset>
         </form>
       </UDrawer>
-    </div>
+    </main>
   );
 }

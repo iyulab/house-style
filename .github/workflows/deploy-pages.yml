@@ -38,6 +38,12 @@ jobs:
       - name: Guide renders
         run: npm run check:guide
 
+      # axe over every guide page and the reference app — composition defects (an unlabelled select, a drawer
+      # named by an empty header, two tables sharing a landmark name) pass every component suite. Judged
+      # exceptions live in the script with their reasons.
+      - name: Accessibility
+        run: npm run check:a11y
+
       - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'
