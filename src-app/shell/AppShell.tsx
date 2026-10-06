@@ -4,6 +4,7 @@ import { UOutlet } from '@iyulab/router/react';
 import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
+import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
 import { NAV_ITEMS } from './nav.js';
 import LoginPage from '../pages/LoginPage.js';
 import DashboardPage from '../pages/DashboardPage.js';
@@ -44,7 +45,14 @@ async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
 }
 
 async function signOut() {
-  await auth.logout();
+  // Signing out is the server ending the session. If it could not (no answer, a 5xx), the cookie is
+  // still valid — stay on the screen and say so; moving to sign-in would hand the session to the next
+  // person at this terminal.
+  const result = await auth.logout();
+  if (!result.ok) {
+    Toast.error(result.message);
+    return;
+  }
   // A hard `location.href` navigation would reload the page — and with it, the MSW mock
   // backend's in-memory orders (see mocks/handlers.ts). Route client-side instead, same
   // idiom as LoginPage.tsx's post-login redirect.
