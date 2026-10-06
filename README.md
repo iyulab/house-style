@@ -130,6 +130,15 @@ npm run check:start-here -w @iyulab/house-style
 packed in place of the registry's — run it before tagging a release. The deploy workflow runs
 both on every push to `main`.
 
+The guide itself is checked too: after a build, every page (the landing page and each category)
+must draw its section in a browser, with no page errors — a build can drop the section modules and
+still succeed. The deploy workflow runs it before uploading the site:
+
+```bash
+npm run build -w @iyulab/house-style
+npm run check:guide -w @iyulab/house-style
+```
+
 ## License
 
 MIT

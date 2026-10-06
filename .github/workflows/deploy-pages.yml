@@ -32,6 +32,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Every guide page draws its section — a build can drop the section modules and still pass
+      # (it did: `sideEffects` covered only the CSS, and the guide went blank). Not deployed if so.
+      - run: npx playwright install --with-deps chromium
+      - name: Guide renders
+        run: npm run check:guide
+
       - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'
