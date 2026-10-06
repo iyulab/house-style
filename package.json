@@ -66,7 +66,7 @@
     "@iyulab/enterprise": "^0.26.0",
     "@iyulab/modern-app": "^0.39.0",
     "@iyulab/router": "^0.20.0",
-    "@iyulab/u-widgets": "^0.25.0",
+    "@iyulab/u-widgets": "^0.26.0",
     "@lit/react": "^1.0.8",
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.14",
