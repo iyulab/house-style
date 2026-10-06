@@ -7,9 +7,6 @@ import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 // the moment `Theme.init()` injects the built-in defaults (`iyu.base`) changes the outcome.
 import '../styles/index.css';
 import '@iyulab/enterprise/icons';
-import '@iyulab/components/dist/components/popover/UPopover.js';
-import '@iyulab/components/dist/components/menu/UMenu.js';
-import '@iyulab/components/dist/components/menu-item/UMenuItem.js';
 import './styles/page-shell.css';
 import { CATEGORIES, TIERS } from './categories.js';
 import './pages/HouseStylePage.js';
@@ -94,30 +91,24 @@ app.load({
           { type: 'link', label: 'npm package', icon: 'box-seam', lib: 'bootstrap', href: 'https://www.npmjs.com/org/iyulab', target: '_blank' },
         ],
       },
-      // A popup-style submenu (u-popover, not the accordion above) — the third
-      // SidebarItem shape this guide is meant to model. `placement` is picked from the
-      // sidebar's own state rather than fixed to one side: on mobile the sidebar widens to
-      // occupy nearly the full screen, so a sideways flyout has no room on either side and
-      // would render off-screen (documented at length in @iyulab/modern-app's
-      // skills/modern-app/references/layout.md, "Popup-style submenus").
+      // A popup menu (not the accordion above) — the flyout SidebarItem shape. The shell places
+      // it (beside the sidebar, downwards on the full-width mobile panel) and owns its keyboard
+      // and focus contract; see @iyulab/modern-app's skills/modern-app/references/layout.md.
       {
-        type: 'html',
-        render: (state) => html`
-          <u-sidebar-button id="house-more-trigger" icon="three-dots" lib="bootstrap" label="More"></u-sidebar-button>
-          <u-popover for="#house-more-trigger"
-            placement=${state.startsWith('mobile') ? 'bottom-start' : 'right-start'}
-            @pick=${(e: Event) => (e.currentTarget as HTMLElement & { hide(): void }).hide()}
-          >
-            <u-menu>
-              <u-menu-item @pick=${() => navigator.clipboard?.writeText(location.href).then(() => app.success('Link copied'))}>
-                Copy link to this page
-              </u-menu-item>
-              <u-menu-item @pick=${() => window.open('https://github.com/iyulab/house-style/issues/new', '_blank')}>
-                Report an issue
-              </u-menu-item>
-            </u-menu>
-          </u-popover>
-        `,
+        type: 'menu',
+        icon: 'three-dots',
+        lib: 'bootstrap',
+        label: 'More',
+        items: [
+          {
+            label: 'Copy link to this page',
+            onClick: () => void navigator.clipboard?.writeText(location.href).then(() => app.success('Link copied')),
+          },
+          {
+            label: 'Report an issue',
+            onClick: () => void window.open('https://github.com/iyulab/house-style/issues/new', '_blank'),
+          },
+        ],
       },
     ],
 
