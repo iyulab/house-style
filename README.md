@@ -77,6 +77,11 @@ Everything else — warm-grey neutrals, the ink primary action, blue for links a
 tints, the 22/18/15/14/13/12/11 type ladder, 28/32/40 controls, 40px table rows — comes from the
 theme and can be overridden token by token.
 
+The type ladder is the `--u-text-*-size` steps plus two house steps derived from them —
+`--hs-text-dense-size` (between body and label: table cells, definition lists, callouts) and
+`--hs-text-hero-size` (display + 6px: a headline figure). Every pattern reads a step, so rescaling the
+ladder (a larger mode, a product system) carries the patterns along.
+
 ## The guide
 
 **Live**: https://iyulab.github.io/house-style/ — this is the guide. There is no

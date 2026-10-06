@@ -305,6 +305,12 @@
   --hs-row-compact: 32px;
   --hs-page-padding: 24px;
 
+  /* House type steps beyond the shared ladder — derived from it, so a rescaled ladder (density, a product system)
+     carries them along. Dense = the step between body and label (13 at 14/12): table cells, definition lists,
+     callouts. Hero = a headline figure, display + 6 (28 at 22). */
+  --hs-text-dense-size: calc((var(--u-text-body-size) + var(--u-text-label-size)) / 2);
+  --hs-text-hero-size:  calc(var(--u-text-display-size) + 6px);
+
   /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections */
   --u-field-padding-block:  4.5px;
   --u-field-padding-inline: 12px;

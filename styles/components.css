@@ -31,7 +31,10 @@
 
 /* ── Button — 28 / 32 / 40, medium weight ─────────────────────────────── *
  * Height follows the components' own formula (1.5em line + 2 × padding + 2px border), so
- * these are padding values, not fixed heights: text and icon-only buttons stay equal.     */
+ * these are padding values, not fixed heights: text and icon-only buttons stay equal.
+ * The font sizes here are literal on purpose: they are terms of that height formula (the
+ * control ladder 28/32/40), not steps of the text ladder — tying them to `--u-text-*` would
+ * change control heights whenever the text ladder is rescaled.                            */
 u-button:not([size]),
 u-button[size='md'] {
   font-size: 13px;
@@ -90,10 +93,10 @@ u-drawer::part(body) {
  *    no zebra (hover and selection carry the row), tabular figures. ──────── */
 flex-table {
   --ft-font-family: var(--u-font-base);
-  --ft-font-size: 13px;
+  --ft-font-size: var(--hs-text-dense-size, 13px);
   --ft-row-height: var(--hs-row);
   --ft-cell-padding-inline: 12px;
-  --ft-header-font-size: 12px;
+  --ft-header-font-size: var(--u-text-label-size, 12px);
   --ft-header-font-weight: 500;
   --ft-header-text-color: var(--u-txt-color-weak);
   --ft-header-bg: var(--u-bg-color-raised);

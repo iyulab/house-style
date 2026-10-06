@@ -87,7 +87,7 @@
   border-bottom: 2px solid transparent;
   background: none;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   line-height: 20px;
   color: var(--u-txt-color-weak);
   text-decoration: none;   /* a tab may be a link (`aria-current="page"`) */
@@ -114,7 +114,7 @@
   border-radius: var(--u-radius-pill, 9999px);
   background: var(--u-bg-color-raised);
   color: var(--u-txt-color-weak);
-  font-size: 11px;
+  font-size: var(--u-text-overline-size, 11px);
   line-height: 16px;
   font-weight: 500;
   text-align: center;
@@ -182,17 +182,17 @@
 }
 .hs-stat__unit {
   margin-inline-start: 2px;
-  font-size: 12px;
+  font-size: var(--u-text-caption-size, 12px);
   font-weight: 500;
   color: var(--u-txt-color-weak);
 }
 .hs-stat__sub {
-  font-size: 12px;
+  font-size: var(--u-text-caption-size, 12px);
   line-height: 18px;
   color: var(--u-txt-color-weaker);
 }
 .hs-stat--hero .hs-stat__value {
-  font-size: 28px;
+  font-size: var(--hs-text-hero-size, 28px);
   line-height: 34px;
   letter-spacing: -0.01em;
 }
@@ -232,7 +232,7 @@
   background: var(--u-primary-bg-color);
 }
 .hs-table-toolbar__title {
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   font-weight: 600;
 }
 .hs-pager {
@@ -242,7 +242,7 @@
   gap: var(--u-space-sm, 8px);
   padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
   border-top: 1px solid var(--u-border-color);
-  font-size: 12px;
+  font-size: var(--u-text-label-size, 12px);
   color: var(--u-txt-color-weak);
   font-variant-numeric: tabular-nums;
 }
@@ -251,7 +251,7 @@
 .hs-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   line-height: 20px;
   color: var(--u-txt-color);
 }
@@ -259,7 +259,7 @@
   padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
   text-align: start;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--u-text-label-size, 12px);
   line-height: 16px;
   font-weight: 500;
   color: var(--u-txt-color-weak);
@@ -309,7 +309,7 @@ a.hs-id:hover,
 .hs-table .hs-group td {
   height: 32px;
   background: var(--u-bg-color-raised);
-  font-size: 12px;
+  font-size: var(--u-text-label-size, 12px);
   font-weight: 600;
   color: var(--u-txt-color-weak);
 }
@@ -353,7 +353,7 @@ tr[aria-selected='true'] .hs-row-actions {
   font-weight: 600;
 }
 .hs-card__link {
-  font-size: 12px;
+  font-size: var(--u-text-label-size, 12px);
   font-weight: 500;
   color: var(--u-link-txt-color);
   text-decoration: none;
@@ -375,7 +375,7 @@ a.hs-card:hover,
   grid-template-columns: max-content minmax(0, 1fr);
   gap: 6px var(--u-space-lg, 16px);
   margin: 0;
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   line-height: 20px;
 }
 .hs-dl > dt { color: var(--u-txt-color-weak); }
@@ -412,7 +412,7 @@ a.hs-card:hover,
   padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
   border-radius: var(--u-radius-xl, 10px);
   background: var(--u-bg-color-raised);
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   line-height: 20px;
 }
 .hs-callout__icon { color: var(--u-txt-color-weak); line-height: 20px; }
@@ -450,7 +450,7 @@ a.hs-card:hover,
   width: 100%;
   margin: 0 0 var(--u-space-md, 12px);
   padding: 0;
-  font-size: 13px;
+  font-size: var(--hs-text-dense-size, 13px);
   font-weight: 600;
   color: var(--u-txt-color);
 }
@@ -475,12 +475,12 @@ a.hs-card:hover,
   color: var(--u-danger-color-strong);
 }
 .hs-field__help {
-  font-size: 12px;
+  font-size: var(--u-text-caption-size, 12px);
   line-height: 18px;
   color: var(--u-txt-color-weaker);
 }
 .hs-field__error {
-  font-size: 12px;
+  font-size: var(--u-text-caption-size, 12px);
   line-height: 18px;
   color: var(--u-danger-color-strong);
 }
@@ -517,7 +517,7 @@ a.hs-card:hover,
   background: var(--u-bg-color);
 }
 .hs-sheet-footer__summary {
-  font-size: 12px;
+  font-size: var(--u-text-caption-size, 12px);
   color: var(--u-txt-color-weak);
 }
 .hs-sheet-footer__actions {
@@ -534,7 +534,7 @@ a.hs-card:hover,
   padding: 0 5px;
   border: 1px solid var(--u-border-color);
   border-radius: var(--u-radius-md, 4px);
-  font-size: 11px;
+  font-size: var(--u-text-overline-size, 11px);
   line-height: 16px;
   font-weight: 500;
   color: var(--u-txt-color-weak);
@@ -548,7 +548,7 @@ a.hs-card:hover,
   height: 18px;
   padding: 0 6px;
   border-radius: var(--u-radius-pill, 9999px);
-  font-size: 11px;
+  font-size: var(--u-text-overline-size, 11px);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   background: var(--u-bg-color-raised);

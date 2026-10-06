@@ -8,6 +8,13 @@
   text from the active background, which this theme makes light (`--hs-brand-soft`), so the text sank into the
   panel (about 1.6:1 light, 1.1:1 dark). The theme now sets `--app-sidebar-group-active-fg` to `--hs-brand-ink`, the
   color it already uses for text on that background (`@iyulab/modern-app` 0.39 reads it).
+- **Patterns follow the type ladder.** `patterns.css` set font sizes in px (11, 12, 13, 28 — 19 places) and flex-table
+  cells and headers did too, so a consumer who rescaled `--u-text-*-size` saw components and body text change while
+  tables, pagers, definition lists and stats stayed put. They now read the steps — label, caption and overline, plus
+  two house steps derived from the ladder: `--hs-text-dense-size` (between body and label — the 13px of table cells,
+  definition lists, callouts) and `--hs-text-hero-size` (display + 6px — the 28px headline figure). Each read keeps
+  the current px as its fallback, so nothing changes at the house ladder. Button and field font sizes stay literal:
+  they are terms of the 28/32/40 control-height formula.
 
 ## [0.1.2] - 2026-10-06
 
