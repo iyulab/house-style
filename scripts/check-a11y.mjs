@@ -1,4 +1,5 @@
-// Accessibility check — axe-core over every page of the built guide (`publish/`) and the reference app.
+// Accessibility check — axe-core over every page of the built guide (`publish/`) and the reference app, and every
+// in-app link target found on them.
 //
 // Why: component tests measure one component at a time; the defects axe finds on a real page are in the
 // composition — a select with no visible label, a drawer labelled by an empty header, two tables whose pagination
@@ -42,13 +43,48 @@ const origin = server.resolvedUrls.local[0].replace(/\/house-style\/?$/, '').rep
 const browser = await chromium.launch();
 const failures = [];
 let judged = 0;
+
+/** Opens a page and waits for the route content to settle — returns the HTTP status. */
+async function open(page, url) {
+  const response = await page.goto(url, { waitUntil: 'networkidle' });
+  // Sections and the app render after their modules load — wait for the route content, then for it to settle.
+  await page.waitForFunction(() => !!document.querySelector('u-sidebar-layout'), null, { timeout: 15000 }).catch(() => {});
+  await page.waitForTimeout(500);
+  return response?.status() ?? 0;
+}
+
+/** Every link address (absolute) through shadow roots, and whether the router's default error screen is up. */
+const inspect = (page) =>
+  page.evaluate(() => {
+    const hrefs = [];
+    let errorPage = false;
+    const walk = (root) => {
+      for (const el of root.querySelectorAll('*')) {
+        if (el.localName === 'u-error-page') errorPage = true;
+        if ((el.localName === 'a' || el.localName === 'area') && el.hasAttribute('href')) hrefs.push(el.href);
+        if (el.shadowRoot) walk(el.shadowRoot);
+      }
+    };
+    walk(document);
+    return { hrefs, errorPage };
+  });
+
+// In-app links — same-origin path → the page it was first seen on. axe does not check where a link goes: a sample
+// app's two main buttons led outside its deploy base and to a route that did not exist while unit, type and axe
+// checks were all green, and the shell logo rendered the base without its trailing slash (a 404 under Vite).
+const links = new Map();
+const rendered = new Set();
 try {
   for (const path of paths) {
     const page = await browser.newPage();
-    await page.goto(`${origin}/house-style/${path}`, { waitUntil: 'networkidle' });
-    // Sections and the app render after their modules load — wait for the route content, then for it to settle.
-    await page.waitForFunction(() => !!document.querySelector('u-sidebar-layout'), null, { timeout: 15000 }).catch(() => {});
-    await page.waitForTimeout(500);
+    await open(page, `${origin}/house-style/${path}`);
+    const { hrefs, errorPage } = await inspect(page);
+    if (errorPage) failures.push(`/${path}: a listed page renders the router error screen (u-error-page)`);
+    rendered.add(new URL(page.url()).pathname);
+    for (const href of hrefs) {
+      const url = new URL(href);
+      if (url.origin === origin && !links.has(url.pathname)) links.set(url.pathname, `/${path}`);
+    }
     await page.addScriptTag({ content: axeSource });
     const violations = await page.evaluate(async () =>
       (await window.axe.run(document)).violations.map((v) => ({
@@ -72,6 +108,22 @@ try {
     if (!pageFailures) console.log(`  ✓ /${path}`);
     await page.close();
   }
+
+  // Link targets: inside the base, and — when not a page already opened — opening to something other than an error.
+  for (const [target, from] of links) {
+    if (!target.startsWith('/house-style/')) {
+      failures.push(`link ${target} (on ${from}): leaves the deploy base /house-style/`);
+      continue;
+    }
+    if (rendered.has(target)) continue;
+    const page = await browser.newPage();
+    const status = await open(page, `${origin}${target}`);
+    const { errorPage } = await inspect(page);
+    if (status >= 400 || errorPage) {
+      failures.push(`link ${target} (on ${from}): ${status >= 400 ? `HTTP ${status}` : 'router error screen (u-error-page)'}`);
+    }
+    await page.close();
+  }
 } finally {
   await browser.close();
   await new Promise((r) => server.httpServer.close(r));
@@ -81,4 +133,4 @@ if (failures.length) {
   console.error(`✗ Accessibility check: ${failures.length} violation(s)\n${failures.map((f) => `  ${f}`).join('\n')}`);
   process.exit(1);
 }
-console.log(`✓ Accessibility check: ${paths.length} pages, no violations (${judged} judged: ${Object.keys(JUDGED).join(', ')}).`);
+console.log(`✓ Accessibility check: ${paths.length} pages, no violations (${judged} judged: ${Object.keys(JUDGED).join(', ')}) · ${links.size} in-app link targets checked.`);
