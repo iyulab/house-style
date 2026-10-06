@@ -3,7 +3,7 @@ import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 // 하우스 스타일이 «화면을 무엇으로 조립하는가» 로 가르치는 프리미티브들 — 가이드(`src/`)가
 // 227회 쓰는 동안 이 레퍼런스 앱은 0회 썼고, 그 어긋남을 `예제 정합` 자가 지목했다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
-import { StatusTag } from '../components/StatusTag.js';
+import { StatusTag, STATUS_COLOR, STATUS_LABEL } from '../components/StatusTag.js';
 import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 import './OrderDetailPage.css';
 import { InfoSection } from '@iyulab/modern-app/react/InfoSection.js';
@@ -11,6 +11,8 @@ import { InfoField } from '@iyulab/modern-app/react/InfoField.js';
 import { GroupBox } from '@iyulab/modern-app/react/GroupBox.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
+import { Timeline } from '@iyulab/modern-app/react/Timeline.js';
+import { TimelineItem } from '@iyulab/modern-app/react/TimelineItem.js';
 import { FormSection, FormRow } from '@iyulab/enterprise/react';
 import { UButton, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
@@ -193,6 +195,17 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                 <UButton color="primary" onClick={openEdit}>Edit order</UButton>
               </ActionBar>
             )}
+
+            {/* What happened to the order, newest first. The mock records only when it was placed and where
+                it is now, so the current status carries no time — a history never shows a time it does not know. */}
+            <GroupBox level={2} title="History">
+              <Timeline>
+                {order.Status !== 'pending' && (
+                  <TimelineItem heading={STATUS_LABEL[order.Status]} color={STATUS_COLOR[order.Status]} />
+                )}
+                <TimelineItem heading="Ordered" datetime={order.CreatedAt} />
+              </Timeline>
+            </GroupBox>
 
             {/* The count is `meta`, not part of the title: it states how many lines there are right now,
                 one step below the section's name. Omitted at zero — the empty state already says so. */}
