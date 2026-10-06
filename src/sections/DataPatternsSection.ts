@@ -9,6 +9,7 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/EmptyState.js';
+import '@iyulab/modern-app/dist/components/Timeline.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import '@iyulab/data-components/dist/components/u-record-picker/URecordPicker.js';
 import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
@@ -69,8 +70,8 @@ const searchDemoCustomers = async (query: string): Promise<PickerItem[]> => {
  * data representation, the list screen (with its status-badge convention and empty-state
  * pairing), the related-records (1:N) recipe, and the edit-form assembly are all real,
  * running compositions of already-shipped components — none of them required a new
- * house-style-specific component. The status-history timeline is the one remaining
- * piece, and it stays undecided on purpose — see the section below.
+ * house-style-specific component. The status-history timeline is the same: it is
+ * `@iyulab/modern-app`'s `u-timeline`, composed below.
  *
  * Recipes with their own reactive state (list screen, cross-page selection,
  * master›detail, the filter empty-state, and the edit form) live as dedicated
@@ -412,16 +413,25 @@ export class DataPatternsSection extends LitElement {
           <p><small>Grayed-out actions above are planned, not hidden — not yet built.</small></p>
         </u-group-box>
 
-        <u-group-box level="2" title="Not yet built — by design">
+        <u-group-box level="2" title="Status history">
           <p>
-            A status-history timeline is not a missing implementation — it's a
-            deliberate hold. <code>@iyulab/modern-app</code>'s own charter already
-            names this exact pattern ("timeline / step rail") and records the
-            repeated need it has observed, but concludes the shape hasn't converged
-            on one answer yet. Building a house-style-specific version here would
-            pre-empt that judgment rather than honor it, so this stays undecided
-            until the upstream charter is ready to.
+            What happened to a record, and when — on its detail screen, under the fields.
+            Use <code>u-timeline</code> from <code>@iyulab/modern-app</code>: newest first,
+            the status in words in each heading (the marker colour repeats it, never
+            replaces it), the actor or a note in the body.
           </p>
+          <u-timeline>
+            <u-timeline-item heading="Delivered" datetime="2026-02-27T16:40" color="success" icon="check" lib="bootstrap">
+              Signed for at the front desk.
+            </u-timeline-item>
+            <u-timeline-item heading="Shipped" datetime="2026-02-26T09:15" color="primary">
+              Courier pickup, tracking 4417-2290.
+            </u-timeline-item>
+            <u-timeline-item heading="Payment overdue" datetime="2026-02-25" color="warning">
+              Reminder sent to the buyer.
+            </u-timeline-item>
+            <u-timeline-item heading="Ordered" datetime="2026-02-24"></u-timeline-item>
+          </u-timeline>
         </u-group-box>
     `;
   }

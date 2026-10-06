@@ -25,7 +25,9 @@
     "LICENSE"
   ],
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./src/**",
+    "./src-app/**"
   ],
   "scripts": {
     "preversion": "node -e \"if(require('fs').existsSync('../../scripts/preversion-check.mjs'))require('child_process').execFileSync('node',['../../scripts/preversion-check.mjs'],{stdio:'inherit'})\"",
@@ -61,7 +63,7 @@
     "@iyulab/components": "^2.0.0",
     "@iyulab/data-components": "^0.37.1",
     "@iyulab/enterprise": "^0.24.0",
-    "@iyulab/modern-app": "^0.36.0",
+    "@iyulab/modern-app": "^0.37.0",
     "@iyulab/router": "^0.19.0",
     "@iyulab/u-widgets": "^0.25.0",
     "@lit/react": "^1.0.8",
