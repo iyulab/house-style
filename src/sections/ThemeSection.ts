@@ -120,7 +120,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           </div>
 
           <div class="hs-filter-bar">
-            <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…"></u-input>
+            <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…" aria-label="Search orders"></u-input>
             <u-select value="all" aria-label="Channel"><u-option value="all">Channel: all</u-option></u-select>
             <u-select value="all" aria-label="Status"><u-option value="all">Status: all</u-option></u-select>
             <u-button appearance="outlined">Filters · 1</u-button>

@@ -26,6 +26,7 @@ export class FilterEmptyStateDemo extends LitElement {
     return html`
       <u-input
         placeholder="Filter customers…"
+        aria-label="Filter customers"
         clearable
         .value=${this.filterText}
         @input=${(e: Event) => { this.filterText = (e.target as UInput).value ?? ''; }}
