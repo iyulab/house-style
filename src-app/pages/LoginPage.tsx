@@ -65,6 +65,7 @@ export default function LoginPage() {
         placement="right"
         mode="non-modal"
         closeOn={[]}
+        aria-labelledby="login-title"
         className={`login-page__panel${focused ? ' login-page__panel--focused' : ''}`}
         style={{ ['--drawer-size' as string]: 'min(420px, 100vw)' } as CSSProperties}
       >
@@ -76,7 +77,7 @@ export default function LoginPage() {
           onBlurCapture={() => setFocused(false)}
         >
           <div>
-            <h2>Sign in</h2>
+            <h2 id="login-title">Sign in</h2>
             <div className="login-page__form-accent" />
           </div>
 

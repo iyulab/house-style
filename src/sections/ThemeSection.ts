@@ -53,7 +53,7 @@ export class ThemeSection extends LitElement {
           (<code>iyu.base</code>) and below your own CSS, which is unlayered and therefore always wins —
           no specificity tricks, no load-order rules.
         </p>
-        <pre><code>// an app without Tailwind — from JS
+        <pre tabindex="0"><code>// an app without Tailwind — from JS
 import '@iyulab/house-style';                          // fonts + tokens + recipes + patterns
 
 /* a Tailwind v4 app — from its Tailwind stylesheet, instead of the line above */
@@ -88,7 +88,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
               <p class="hs-field__help"><code>${name}</code> — <code>${readToken(name)}</code></p>
             </div>`)}
         </div>
-        <pre><code>:root { --hs-brand: #c8161d; --hs-brand-soft: #fcebec; --hs-brand-ink: #a3121a; }
+        <pre tabindex="0"><code>:root { --hs-brand: #c8161d; --hs-brand-soft: #fcebec; --hs-brand-ink: #a3121a; }
 :root[theme="dark"] { --hs-brand-soft: #3a1a1c; --hs-brand-ink: #ff9a9e; }</code></pre>
       </u-group-box>
 
@@ -121,8 +121,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
 
           <div class="hs-filter-bar">
             <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…"></u-input>
-            <u-select value="all"><u-option value="all">Channel: all</u-option></u-select>
-            <u-select value="all"><u-option value="all">Status: all</u-option></u-select>
+            <u-select value="all" aria-label="Channel"><u-option value="all">Channel: all</u-option></u-select>
+            <u-select value="all" aria-label="Status"><u-option value="all">Status: all</u-option></u-select>
             <u-button appearance="outlined">Filters · 1</u-button>
             <u-button class="hs-filter-bar__end" appearance="plain">Save view</u-button>
           </div>
@@ -145,8 +145,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <table class="hs-table">
               <thead>
                 <tr>
-                  <th style="width:36px"></th><th>Order</th><th>Customer</th><th>Status</th><th>Due</th>
-                  <th class="hs-num">Qty</th><th class="hs-num">Amount</th><th style="width:72px"></th>
+                  <th style="width:36px"><span class="guide-visually-hidden">Select</span></th><th>Order</th><th>Customer</th><th>Status</th><th>Due</th>
+                  <th class="hs-num">Qty</th><th class="hs-num">Amount</th><th style="width:72px"><span class="guide-visually-hidden">Actions</span></th>
                 </tr>
               </thead>
               <tbody>

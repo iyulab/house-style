@@ -27,7 +27,7 @@ export class HouseStylePage extends LitElement {
     return html`
       <div class="start-code">
         <u-copy-button .value=${code} label=${label}></u-copy-button>
-        <pre><code>${code}</code></pre>
+        <pre tabindex="0"><code>${code}</code></pre>
       </div>
     `;
   }
@@ -120,7 +120,7 @@ export class HouseStylePage extends LitElement {
           instead of manual <code>addEventListener</code>, no hand-rolled
           <code>customElements.whenDefined</code> race to work around.
         </p>
-        <pre><code>import { UButton, UInput } from '@iyulab/components/react';
+        <pre tabindex="0"><code>import { UButton, UInput } from '@iyulab/components/react';
 
 function Form() {
   return &lt;UButton color="primary" onClick={submit}&gt;Save&lt;/UButton&gt;;

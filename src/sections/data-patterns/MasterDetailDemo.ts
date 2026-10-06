@@ -53,6 +53,7 @@ export class MasterDetailDemo extends LitElement {
       >
         <u-rich-table
           id="master-detail-table"
+          aria-label="Master list"
           .columns=${COLUMNS}
           .data=${ROWS}
           .totalCount=${ROWS.length}

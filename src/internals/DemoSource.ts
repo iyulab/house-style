@@ -27,7 +27,7 @@ export class DemoSource extends LitElement {
         <div class="demo-source__bar">
           <u-copy-button .value=${this.source} label="Copy code"></u-copy-button>
         </div>
-        <pre><code>${this.source}</code></pre>
+        <pre tabindex="0"><code>${this.source}</code></pre>
       </details>
     `;
   }

@@ -235,7 +235,7 @@ export class FlowsSection extends LitElement {
           <code>?id=</code> change and only the bound prop moves &mdash; the list keeps its
           scroll, selection and loaded rows. Two lines, both on the route:
         </p>
-        <pre><code>{
+        <pre tabindex="0"><code>{
   path: '/orders',
   key: ctx =&gt; ctx.pathname,   // same path, same page — query changes arrive as props
   render: ctx =&gt; html\`&lt;orders-screen .selectedId=\${ctx.query.get('id') ?? undefined}&gt;&lt;/orders-screen&gt;\`,

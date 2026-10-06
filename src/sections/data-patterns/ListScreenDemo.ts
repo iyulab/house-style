@@ -51,6 +51,7 @@ export class ListScreenDemo extends LitElement {
     return html`
       <u-rich-table
         id="list-screen-table"
+        aria-label="Orders"
         .columns=${COLUMNS}
         data-mode="client"
         .data=${ROWS}

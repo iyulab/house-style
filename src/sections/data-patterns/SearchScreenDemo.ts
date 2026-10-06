@@ -192,6 +192,7 @@ export class SearchScreenDemo extends LitElement {
             `
           : html`
               <u-rich-table
+                aria-label="Search results"
                 .columns=${COLUMNS}
                 .data=${this.pageRows}
                 .totalCount=${this.results.length}

@@ -46,6 +46,7 @@ export class CrossPageSelectionDemo extends LitElement {
         <strong>${this.selectedOnPageCount}</strong> checked on this page
       </p>
       <u-rich-table
+        aria-label="Orders across pages"
         .columns=${COLUMNS}
         .data=${this.pageRows}
         .totalCount=${PAGED_ROWS.length}
