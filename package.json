@@ -44,9 +44,11 @@
     "test": "node --test \"tests/*.test.mjs\""
   },
   "iyulab": {
-    "upstreamChecks": [
-      "check:ladder"
-    ]
+    "upstreamChecks": {
+      "@iyulab/components": [
+        "check:ladder"
+      ]
+    }
   },
   "engines": {
     "node": ">=20"
