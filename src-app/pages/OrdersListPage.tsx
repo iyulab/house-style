@@ -60,10 +60,17 @@ export default function OrdersListPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [newOrderOpen, setNewOrderOpen] = useState(false);
+  // A failed load is shown by the table itself (`error`) — without it the page would sit on an
+  // empty table that reads as "no orders".
+  const [loadError, setLoadError] = useState<{ message: string } | null>(null);
 
   async function reload() {
-    const rows = await svc.odataGet<Order>('Orders');
-    setOrders(rows);
+    try {
+      setLoadError(null);
+      setOrders(await svc.odataGet<Order>('Orders'));
+    } catch (err) {
+      setLoadError({ message: err instanceof Error ? err.message : String(err) });
+    }
   }
 
   useEffect(() => { reload(); }, []);
@@ -109,7 +116,7 @@ export default function OrdersListPage() {
 
       {/* 가이드가 가르치는 두 갈래 — 데이터가 아예 없는 것(`no-data`)과 필터가 걸러낸 것은
           다른 상황이고 다음 행동도 다르다. 앞의 것은 화면의 빈 상태가, 뒤의 것은 표가 방금
-          입력한 필터 바로 아래에서 말한다(`noMatchMessage`) — 같은 안내를 두 곳에 두지 않는다. */}
+          입력한 필터 바로 아래에서 말한다(`noMatchingMessage`) — 같은 안내를 두 곳에 두지 않는다. */}
       {orders && orders.length === 0 && (
         <EmptyState variant="no-data" title="No orders yet" description="Create the first one to get started." />
       )}
@@ -118,8 +125,10 @@ export default function OrdersListPage() {
         ref={tableRef}
         dataMode="client"
         data={(orders ?? []) as unknown as Record<string, unknown>[]}
+        loading={orders === null && !loadError}
+        error={loadError}
         columns={COLUMNS}
-        noMatchMessage="No orders match these filters — clear a filter to see more."
+        noMatchingMessage="No orders match these filters — clear a filter to see more."
         selectable
         filterable
         onFilterChange={(e) => { setFilteredCount(e.detail.filteredCount ?? 0); setMessage(''); }}
