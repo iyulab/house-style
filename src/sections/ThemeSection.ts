@@ -6,6 +6,7 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
+import '@iyulab/components/dist/components/textarea/UTextarea.js';
 import '@iyulab/components/dist/components/option/UOption.js';
 import '@iyulab/components/dist/components/tag/UTag.js';
 import '@iyulab/components/dist/components/icon/UIcon.js';
@@ -216,6 +217,10 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
                 <label class="hs-field"><span class="hs-field__label">Order date</span><u-input value="2026-08-26"></u-input></label>
                 <label class="hs-field"><span class="hs-field__label">Payment due</span><u-input value="2027-02-28"></u-input><span class="hs-field__help">From the channel rule · editable</span></label>
               </div>
+            </fieldset>
+            <fieldset class="hs-fieldset">
+              <legend class="hs-fieldset__legend">Notes</legend>
+              <label class="hs-field"><span class="hs-field__label">Delivery note</span><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></label>
             </fieldset>
           </div>
           <div class="hs-sheet-footer">

@@ -44,6 +44,12 @@ jobs:
       - name: Accessibility
         run: npm run check:a11y
 
+      # The size ladder is owned by two packages — the components define sm / md / lg from the control density and
+      # this sheet restyles the steps. Each side's own tests measure only itself; the rendered composition is where a
+      # step can come out smaller than the one below it at a raised density. Not deployed if so.
+      - name: Control ladder
+        run: npm run check:ladder
+
       - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'

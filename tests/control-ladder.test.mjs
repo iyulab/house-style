@@ -7,6 +7,9 @@
 //
 // Height = 1.5em line + 2 × block padding + 2px border (the components' formula). The browser measurement behind these
 // numbers: 28 / 32 / 40 at 14px, and buttons and fields equal at every step at 16px.
+//
+// These tests read the declarations against a copy of the components' sm formula (`SM_FONT`). The rendered composition —
+// the real components under this sheet, four densities, six controls — is `npm run check:ladder` (after a build).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
