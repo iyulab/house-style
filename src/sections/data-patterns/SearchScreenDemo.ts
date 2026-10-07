@@ -88,7 +88,7 @@ export class SearchScreenDemo extends LitElement {
   @state() private draft: Criteria = { ...DEFAULTS };
   /** What the last search actually ran with. The table reflects this, never `draft`. */
   @state() private applied: Criteria | null = null;
-  @state() private page = 1;
+  @state() private page = 0; // zero-based, the same axis as u-rich-table `page`
   @state() private message = '';
 
   /**
@@ -109,7 +109,7 @@ export class SearchScreenDemo extends LitElement {
   }
 
   private get pageRows() {
-    const start = (this.page - 1) * PAGED_PAGE_SIZE;
+    const start = this.page * PAGED_PAGE_SIZE;
     return this.results.slice(start, start + PAGED_PAGE_SIZE);
   }
 
@@ -117,14 +117,14 @@ export class SearchScreenDemo extends LitElement {
     this.applied = { ...this.draft };
     // Changing the criteria always returns to page 1 — staying on page 4 of a result
     // set that no longer has four pages is the classic way this goes wrong.
-    this.page = 1;
+    this.page = 0;
     this.message = `${this.results.length} orders found.`;
   }
 
   private reset() {
     this.draft = { ...DEFAULTS };
     this.applied = null;
-    this.page = 1;
+    this.page = 0;
     this.message = '';
   }
 
@@ -197,7 +197,7 @@ export class SearchScreenDemo extends LitElement {
                 .data=${this.pageRows}
                 .totalCount=${this.results.length}
                 .pageSize=${PAGED_PAGE_SIZE}
-                .currentPage=${this.page}
+                .page=${this.page}
                 @page-change=${(e: CustomEvent<{ page: number }>) => { this.page = e.detail.page; }}
               ></u-rich-table>
             `}

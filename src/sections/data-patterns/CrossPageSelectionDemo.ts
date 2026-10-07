@@ -18,11 +18,11 @@ export class CrossPageSelectionDemo extends LitElement {
     return this;
   }
 
-  @state() private currentPage = 1;
+  @state() private page = 0;
   @state() private selectedIds: string[] = [];
 
   private get pageRows() {
-    const start = (this.currentPage - 1) * PAGED_PAGE_SIZE;
+    const start = this.page * PAGED_PAGE_SIZE;
     return PAGED_ROWS.slice(start, start + PAGED_PAGE_SIZE);
   }
 
@@ -36,7 +36,7 @@ export class CrossPageSelectionDemo extends LitElement {
   }
 
   private handlePageChange(e: RichTableEventMap['page-change']) {
-    this.currentPage = e.detail.page;
+    this.page = e.detail.page;
   }
 
   render() {
@@ -51,7 +51,7 @@ export class CrossPageSelectionDemo extends LitElement {
         .data=${this.pageRows}
         .totalCount=${PAGED_ROWS.length}
         .pageSize=${PAGED_PAGE_SIZE}
-        .currentPage=${this.currentPage}
+        .page=${this.page}
         selectable
         @selection-change=${this.handleSelectionChange}
         @page-change=${this.handlePageChange}
