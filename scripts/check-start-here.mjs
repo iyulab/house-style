@@ -24,7 +24,7 @@
  * script has walked, never a hand-kept copy.
  */
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -51,6 +51,7 @@ const isWin = process.platform === 'win32';
 const npmMajor = Number(run('npm', ['-v']).stdout.trim().split('.')[0]);
 const npm = npmMajor >= 11 ? ['npm'] : ['npx', '-y', 'npm@11'];
 
+removeLeftovers();
 const work = mkdtempSync(join(tmpdir(), 'start-here-'));
 let project = work;
 const steps = [];
@@ -186,7 +187,25 @@ function compareStarter(dir) {
 /** Best effort: on Windows the preview server's native bindings stay loaded until this process exits. */
 function cleanup() {
   try { rmSync(work, { recursive: true, force: true }); }
-  catch { console.log(`  (left ${work} — a loaded native module holds a file; the OS temp directory will clear it)`); }
+  catch { console.log(`  (left ${work} — a loaded native module holds a file; the next run removes it)`); }
+}
+
+/**
+ * Removes the projects earlier runs could not remove. Windows does not clear its temp directory, and each project is a
+ * full install (~160 MB): runs from the deploy gate's local mirror piled up until the disk was full. The file lock ends
+ * with the process that held it, so a later run can delete the directory. A project younger than half an hour may
+ * belong to a run still going, and is left alone.
+ */
+function removeLeftovers() {
+  const root = tmpdir();
+  const cutoff = Date.now() - 30 * 60 * 1000;
+  for (const name of readdirSync(root)) {
+    if (!name.startsWith('start-here-')) continue;
+    const path = join(root, name);
+    try {
+      if (statSync(path).mtimeMs < cutoff) rmSync(path, { recursive: true, force: true });
+    } catch { /* still held, or already gone — the next run tries again */ }
+  }
 }
 
 function step(name, fn) {
