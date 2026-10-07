@@ -1,19 +1,27 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { createArraySource } from '@iyulab/flex-table/array';
 
+import '@iyulab/enterprise/list-page';
 import '@iyulab/components/dist/components/badge/UBadge.js';
 import '@iyulab/components/dist/components/button/UButton.js';
+import '@iyulab/components/dist/components/input/UInput.js';
+import '@iyulab/components/dist/components/select/USelect.js';
+import '@iyulab/components/dist/components/option/UOption.js';
+import '@iyulab/components/dist/components/pagination/UPagination.js';
+import '@iyulab/modern-app/dist/components/EmptyState.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
-import type { RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
+import '@iyulab/data-components/dist/components/data-view/UDataView.js';
+import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
+import type { RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 
-import { COLUMNS, ROWS } from './constants.js';
+import { COLUMNS, PAGED_ROWS, PAGED_PAGE_SIZE, renderOrderCard } from './constants.js';
 
 /**
- * List screen recipe. The list is already loaded, so the table does the narrowing itself:
- * `data-mode="client"` makes `u-rich-table` apply its filter row, sorting and paging to
- * `.data` as the whole set. When the query goes to the server instead, leave the mode at its
- * default and answer `filter-change` / `page-change` with a request.
+ * List screen recipe. `u-list-page` binds one data source to the table, the cards and the pager, and turns the search
+ * box's `search` into the source's search — the screen only says what is on it. Here the rows are already loaded
+ * (`createArraySource`); for a server list, `createODataSource` from `@iyulab/flex-table/odata` takes its place.
  */
 @customElement('house-data-patterns-list-screen')
 export class ListScreenDemo extends LitElement {
@@ -21,55 +29,49 @@ export class ListScreenDemo extends LitElement {
     return this;
   }
 
-  @state() private selectedCount = 0;
-  @state() private cancelMessage = '';
+  private orders = createArraySource(PAGED_ROWS, { pageSize: PAGED_PAGE_SIZE, searchFields: row => [row.id, row.customer] });
+  @state() private view = 'table';
+  @state() private selected = 0;
+  @state() private message = '';
 
-  private handleSelectionChange(e: RichTableEventMap['selection-change']) {
-    this.selectedCount = e.detail.selectedIds.length;
+  /** Status is this screen's own criterion: it narrows the rows the source sees. */
+  private filterStatus(e: Event) {
+    const status = (e.target as USelect).value;
+    this.orders.update(status ? PAGED_ROWS.filter(row => row.status === status) : PAGED_ROWS, { pageSize: PAGED_PAGE_SIZE });
   }
 
-  /**
-   * Simulates an API refetch — a real implementation would re-request `.data` here.
-   * This demo's refetch also clears any existing status message as a side effect,
-   * modeling a common shape: one view-state object holds both the rows and the status
-   * line, and refetching replaces the whole object. That's exactly why the success
-   * message below is set *after* this call returns, not before — setting it first
-   * would have this "refetch" immediately erase it.
-   */
-  private simulateRefetch() {
-    this.cancelMessage = '';
-  }
-
-  private handleCancelOrders() {
-    this.querySelector<URichTable>('#list-screen-table')?.clearSelection();
-    this.selectedCount = 0;
-    this.simulateRefetch();
-    this.cancelMessage = 'Selected orders canceled.';
+  private cancelSelected() {
+    this.querySelector<URichTable>('u-rich-table')?.clearSelection();
+    this.message = `${this.selected} orders canceled.`;
+    this.selected = 0;
   }
 
   render() {
     return html`
-      <u-rich-table
-        id="list-screen-table"
-        aria-label="Orders"
-        .columns=${COLUMNS}
-        data-mode="client"
-        .data=${ROWS}
-        selectable
-        filterable
-        .filterPlaceholder=${'Filter…'}
-        .filterAllLabel=${'All statuses'}
-        @selection-change=${this.handleSelectionChange}
-      >
-        <span slot="bulk-actions">
-          ${this.selectedCount > 0
-            ? html`<u-badge color="primary">${this.selectedCount} selected</u-badge>
-                   <u-button size="sm" appearance="outlined">Export</u-button>
-                   <u-button size="sm" color="danger" appearance="outlined" @click=${this.handleCancelOrders}>Cancel orders</u-button>`
-            : ''}
-        </span>
-      </u-rich-table>
-      ${this.cancelMessage ? html`<p>${this.cancelMessage}</p>` : ''}
+      <u-list-page .source=${this.orders} view=${this.view}>
+        <u-input slot="filters" type="search" label="Search" placeholder="Order or customer"></u-input>
+        <u-select slot="filters" label="Status" value="" @change=${this.filterStatus}>
+          <u-option value="">All statuses</u-option>
+          <u-option value="pending">Pending</u-option>
+          <u-option value="shipped">Shipped</u-option>
+          <u-option value="delivered">Delivered</u-option>
+        </u-select>
+        <u-button slot="toolbar" size="sm" appearance="outlined" aria-pressed=${this.view === 'cards'}
+          @click=${() => { this.view = this.view === 'table' ? 'cards' : 'table'; }}>Cards</u-button>
+        <u-rich-table slot="view" view-name="table" aria-label="Orders" .columns=${COLUMNS} selectable hide-pagination
+          @selection-change=${(e: RichTableEventMap['selection-change']) => { this.selected = e.detail.selectedIds.length; }}>
+          <span slot="bulk-actions">
+            ${this.selected > 0
+              ? html`<u-badge color="primary">${this.selected} selected</u-badge>
+                     <u-button size="sm" color="danger" appearance="outlined" @click=${this.cancelSelected}>Cancel orders</u-button>`
+              : ''}
+          </span>
+        </u-rich-table>
+        <u-data-view slot="view" view-name="cards" hide-toolbar .renderCard=${renderOrderCard}></u-data-view>
+        <u-pagination slot="pager" label="Orders pages"></u-pagination>
+        <u-empty-state slot="empty" variant="no-results" title="No orders match"></u-empty-state>
+      </u-list-page>
+      ${this.message ? html`<p role="status">${this.message}</p>` : ''}
     `;
   }
 }

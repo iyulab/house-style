@@ -127,26 +127,28 @@ export class DataPatternsSection extends LitElement {
           </p>
         </u-group-box>
 
-        <u-group-box level="2" title="List screen — assembled, not a dedicated kit">
+        <u-group-box level="2" title="List screen — one source, the view that shows it, and slots">
           <p>
-            No purpose-built "list-screen kit" component exists — this is
-            <code>u-rich-table</code> from <code>@iyulab/data-components</code>, as-is,
-            with its own filter row, selection tracking and bulk-action slot switched on.
-            Nothing here is a house-style-specific component; the assembly itself is the
-            answer to "how do these already-built pieces fit together." The Status column
-            renders through <code>ColumnDef.render</code> as <code>u-tag</code> — see the
-            convention below for which color means what.
+            <code>u-list-page</code> from <code>@iyulab/enterprise</code> is the list skeleton: it binds one data
+            source to whatever sits in its <code>view</code> slot and to the pager, and turns the search box's
+            <code>search</code> into the source's search. It does not draw a table — <code>u-rich-table</code> and the
+            card view <code>u-data-view</code> do, and the skeleton's <code>view</code> attribute says which one shows.
+            Hidden views stay bound, so switching keeps the page, the sort and the search.
           </p>
           <p>
-            This demo loads the full result set once and sets <code>data-mode="client"</code>, so
-            the table applies its own filter row, sorting and paging — no filtering code in the
-            screen. That suits a small-to-medium, row-CRUD-focused list like this one. <strong>That is a property of
-            this demo, not a limit of the component</strong> — <code>u-rich-table</code> pages
-            from a server perfectly well; see the search screen below, which does exactly that.
-            Reach for <code>@iyulab/flex-table</code> when you need <em>cell-level editing</em> or
-            spreadsheet-scale virtualisation, not merely because the data is paged. The two axes
-            are independent, and conflating them sends screens that only need paging to a
-            heavier component than they wanted.
+            What belongs to this screen goes in a slot: the status criterion in <code>filters</code> (it narrows the
+            rows the source sees), the view switch in <code>toolbar</code>, the actions on the selected rows in the
+            table's own <code>bulk-actions</code>, and the "no matches" state in <code>empty</code>. Selection stays
+            on the table — the skeleton binds what the source owns, not what the screen does with it. The Status
+            column renders through <code>ColumnDef.render</code> as <code>u-tag</code>; see the convention below for
+            which color means what.
+          </p>
+          <p>
+            The rows here are already loaded, so the source is <code>createArraySource</code> from
+            <code>@iyulab/flex-table/array</code>; a server list swaps in <code>createODataSource</code> and nothing
+            else changes. Reach for <code>flex-table</code> as the view when you need <em>cell-level editing</em> or
+            spreadsheet-scale virtualisation — it takes the same place in the <code>view</code> slot. For a layout
+            the slots do not fit, <code>bindSource</code> binds the same source to elements you place yourself.
           </p>
           <p>
             Both tables describe a column with the same words, so moving a screen from one to the

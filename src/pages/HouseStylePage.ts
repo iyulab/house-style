@@ -46,7 +46,7 @@ export class HouseStylePage extends LitElement {
             ${this.renderCode(CREATE, 'Copy commands')}
           </li>
           <li>
-            <p><strong>Install</strong> the components, the table, the app shell, and the house theme.</p>
+            <p><strong>Install</strong> the components, the table, the app shell, the list skeleton and its data source, and the house theme.</p>
             ${this.renderCode(INSTALL, 'Copy command')}
           </li>
           <li>
@@ -76,16 +76,16 @@ export class HouseStylePage extends LitElement {
       <u-group-box level="2" title="Recipe: a list screen">
         <a slot="actions" href="${base}data-patterns">See it running →</a>
         <p>
-          Most business apps start with a list: a table with a filter row and actions on the
-          selected rows. This is the one the Data patterns page runs live — copy both files whole, then
-          replace the columns and the data. The "no data yet" and "no matches" states that go
-          with it are on the same page.
+          Most business apps start with a list: search, a criterion or two, a table that can turn into
+          cards, a pager, and actions on the selected rows. This is the one the Data patterns page runs
+          live — copy both files whole, then replace the columns and the data. The "no data yet" state
+          that goes with it is on the same page.
         </p>
         <ol class="start-recipe">
-          <li><strong>Table</strong> — <code>u-rich-table</code> with columns, a filter row and row selection switched on; status renders as <code>u-tag</code> through the column's <code>render</code>.</li>
-          <li><strong>Filtering</strong> — the list is already loaded, so <code>data-mode="client"</code> lets the table filter, sort and page it itself. When the query belongs to the server, leave the default and answer <code>filter-change</code> with a request.</li>
-          <li><strong>Bulk actions</strong> — in the <code>bulk-actions</code> slot, shown only while rows are selected, with how many.</li>
-          <li><strong>On a route</strong> — put a <code>u-page-header</code> above it to name the screen; the shell already gives the content area its gutter.</li>
+          <li><strong>Skeleton and source</strong> — <code>u-list-page</code> binds one data source to the table, the cards and the pager, and turns the search box's <code>search</code> into the source's search. The rows are already loaded here (<code>createArraySource</code>); a server list uses <code>createODataSource</code> instead.</li>
+          <li><strong>Table or cards</strong> — each view has a <code>view-name</code>; the skeleton's <code>view</code> says which one shows. Status renders as <code>u-tag</code> through the column's <code>render</code>.</li>
+          <li><strong>The screen's own parts</strong> — a criterion in the <code>filters</code> slot, buttons in <code>toolbar</code>, the actions on the selected rows in the table's <code>bulk-actions</code>, and the no-match state in <code>empty</code>.</li>
+          <li><strong>On a route</strong> — put a <code>u-page-header</code> in the <code>header</code> slot to name the screen; the shell already gives the content area its gutter.</li>
         </ol>
         <house-demo-source label="ListScreenDemo.ts" .source=${listScreenSrc}></house-demo-source>
         <house-demo-source label="constants.ts" .source=${listConstantsSrc}></house-demo-source>

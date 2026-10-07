@@ -10,8 +10,8 @@
 export const CREATE = `npm create vite@latest my-app -- --template lit-ts
 cd my-app`;
 
-/** Step 2 — the components, the table, the app shell, and the house theme. */
-export const INSTALL = `npm install @iyulab/components @iyulab/data-components @iyulab/modern-app @iyulab/house-style`;
+/** Step 2 — the components, the table, the app shell, the list skeleton and its data source, and the house theme. */
+export const INSTALL = `npm install @iyulab/components @iyulab/data-components @iyulab/modern-app @iyulab/enterprise @iyulab/flex-table @iyulab/house-style`;
 
 /** Step 3a — `index.html`, replacing the template's (which loads its own demo element and CSS). */
 export const INDEX_HTML = `<!doctype html>
