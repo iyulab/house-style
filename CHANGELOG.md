@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.4] - 2026-10-07
+
+### Fixed
+
+- **The control ladder follows the control density** (`--u-density`). Button font sizes were literal (md 13px, lg
+  14px) and so were the field and button paddings, so a host that raised the density grew only some steps: with
+  `@iyulab/components` 2.13 (sm follows the density) a small button became larger than a default one (13.7 > 13px),
+  and buttons stopped lining up with fields. Font sizes are now steps of the density and paddings are em. At the
+  default 14px nothing changes — 12 / 13 / 14px and 28 / 32 / 40px; at 16px all three steps grow in order and
+  buttons and fields stay level.
+
 ## [0.1.3] - 2026-10-06
 
 ### Fixed

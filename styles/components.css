@@ -32,23 +32,27 @@
 /* ── Button — 28 / 32 / 40, medium weight ─────────────────────────────── *
  * Height follows the components' own formula (1.5em line + 2 × padding + 2px border), so
  * these are padding values, not fixed heights: text and icon-only buttons stay equal.
- * The font sizes here are literal on purpose: they are terms of that height formula (the
- * control ladder 28/32/40), not steps of the text ladder — tying them to `--u-text-*` would
- * change control heights whenever the text ladder is rescaled.                            */
+ * The font sizes are terms of that height formula (the control ladder 28/32/40), not steps of
+ * the text ladder — tying them to `--u-text-*` would change control heights whenever the text
+ * ladder is rescaled. They are steps of the control density instead (`--u-density`, the
+ * components' size axis): at the default 14px they are 12 / 13 / 14 and the heights 28/32/40;
+ * a host that raises the density (a field or touch mode) grows all three together and in order.
+ * Padding is in em for the same reason — the n/13, n/12, n/14 factors give the px values at the
+ * default density exactly. (sm takes the components' own size: density × 6/7.)            */
 u-button:not([size]),
 u-button[size='md'] {
-  font-size: 13px;
-  --btn-padding-block: 5.25px;   /* 19.5 + 10.5 + 2 = 32 */
-  --btn-padding-inline: 12px;
+  font-size: calc(var(--u-density, 14px) * 13 / 14);
+  --btn-padding-block: calc(5.25em / 13);   /* 13px: 19.5 + 10.5 + 2 = 32 */
+  --btn-padding-inline: calc(12em / 13);
 }
 u-button[size='sm'] {
-  --btn-padding-block: 4px;      /* 12px → 18 + 8 + 2 = 28 */
-  --btn-padding-inline: 8px;
+  --btn-padding-block: calc(4em / 12);      /* 12px: 18 + 8 + 2 = 28 */
+  --btn-padding-inline: calc(8em / 12);
 }
 u-button[size='lg'] {
-  font-size: 14px;
-  --btn-padding-block: 8.5px;    /* 21 + 17 + 2 = 40 */
-  --btn-padding-inline: 16px;
+  font-size: var(--u-density, 14px);
+  --btn-padding-block: calc(8.5em / 14);    /* 14px: 21 + 17 + 2 = 40 */
+  --btn-padding-inline: calc(16em / 14);
 }
 u-button[appearance='link'] {
   --btn-padding-inline: 0;
@@ -58,11 +62,11 @@ u-button[appearance='link'] {
  *    (Components 2.0 renders fields at 14px by default, so a field no longer grows with the
  *    surrounding text; the house sets the box padding per size.) ── */
 :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='sm'] {
-  --u-field-padding-block: 4px;     /* 12px → 18 + 8 + 2 = 28 */
+  --u-field-padding-block: calc(4em / 12);     /* 12px: 18 + 8 + 2 = 28 */
 }
 :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='lg'] {
-  font-size: 14px;
-  --u-field-padding-block: 8.5px;   /* 21 + 17 + 2 = 40 */
+  font-size: var(--u-density, 14px);           /* with the density, like md — the step is the padding */
+  --u-field-padding-block: calc(8.5em / 14);   /* 14px: 21 + 17 + 2 = 40 */
 }
 
 /* ── Tag — 22px labels (12px text · 1px block padding · hairline) to sit inside 40px rows.

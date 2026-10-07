@@ -311,9 +311,10 @@
   --hs-text-dense-size: calc((var(--u-text-body-size) + var(--u-text-label-size)) / 2);
   --hs-text-hero-size:  calc(var(--u-text-display-size) + 6px);
 
-  /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections */
-  --u-field-padding-block:  4.5px;
-  --u-field-padding-inline: 12px;
+  /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections. In em, so the box
+     follows the control density with the buttons (resolved at the field: 4.5px / 12px at the default 14px). */
+  --u-field-padding-block:  calc(4.5em / 14);
+  --u-field-padding-inline: calc(12em / 14);
   --u-field-radius:         6px;
 
   /* Shell (`@iyulab/modern-app`) — 32px navigation rows, 16px icons, a flat current item */

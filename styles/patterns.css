@@ -486,7 +486,7 @@ a.hs-card:hover,
 }
 /* Form fields are 40px (the side-sheet and edit-form size); toolbars keep 32px. */
 .hs-field {
-  --u-field-padding-block: 8.5px;
+  --u-field-padding-block: calc(8.5em / 14);   /* 14px: 21 + 17 + 2 = 40 — and with the density */
 }
 .hs-field :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker) {
   width: 100%;
