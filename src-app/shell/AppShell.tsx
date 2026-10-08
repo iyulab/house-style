@@ -1,7 +1,10 @@
 import { Router } from '@iyulab/router';
 import type { RouteContext } from '@iyulab/router';
 import { UOutlet } from '@iyulab/router/react';
-import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
+import { SidebarLayout, ScreenObserver, EmptyState } from '@iyulab/modern-app/react';
+// This shell builds its own `Router`, so the error classes come from the same module the router throws them
+// from. An `app.load()` app imports them from `@iyulab/modern-app` (it re-exports them).
+import { AccessDeniedError, NotFoundError } from '@iyulab/router';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
@@ -34,6 +37,12 @@ function initialSidebarState(): 'default' | 'slim' | 'mobile' {
   const width = window.innerWidth;
   return width < small ? 'mobile' : width < medium ? 'slim' : 'default';
 }
+
+const ORDERS_READ = NAV_ITEMS.find((n) => n.path === '/orders')?.permission;
+
+/** A route guard from a permission — the one rule the sidebar link also filters by. Runs after `requireAuth`,
+ *  which loaded the session's permissions. */
+const can = (permission: string | undefined) => () => !permission || hasPermission(permission);
 
 async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
   if (ctx.pathname === base + 'login') return true;
@@ -94,7 +103,10 @@ export function mountAppShell(root: HTMLElement) {
             config={{
               type: 'sidebar',
               title: 'Orders Reference',
-              main: NAV_ITEMS.map((n) => ({ type: 'link', label: n.label, icon: n.icon, lib: n.lib, href: base.slice(0, -1) + n.path })),
+              main: NAV_ITEMS.map((n) => ({
+                type: 'link', label: n.label, icon: n.icon, lib: n.lib, href: base.slice(0, -1) + n.path,
+                requirePermission: n.permission,
+              })),
               footer: [{ type: 'button', label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut }],
               hasPermission,
             }}
@@ -104,11 +116,21 @@ export function mountAppShell(root: HTMLElement) {
         ),
         children: [
           { index: true, render: () => <DashboardPage /> },
-          { path: 'orders', render: () => <OrdersListPage /> },
-          { path: 'orders/new', render: () => <NewOrderPage /> },
-          { path: 'orders/:id', render: (ctx) => <OrderDetailPage orderId={ctx.params.id as string} /> },
+          { path: 'orders', enter: can(ORDERS_READ), render: () => <OrdersListPage /> },
+          { path: 'orders/new', enter: can('orders.write'), render: () => <NewOrderPage /> },
+          { path: 'orders/:id', enter: can(ORDERS_READ), render: (ctx) => <OrderDetailPage orderId={ctx.params.id as string} /> },
         ],
       },
     ],
+    // A guard that says no raises `AccessDeniedError`; the router draws the fallback in the outlet the failing
+    // route would have used — inside the shell, so the sidebar stays. A blocked screen is not an outage, so it is
+    // not drawn as `error` (that reads as "couldn't load" and interrupts a screen reader with an alert).
+    fallback: {
+      render: (ctx) => ctx.error instanceof AccessDeniedError
+        ? <EmptyState variant="no-access" />
+        : ctx.error instanceof NotFoundError
+          ? <EmptyState title="Page not found" description="Check the address, or go back to the dashboard." />
+          : <EmptyState variant="error" description={ctx.error.message} />,
+    },
   });
 }

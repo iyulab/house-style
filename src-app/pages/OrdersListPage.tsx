@@ -10,6 +10,7 @@ import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { svc } from '../lib/odata.js';
+import { usePermission } from '../lib/permissions.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import { StatusTag } from '../components/StatusTag.js';
 import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
@@ -40,6 +41,7 @@ export default function OrdersListPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [newOrderOpen, setNewOrderOpen] = useState(false);
+  const canWrite = usePermission('orders.write');
 
   async function cancelSelected() {
     const ids = selectedIds;
@@ -67,14 +69,20 @@ export default function OrdersListPage() {
       </USelect>
       <ActionBar slot="toolbar">
         <UButton appearance="outlined" aria-pressed={view === 'cards'} onClick={() => setView(view === 'table' ? 'cards' : 'table')}>Cards</UButton>
-        <UButton slot="danger" color="danger" appearance="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
-          Cancel selected ({selectedIds.length})
-        </UButton>
-        <UButton color="primary" onClick={() => setNewOrderOpen(true)}>New order</UButton>
-        <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>New order with items</UButton>
+        {/* Write actions follow the same permission the new-order route guards — hidden, not disabled: a read-only
+            account has nothing to wait for. */}
+        {canWrite && (
+          <>
+            <UButton slot="danger" color="danger" appearance="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
+              Cancel selected ({selectedIds.length})
+            </UButton>
+            <UButton color="primary" onClick={() => setNewOrderOpen(true)}>New order</UButton>
+            <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>New order with items</UButton>
+          </>
+        )}
       </ActionBar>
       {message && <UAlert slot="toolbar" open status="success">{message}</UAlert>}
-      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable hidePagination
+      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable={canWrite} hidePagination
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UDataViewReact slot="view" view-name="cards" hideToolbar

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 
 import type { UInput as UInputElement } from '@iyulab/components';
 import { UAlert, UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import { auth } from '../lib/auth.js';
-import { DEMO_CREDENTIALS } from '../mocks/data.js';
+import { DEMO_CREDENTIALS, VIEWER_CREDENTIALS } from '../mocks/data.js';
 import './LoginPage.css';
 
 export default function LoginPage() {
@@ -83,7 +83,9 @@ export default function LoginPage() {
 
           <p className="login-page__hint">
             This is a demo backend (mocked, no real accounts) — sign in with{' '}
-            <code>{DEMO_CREDENTIALS.Username}</code> / <code>{DEMO_CREDENTIALS.Password}</code>.
+            <code>{DEMO_CREDENTIALS.Username}</code> / <code>{DEMO_CREDENTIALS.Password}</code>, or{' '}
+            <code>{VIEWER_CREDENTIALS.Username}</code> / <code>{VIEWER_CREDENTIALS.Password}</code> for a
+            read-only account.
           </p>
 
           {/* One lock for the whole form while signing in — a disable boundary, not a visual group. */}

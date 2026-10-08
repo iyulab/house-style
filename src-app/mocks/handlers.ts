@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, PRODUCTS, ORDER_ITEMS, type Order, type OrderItem } from './data.js';
+import { ORDERS, DEMO_ACCOUNTS, PRODUCTS, ORDER_ITEMS, type DemoUser, type Order, type OrderItem } from './data.js';
 import { queryRows } from './odata-query.js';
 
 // A demo backend, not a persistence layer: the order list lives in memory and resets on reload.
@@ -7,16 +7,20 @@ import { queryRows } from './odata-query.js';
 // to an app screen lands on that screen instead of the login page. A real backend keeps its session
 // across a reload, and a reference app that logged you out on every refresh taught the opposite.
 const SESSION_KEY = 'house-style-demo-session';
-const readSession = (): typeof DEMO_USER | null => {
-  try { return sessionStorage.getItem(SESSION_KEY) ? DEMO_USER : null; } catch { return null; }
-};
-const writeSession = (on: boolean): void => {
+// The stored value is the signed-in user's Id — two accounts with different permissions share this backend.
+const readSession = (): DemoUser | null => {
   try {
-    if (on) sessionStorage.setItem(SESSION_KEY, '1');
+    const id = sessionStorage.getItem(SESSION_KEY);
+    return DEMO_ACCOUNTS.find((a) => a.user.Id === id)?.user ?? null;
+  } catch { return null; }
+};
+const writeSession = (user: DemoUser | null): void => {
+  try {
+    if (user) sessionStorage.setItem(SESSION_KEY, user.Id);
     else sessionStorage.removeItem(SESSION_KEY);
   } catch { /* storage unavailable — the session lasts this page load */ }
 };
-let session: typeof DEMO_USER | null = readSession();
+let session: DemoUser | null = readSession();
 const orders: Order[] = ORDERS.map((o) => ({ ...o }));
 let nextOrderSeq = orders.length;
 const orderItems: OrderItem[] = ORDER_ITEMS.map((i) => ({ ...i }));
@@ -31,17 +35,20 @@ export const handlers = [
 
   http.post('*/api/auth/login', async ({ request }) => {
     const body = (await request.json()) as { Username?: string; Password?: string };
-    if (body.Username === DEMO_CREDENTIALS.Username && body.Password === DEMO_CREDENTIALS.Password) {
-      session = DEMO_USER;
-      writeSession(true);
-      return HttpResponse.json(DEMO_USER);
+    const account = DEMO_ACCOUNTS.find(
+      (a) => a.credentials.Username === body.Username && a.credentials.Password === body.Password,
+    );
+    if (account) {
+      session = account.user;
+      writeSession(account.user);
+      return HttpResponse.json(account.user);
     }
     return new HttpResponse(null, { status: 401 });
   }),
 
   http.post('*/api/auth/logout', () => {
     session = null;
-    writeSession(false);
+    writeSession(null);
     return new HttpResponse(null, { status: 204 });
   }),
 

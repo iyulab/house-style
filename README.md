@@ -100,9 +100,14 @@ The live page is organized into sections:
 ## The reference app
 
 The guide has a second half: a small but working line-of-business app, assembled only from
-these libraries, at **https://iyulab.github.io/house-style/app/** (sign in with `demo` / `demo`
-— the backend is mocked in the browser, there are no real accounts). It is reachable from the
-guide's sidebar under "Open the reference app".
+these libraries, at **https://iyulab.github.io/house-style/app/** (sign in with `demo` / `demo`,
+or `viewer` / `viewer` for a read-only account — the backend is mocked in the browser, there are
+no real accounts). It is reachable from the guide's sidebar under "Open the reference app".
+
+The two accounts show permissions end to end: one permission decides both whether a link or
+action is shown and whether its route lets the user in. The read-only account sees no create or
+cancel actions, and opening the new-order screen by its address shows the blocked state
+(`<u-empty-state variant="no-access">`) inside the shell.
 
 Where the guide shows each pattern on its own, the app shows them load-bearing: a sidebar shell,
 a list screen with filtering, selection and bulk actions, a master-detail order screen with an

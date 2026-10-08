@@ -84,3 +84,19 @@ export const DEMO_USER: DemoUser = {
 };
 
 export const DEMO_CREDENTIALS = { Username: 'demo', Password: 'demo' };
+
+/** A read-only account — the same screens with `orders.write` missing: no create/edit actions, and the
+ *  new-order screen is blocked by its route guard (reach it by address to see the blocked state). */
+export const VIEWER_USER: DemoUser = {
+  Id: 'u-2',
+  Name: 'Demo Viewer',
+  Permissions: ['orders.read'],
+};
+
+export const VIEWER_CREDENTIALS = { Username: 'viewer', Password: 'viewer' };
+
+/** Every account the mock backend accepts. */
+export const DEMO_ACCOUNTS = [
+  { credentials: DEMO_CREDENTIALS, user: DEMO_USER },
+  { credentials: VIEWER_CREDENTIALS, user: VIEWER_USER },
+];
