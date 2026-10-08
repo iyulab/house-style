@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { createODataSource } from '@iyulab/flex-table/odata';
+import { useState } from 'react';
+import { useODataSource } from '@iyulab/flex-table/react';
 import { ListPage } from '@iyulab/enterprise/react';
 import { URichTableReact, UDataViewReact } from '@iyulab/data-components/react';
 import type { ColumnDefReact } from '@iyulab/data-components/react';
@@ -33,17 +33,13 @@ const COLUMNS: ColumnDefReact[] = [
  * and the pager. The screen holds only what is its own: the status criterion, the view, the selection.
  */
 export default function OrdersListPage() {
-  const orders = useMemo(() => createODataSource<Order>('/$data/Orders', { pageSize: 5, defaultOrderBy: 'CreatedAt desc' }), []);
-  const { totalCount, search } = useSyncExternalStore(orders.subscribe, orders.getState);
   const [status, setStatus] = useState('');
+  // The status criterion is part of the query — a changed `fixedFilter` goes back to the first page.
+  const orders = useODataSource<Order>('/$data/Orders', { pageSize: 5, defaultOrderBy: 'CreatedAt desc', fixedFilter: status ? { Status: status } : undefined });
   const [view, setView] = useState<'table' | 'cards'>('table');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [newOrderOpen, setNewOrderOpen] = useState(false);
-
-  useEffect(() => {
-    orders.update('/$data/Orders', { pageSize: 5, defaultOrderBy: 'CreatedAt desc', fixedFilter: status ? { Status: status } : undefined });
-  }, [orders, status]);
 
   async function cancelSelected() {
     const ids = selectedIds;
@@ -59,8 +55,8 @@ export default function OrdersListPage() {
   }
 
   return (
-    <ListPage source={orders} view={view}>
-      <PageHeader slot="header" title="Orders" subtitle={`${totalCount} order(s)`} />
+    <ListPage source={orders.source} view={view}>
+      <PageHeader slot="header" title="Orders" subtitle={`${orders.totalCount} order(s)`} />
       <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" />
       <USelect slot="filters" label="Status" value={status} onChange={(e) => setStatus(String((e.target as USelectElement).value ?? ''))}>
         <u-option value="">All statuses</u-option>
@@ -86,7 +82,7 @@ export default function OrdersListPage() {
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UPagination slot="pager" label="Orders pages" />
       {/* 데이터가 아예 없는 것과 조건이 걸러낸 것은 다음 행동이 다르다 — 화면이 자기 조건을 보고 고른다. */}
-      <EmptyState slot="empty" {...(search || status
+      <EmptyState slot="empty" {...(orders.search || status
         ? { variant: 'no-results', title: 'No orders match', description: 'Clear the search or the status to see more.' }
         : { variant: 'no-data', title: 'No orders yet', description: 'Create the first one to get started.' })} />
       <NewOrderDrawer open={newOrderOpen} onClose={() => setNewOrderOpen(false)} onCreated={() => orders.refresh()} />
