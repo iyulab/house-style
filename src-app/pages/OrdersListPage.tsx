@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { URichTableReact } from '@iyulab/data-components/react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { createODataSource } from '@iyulab/flex-table/odata';
+import { ListPage } from '@iyulab/enterprise/react';
+import { URichTableReact, UDataViewReact } from '@iyulab/data-components/react';
 import type { ColumnDefReact } from '@iyulab/data-components/react';
-import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
-import { UButton, UAlert } from '../lib/ui-react.js';
+import type { USelect as USelectElement } from '@iyulab/components';
+import { UButton, UAlert, UInput, USelect, UPagination } from '../lib/ui-react.js';
 // 화면 제목·액션 줄·결과 메시지·빈 상태는 손으로 짜지 않는다 — 가이드가 이름을 준 자리다.
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
@@ -13,134 +15,81 @@ import { StatusTag } from '../components/StatusTag.js';
 import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
 
-// `URichTableReact` widens `render` to accept a React node (that is the whole point of
-// `ColumnDefReact` over the vanilla `ColumnDef`) — so this returns the shared badge as JSX.
-function renderStatusTag(value: unknown) {
-  return <StatusTag status={String(value) as OrderStatus} />;
-}
-
-// A hard `location.href` navigation would reload the page — and with it, the MSW mock
-// backend's in-memory orders (see mocks/handlers.ts) and the Router's client-side state.
-// Route client-side instead, same idiom as LoginPage.tsx's post-login redirect.
+// A hard `location.href` navigation would reload the page — and with it the MSW mock backend's in-memory orders.
 function navigate(path: string) {
   history.pushState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
-// `ColumnDefReact` is not generic — `key` is matched against row properties at runtime, not
-// checked against `Order` at compile time (matches the existing house-style Data Patterns
-// recipe). The React variant is required here: `URichTableReact.columns` is typed against it.
 const COLUMNS: ColumnDefReact[] = [
-  { key: 'Id', label: 'Order', width: '140px' },
-  { key: 'Customer', label: 'Customer', width: '200px', filterable: true, filterType: 'text' },
-  {
-    key: 'Status', label: 'Status', width: '120px',
-    filterable: true, filterType: 'select',
-    options: [
-      { value: 'pending', label: 'Pending' },
-      { value: 'shipped', label: 'Shipped' },
-      { value: 'delivered', label: 'Delivered' },
-      { value: 'cancelled', label: 'Cancelled' },
-    ],
-    render: renderStatusTag,
-  },
-  { key: 'Total', label: 'Total', width: '140px', align: 'end', render: (v) => `₩${Number(v).toLocaleString()}` },
+  { key: 'Id', label: 'Order', width: '140px', sortable: true },
+  { key: 'Customer', label: 'Customer', width: '200px', sortable: true },
+  { key: 'Status', label: 'Status', width: '120px', render: (v) => <StatusTag status={String(v) as OrderStatus} /> },
+  { key: 'Total', label: 'Total', width: '140px', align: 'end', sortable: true, render: (v) => `₩${Number(v).toLocaleString()}` },
 ];
 
+/**
+ * The orders list — `ListPage` binds one OData source (the server pages, sorts and searches) to the table, the cards
+ * and the pager. The screen holds only what is its own: the status criterion, the view, the selection.
+ */
 export default function OrdersListPage() {
-  const [orders, setOrders] = useState<Order[] | null>(null);
-  // The whole list is loaded, so the table filters it itself (`dataMode="client"`). The page only
-  // keeps the count for its subtitle and empty state: `filter-change` reports it when a filter
-  // changes, and `filteredRowCount` is read after new data has reached the table.
-  const tableRef = useRef<URichTable>(null);
-  const [filteredCount, setFilteredCount] = useState(0);
-  // `selection-change`'s `detail.selectedIds` is cumulative across every filter/page visited so
-  // far (confirmed against the component's source) — this page just displays that count,
-  // instead of re-deriving a "which rows are checked right now" set itself.
+  const orders = useMemo(() => createODataSource<Order>('/$data/Orders', { pageSize: 5, defaultOrderBy: 'CreatedAt desc' }), []);
+  const { totalCount, search } = useSyncExternalStore(orders.subscribe, orders.getState);
+  const [status, setStatus] = useState('');
+  const [view, setView] = useState<'table' | 'cards'>('table');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [newOrderOpen, setNewOrderOpen] = useState(false);
-  // A failed load is shown by the table itself (`error`) — without it the page would sit on an
-  // empty table that reads as "no orders".
-  const [loadError, setLoadError] = useState<{ message: string } | null>(null);
 
-  async function reload() {
-    try {
-      setLoadError(null);
-      setOrders(await svc.odataGet<Order>('Orders'));
-    } catch (err) {
-      setLoadError({ message: err instanceof Error ? err.message : String(err) });
-    }
-  }
-
-  useEffect(() => { reload(); }, []);
-  // Runs after the commit that handed `orders` to the table, so the getter sees the new rows.
-  useEffect(() => { if (tableRef.current) setFilteredCount(tableRef.current.filteredRowCount); }, [orders]);
+  useEffect(() => {
+    orders.update('/$data/Orders', { pageSize: 5, defaultOrderBy: 'CreatedAt desc', fixedFilter: status ? { Status: status } : undefined });
+  }, [orders, status]);
 
   async function cancelSelected() {
     const ids = selectedIds;
-    // Irreversible, so it runs only from a confirmation — the one place it is drawn solid (the
-    // guide's action hierarchy). The page button stays outlined.
+    // Irreversible, so it runs only from a confirmation — the one place it is drawn solid.
     const ok = await Dialog.confirm(`Cancel ${ids.length} order(s)? This cannot be undone.`, {
-      title: 'Cancel orders',
-      confirmLabel: 'Cancel orders',
-      cancelLabel: 'Keep orders',
-      confirmColor: 'danger',
+      title: 'Cancel orders', confirmLabel: 'Cancel orders', cancelLabel: 'Keep orders', confirmColor: 'danger',
     });
     if (!ok) return;
     await Promise.all(ids.map((id) => svc.odataPatch<Order>('Orders', id, { Status: 'cancelled' })));
-    // Clear selection, then reload, then set the message — in that order, so the confirmation
-    // text never appears before the table has visibly updated.
     setSelectedIds([]);
-    await reload();
+    orders.refresh();
     setMessage(`Cancelled ${ids.length} order(s).`);
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--u-space-md, 16px)' }}>
-      <PageHeader title="Orders" subtitle={orders ? `${filteredCount} of ${orders.length}` : undefined} />
-
-      <ActionBar>
+    <ListPage source={orders} view={view}>
+      <PageHeader slot="header" title="Orders" subtitle={`${totalCount} order(s)`} />
+      <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" />
+      <USelect slot="filters" label="Status" value={status} onChange={(e) => setStatus(String((e.target as USelectElement).value ?? ''))}>
+        <u-option value="">All statuses</u-option>
+        <u-option value="pending">Pending</u-option>
+        <u-option value="shipped">Shipped</u-option>
+        <u-option value="delivered">Delivered</u-option>
+        <u-option value="cancelled">Cancelled</u-option>
+      </USelect>
+      <ActionBar slot="toolbar">
+        <UButton appearance="outlined" aria-pressed={view === 'cards'} onClick={() => setView(view === 'table' ? 'cards' : 'table')}>Cards</UButton>
         <UButton slot="danger" color="danger" appearance="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
           Cancel selected ({selectedIds.length})
         </UButton>
-        <UButton color="primary" onClick={() => setNewOrderOpen(true)}>
-          New order
-        </UButton>
-        <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>
-          New order with items
-        </UButton>
+        <UButton color="primary" onClick={() => setNewOrderOpen(true)}>New order</UButton>
+        <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>New order with items</UButton>
       </ActionBar>
-
-      {message && <UAlert open status="success">{message}</UAlert>}
-
-      {/* 가이드가 가르치는 두 갈래 — 데이터가 아예 없는 것(`no-data`)과 필터가 걸러낸 것은
-          다른 상황이고 다음 행동도 다르다. 앞의 것은 화면의 빈 상태가, 뒤의 것은 표가 방금
-          입력한 필터 바로 아래에서 말한다(`noMatchingMessage`) — 같은 안내를 두 곳에 두지 않는다. */}
-      {orders && orders.length === 0 && (
-        <EmptyState variant="no-data" title="No orders yet" description="Create the first one to get started." />
-      )}
-
-      <URichTableReact
-        ref={tableRef}
-        dataMode="client"
-        data={(orders ?? []) as unknown as Record<string, unknown>[]}
-        loading={orders === null && !loadError}
-        error={loadError}
-        columns={COLUMNS}
-        noMatchingMessage="No orders match these filters — clear a filter to see more."
-        selectable
-        filterable
-        onFilterChange={(e) => { setFilteredCount(e.detail.filteredCount ?? 0); setMessage(''); }}
+      {message && <UAlert slot="toolbar" open status="success">{message}</UAlert>}
+      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable hidePagination
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
-        onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)}
-      />
-
-      <NewOrderDrawer
-        open={newOrderOpen}
-        onClose={() => setNewOrderOpen(false)}
-        onCreated={reload}
-      />
-    </div>
+        onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
+      <UDataViewReact slot="view" view-name="cards" hideToolbar
+        renderCard={(o) => <><strong>{String(o.Customer)}</strong> <StatusTag status={o.Status as OrderStatus} /><div><small>{String(o.Id)} · ₩{Number(o.Total).toLocaleString()}</small></div></>}
+        onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
+      <UPagination slot="pager" label="Orders pages" />
+      {/* 데이터가 아예 없는 것과 조건이 걸러낸 것은 다음 행동이 다르다 — 화면이 자기 조건을 보고 고른다. */}
+      <EmptyState slot="empty" {...(search || status
+        ? { variant: 'no-results', title: 'No orders match', description: 'Clear the search or the status to see more.' }
+        : { variant: 'no-data', title: 'No orders yet', description: 'Create the first one to get started.' })} />
+      <NewOrderDrawer open={newOrderOpen} onClose={() => setNewOrderOpen(false)} onCreated={() => orders.refresh()} />
+    </ListPage>
   );
 }

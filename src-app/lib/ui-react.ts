@@ -11,4 +11,4 @@
 // The module is kept as one alias point so every page shares a single declaration per
 // component, and so `<u-option>` stays registered as a side effect of importing `USelect`
 // (see `jsx-intrinsics.d.ts`). It no longer reimplements anything the library owns.
-export { UButton, UInput, USelect, UDrawer, UAlert, UTag } from '@iyulab/components/react';
+export { UButton, UInput, USelect, UDrawer, UAlert, UTag, UPagination } from '@iyulab/components/react';

@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { ORDERS, DEMO_USER, DEMO_CREDENTIALS, PRODUCTS, ORDER_ITEMS, type Order, type OrderItem } from './data.js';
+import { queryRows } from './odata-query.js';
 
 // A demo backend, not a persistence layer: the order list lives in memory and resets on reload.
 // The sign-in does not — it is kept in `sessionStorage` (this tab only), so a reload or a deep link
@@ -50,10 +51,9 @@ export const handlers = [
     return order ? HttpResponse.json(order) : new HttpResponse(null, { status: 404 });
   }),
 
-  http.get('*/$data/Orders', () => {
-    // Filtering/pagination happen client-side in this demo (matches the existing house-style
-    // Data Patterns list-screen recipe) — the mock always returns the full set.
-    return HttpResponse.json({ value: orders });
+  http.get('*/$data/Orders', ({ request }) => {
+    // The list pages on the server, as a production app does (`createODataSource`) — see odata-query.ts.
+    return HttpResponse.json(queryRows(orders, new URL(request.url), ['Id', 'Customer']));
   }),
 
   http.patch(/\/\$data\/Orders\(([^)]+)\)$/, async ({ request }) => {
