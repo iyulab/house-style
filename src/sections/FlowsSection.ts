@@ -12,6 +12,7 @@ import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/MasterDetailLayout.js';
 import '@iyulab/modern-app/dist/components/Wizard.js';
+import '@iyulab/modern-app/dist/components/EmptyState.js';
 import type { WizardStep, WizardStepChangeDetail } from '@iyulab/modern-app/dist/components/Wizard.js';
 import type { Wizard } from '@iyulab/modern-app/dist/components/Wizard.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
@@ -313,6 +314,44 @@ export class FlowsSection extends LitElement {
               ` : ''}
             </u-wizard>
           `}
+      </u-group-box>
+
+      <u-group-box level="2" title="Permissions — a filtered menu and a blocked screen">
+        <p>
+          Filtering the menu is half of it. A user who follows a bookmark or types an
+          address still reaches a screen the menu hid, so the route needs the same rule:
+          an <code>enter</code> guard that returns <code>false</code>. The router then
+          raises <code>AccessDeniedError</code> into the app <code>fallback</code>, and the
+          fallback draws the blocked screen.
+        </p>
+        <pre><code>import { app, AccessDeniedError } from '@iyulab/modern-app';
+
+const can = (perm: string) =&gt; hasPermission(perm);   // one rule for the menu and the route
+
+await app.load({
+  layout: {
+    type: 'sidebar',
+    hasPermission: can,
+    main: [{ type: 'link', label: 'Audit log', href: '/audit', requirePermission: 'audit.read' }],
+  },
+  routes: [
+    { path: '/audit', enter: () =&gt; can('audit.read'), render: () =&gt; html\`&lt;audit-screen&gt;&lt;/audit-screen&gt;\` },
+  ],
+  fallback: {
+    render: ctx =&gt; ctx.error instanceof AccessDeniedError
+      ? html\`&lt;u-empty-state variant="no-access"&gt;&lt;/u-empty-state&gt;\`
+      : html\`&lt;u-empty-state variant="error" .description=\${ctx.error.message}&gt;&lt;/u-empty-state&gt;\`,
+  },
+});</code></pre>
+        <p>
+          A blocked screen is not an outage. <code>variant="error"</code> would read as
+          "couldn't load" and interrupt a screen reader with an alert; <code>no-access</code>
+          says what is true — the screen exists, this user may not see it — and its next
+          step is asking for access, not trying again.
+        </p>
+        <u-empty-state variant="no-access">
+          <u-button slot="actions" appearance="outlined">Request access</u-button>
+        </u-empty-state>
       </u-group-box>
 
       <u-group-box level="2" title="Not yet decided">

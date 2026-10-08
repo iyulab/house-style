@@ -14,7 +14,7 @@
     "@iyulab/enterprise": "^0.28.2",
     "@iyulab/flex-table": "^0.64.0",
     "@iyulab/house-style": "^0.1.4",
-    "@iyulab/modern-app": "^0.45.0",
+    "@iyulab/modern-app": "^0.46.0",
     "lit": "^3.3.3"
   },
   "devDependencies": {
