@@ -1,20 +1,12 @@
+import { html } from 'lit';
 import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 // `renderStatusTag` creates the element, so this module is what registers it.
 import '@iyulab/components/dist/components/tag/UTag.js';
 
 export const COLUMNS: ColumnDef[] = [
   { key: 'id', label: 'Order', width: '120px' },
-  { key: 'customer', label: 'Customer', minWidth: '200px', filterable: true, filterType: 'text' },
-  {
-    key: 'status', label: 'Status', width: '140px',
-    filterable: true, filterType: 'select',
-    options: [
-      { value: 'pending', label: 'Pending' },
-      { value: 'shipped', label: 'Shipped' },
-      { value: 'delivered', label: 'Delivered' },
-    ],
-    render: renderStatusTag,
-  },
+  { key: 'customer', label: 'Customer', minWidth: '200px' },
+  { key: 'status', label: 'Status', width: '140px', render: renderStatusTag },
   { key: 'total', label: 'Total', align: 'end', width: '120px' },
 ];
 
@@ -49,3 +41,8 @@ export const PAGED_ROWS = Array.from({ length: 12 }, (_, i) => ({
   status: ['pending', 'shipped', 'delivered'][i % 3],
   total: `₩${((i + 1) * 87000).toLocaleString()}`,
 }));
+
+/** The card view of the same rows — `u-data-view`'s `renderCard`; the list switches between it and the table. */
+export function renderOrderCard(row: Record<string, unknown>) {
+  return html`<strong>${row.customer}</strong> ${renderStatusTag(row.status)}<div><small>${row.id} · ${row.total}</small></div>`;
+}
