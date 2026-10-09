@@ -9,7 +9,7 @@ import { UButton, UAlert, UInput, USelect, UPagination } from '../lib/ui-react.j
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
 import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
-import { svc, onUnauthorized } from '../lib/odata.js';
+import { svc } from '../lib/odata.js';
 import { usePermission } from '../lib/permissions.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import { StatusTag } from '../components/StatusTag.js';
@@ -37,11 +37,11 @@ export default function OrdersListPage() {
   const [status, setStatus] = useState('');
   // The status criterion is part of the query — a changed `fixedFilter` goes back to the first page.
   const orders = useODataSource<Order>('/$data/Orders', {
+    // The service's base URL and session policy — an expired session goes to sign-in from the list too.
+    ...svc.sourceDefaults,
     pageSize: 5,
     defaultOrderBy: 'CreatedAt desc',
     fixedFilter: status ? { Status: status } : undefined,
-    // The same session policy as the service — an expired session goes to sign-in from the list too.
-    onUnauthorized,
   });
   const [view, setView] = useState<'table' | 'cards'>('table');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
