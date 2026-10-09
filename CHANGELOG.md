@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.5] - 2026-10-09
+
+### Fixed
+
+- **The `@iyulab/modern-app` peer range now starts where the theme takes effect: `>=0.39.0`** (was `>=0.34.0`). The
+  theme sets `--app-sidebar-group-active-fg` so a sidebar group header that holds the current page stays readable on
+  the theme's light active surface; modern-app reads that property from 0.39.0. With 0.34–0.38 the range allowed it,
+  and the header text was derived from the surface instead — about 1.6:1 contrast in light mode.
+
 ## [0.1.4] - 2026-10-07
 
 ### Fixed

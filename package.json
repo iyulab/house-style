@@ -1,6 +1,6 @@
 {
   "name": "@iyulab/house-style",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "The iyulab house theme: a CSS-only theme for @iyulab components — tokens, component recipes, line-of-business layout patterns and a Tailwind CSS v4 preset — plus the guide site that documents it.",
   "license": "MIT",
   "repository": {
@@ -59,7 +59,7 @@
   "peerDependencies": {
     "@iyulab/components": "^2.0.0",
     "@iyulab/flex-table": ">=0.41.0",
-    "@iyulab/modern-app": ">=0.34.0"
+    "@iyulab/modern-app": ">=0.39.0"
   },
   "peerDependenciesMeta": {
     "@iyulab/flex-table": {
