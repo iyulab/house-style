@@ -1,10 +1,10 @@
 import { Router } from '@iyulab/router';
 import type { RouteContext } from '@iyulab/router';
 import { UOutlet } from '@iyulab/router/react';
-import { SidebarLayout, ScreenObserver, EmptyState } from '@iyulab/modern-app/react';
-// This shell builds its own `Router`, so the error classes come from the same module the router throws them
-// from. An `app.load()` app imports them from `@iyulab/modern-app` (it re-exports them).
-import { AccessDeniedError, NotFoundError } from '@iyulab/router';
+import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
+// The failure screens `app.load()` draws when it gets no `fallback`. This shell builds its own `Router`, so it
+// passes them itself rather than copying the mapping — a copy would miss the package's later fixes to it.
+import { defaultFallback } from '@iyulab/modern-app';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
@@ -123,14 +123,8 @@ export function mountAppShell(root: HTMLElement) {
       },
     ],
     // A guard that says no raises `AccessDeniedError`; the router draws the fallback in the outlet the failing
-    // route would have used — inside the shell, so the sidebar stays. A blocked screen is not an outage, so it is
-    // not drawn as `error` (that reads as "couldn't load" and interrupts a screen reader with an alert).
-    fallback: {
-      render: (ctx) => ctx.error instanceof AccessDeniedError
-        ? <EmptyState variant="no-access" />
-        : ctx.error instanceof NotFoundError
-          ? <EmptyState title="Page not found" description="Check the address, or go back to the dashboard." />
-          : <EmptyState variant="error" description={ctx.error.message} />,
-    },
+    // route would have used — inside the shell, so the sidebar stays. `defaultFallback` draws it as `no-access`,
+    // not `error`: a blocked screen is not an outage. A missing page is `not-found`, and the tab title follows.
+    fallback: defaultFallback,
   });
 }

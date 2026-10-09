@@ -321,10 +321,13 @@ export class FlowsSection extends LitElement {
           Filtering the menu is half of it. A user who follows a bookmark or types an
           address still reaches a screen the menu hid, so the route needs the same rule:
           an <code>enter</code> guard that returns <code>false</code>. The router then
-          raises <code>AccessDeniedError</code> into the app <code>fallback</code>, and the
-          fallback draws the blocked screen.
+          raises <code>AccessDeniedError</code>, and the app draws the blocked screen in the
+          outlet the route would have used. Leave <code>fallback</code> out and
+          <code>app.load()</code> draws it as <code>no-access</code>, a missing page as
+          <code>not-found</code>, each with a matching tab title. An app that builds its own
+          <code>Router</code> passes the same screens with <code>fallback: defaultFallback</code>.
         </p>
-        <pre><code>import { app, AccessDeniedError } from '@iyulab/modern-app';
+        <pre><code>import { app } from '@iyulab/modern-app';
 
 const can = (perm: string) =&gt; hasPermission(perm);   // one rule for the menu and the route
 
@@ -337,11 +340,7 @@ await app.load({
   routes: [
     { path: '/audit', enter: () =&gt; can('audit.read'), render: () =&gt; html\`&lt;audit-screen&gt;&lt;/audit-screen&gt;\` },
   ],
-  fallback: {
-    render: ctx =&gt; ctx.error instanceof AccessDeniedError
-      ? html\`&lt;u-empty-state variant="no-access"&gt;&lt;/u-empty-state&gt;\`
-      : html\`&lt;u-empty-state variant="error" .description=\${ctx.error.message}&gt;&lt;/u-empty-state&gt;\`,
-  },
+  // no fallback: the default draws no-access · not-found · error
 });</code></pre>
         <p>
           A blocked screen is not an outage. <code>variant="error"</code> would read as
