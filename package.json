@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "@iyulab/components": "^2.19.0",
+    "@iyulab/components": "^2.20.0",
     "@iyulab/data-components": "^0.47.0",
     "@iyulab/enterprise": "^0.29.0",
     "@iyulab/flex-table": "^0.64.0",
