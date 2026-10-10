@@ -385,6 +385,19 @@ export class DataPatternsSection extends LitElement {
             lifts and the message shows.
           </p>
           <p>
+            <strong>Validate every field on save, then summarize.</strong> Put the fields in a
+            <code>&lt;form novalidate&gt;</code> and make the footer's Save its submit button
+            (<code>type="submit" form="…"</code> — the footer sits outside the form) — Enter in a field
+            submits it too, and the browser's own bubble stays out of the way — and on save call <code>validate()</code> on each control
+            in <code>form.elements</code>, not only until the first failure: each invalid field shows
+            its own message. If any failed, stop, and show an error summary at the top — a
+            <code>u-alert status="error"</code> titled with what to do, one link per field that moves
+            focus to it, in the same words as the inline message — and move focus to the summary.
+            The save button never fails silently, and a screen reader user hears what to fix
+            (GOV.UK «Error summary» · WCAG 3.3.1). <code>required</code> on <code>u-field</code> is
+            the constraint, not only the marker. Clear the delivery date and save to see it.
+          </p>
+          <p>
             Saving also demonstrates a two-tier error split: a typed API error (a
             server-shaped <code>{ code, message }</code>) shows its <code>message</code>
             as-is, because the server wrote it to be read. Anything else — a raw
