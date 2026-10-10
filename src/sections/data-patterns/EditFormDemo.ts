@@ -12,18 +12,19 @@ import '@iyulab/components/dist/components/option/UOption.js';
 import '@iyulab/components/dist/components/field/UField.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import { UFormControlElement } from '@iyulab/components/dist/components/UFormControlElement.js';
+import { ApiError, applyFieldErrors } from '@iyulab/enterprise';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 
-/** A server-shaped error — has a message worth showing the user as-is. */
-interface ApiError { code: string; message: string; }
+/**
+ * One line of the error summary — the field's label, the control's own message, and the control to go back to.
+ * A line the server could not tie to a field (no target, or no field of that name) has no control and no link.
+ */
+interface FieldError { label: string; message: string; control?: HTMLElement; }
 
-function isApiError(value: unknown): value is ApiError {
-  return typeof value === 'object' && value !== null && 'code' in value && 'message' in value;
-}
-
-/** One line of the error summary — the field's label, the control's own message, and the control to go back to. */
-interface FieldError { label: string; message: string; control: UFormControlElement<unknown>; }
+/** The label the user sees for a control — its `u-field`'s, else its name. */
+const labelOf = (control: Element): string =>
+  control.closest('u-field')?.label ?? control.getAttribute('name') ?? '';
 
 /**
  * Edit form recipe. No purpose-built "edit-form kit" component exists — this is
@@ -44,6 +45,10 @@ interface FieldError { label: string; message: string; control: UFormControlElem
  * `<form novalidate>` whose submit button is the footer's Save (`type="submit" form="edit-form"` — the footer
  * sits outside the form): Enter in a field submits it too, and the browser's own bubble stays out of the way.
  * `required` on `u-field` is the constraint, not only the marker.
+ *
+ * A rejection that names fields (`ApiError.details` with a `target`) lands on those fields the same way:
+ * `applyFieldErrors` from `@iyulab/enterprise` puts each message on the control whose `name` is the target —
+ * it clears when the user edits that field — and the summary lists them, plus any detail it could not place.
  *
  * Saving also demonstrates a two-tier error split: a typed API error (a server-shaped
  * `{ code, message }`) shows its `message` as-is, because the server wrote it to be
@@ -77,8 +82,8 @@ export class EditFormDemo extends LitElement {
   }
 
   /**
-   * Stands in for a real API call. `'api-error'` rejects with a server-shaped error
-   * (has a `message` worth showing as-is); `'network-error'` rejects with a raw
+   * Stands in for a real API call. `'api-error'` rejects with an `ApiError` whose details name the
+   * delivery date — the shape `createODataService` throws for an OData rejection; `'network-error'` rejects with a raw
    * `TypeError`, the same shape a failed `fetch()` throws — never something to show a
    * user directly.
    */
@@ -86,7 +91,10 @@ export class EditFormDemo extends LitElement {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (scenario === 'api-error') {
-          reject({ code: 'VALIDATION_ERROR', message: 'Delivery date must be after the order date.' } satisfies ApiError);
+          reject(new ApiError('The order could not be saved.', 400, {
+            code: 'InvalidBody',
+            details: [{ code: 'ValidationFailed', message: 'Must be after the order date (2026-03-02).', target: 'delivery' }],
+          }));
         } else if (scenario === 'network-error') {
           reject(new TypeError('Failed to fetch'));
         } else {
@@ -102,18 +110,26 @@ export class EditFormDemo extends LitElement {
    * problem at once.
    */
   private async validateFields(): Promise<boolean> {
-    this.fieldErrors = Array.from(this.form.elements)
+    const invalid = Array.from(this.form.elements)
       .filter((el): el is UFormControlElement<unknown> => el instanceof UFormControlElement)
-      .filter((control) => !control.validate())
-      .map((control) => ({
-        label: control.closest('u-field')?.label ?? control.name ?? '',
-        message: control.validationMessage,
-        control,
-      }));
-    if (this.fieldErrors.length === 0) return true;
+      .filter((control) => !control.validate());
+    if (invalid.length === 0) return true;
+    await this.showSummary(invalid.map((control) => ({ label: labelOf(control), message: control.validationMessage, control })));
+    return false;
+  }
+
+  /** Says what to do — «field» when every line points at one, «problem» otherwise. */
+  private get summaryTitle(): string {
+    const n = this.fieldErrors.length;
+    const noun = this.fieldErrors.every((e) => e.control) ? 'field' : 'problem';
+    return `Fix ${n} ${noun}${n === 1 ? '' : 's'} to save`;
+  }
+
+  /** Shows the error summary and moves focus to it — a screen reader user hears the title and the list. */
+  private async showSummary(errors: FieldError[]) {
+    this.fieldErrors = errors;
     await this.updateComplete;
     this.querySelector<HTMLElement>('#edit-errors')?.focus();
-    return false;
   }
 
   private handleSubmit = (e: SubmitEvent) => {
@@ -122,6 +138,7 @@ export class EditFormDemo extends LitElement {
   };
 
   private async handleSave() {
+    this.fieldErrors = [];
     if (!(await this.validateFields())) return;
     this.saveStatus = 'saving';
     this.saveError = null;
@@ -129,8 +146,19 @@ export class EditFormDemo extends LitElement {
       await this.simulateSaveRequest(this.saveScenario);
       this.closeEditDrawer();
     } catch (err) {
+      // Unlock first: a disabled control is barred from validation, so a message put on it would not show.
+      this.saveStatus = 'idle';
+      await this.updateComplete;
+      const { applied, formLevel } = applyFieldErrors(this.form, err);
+      if (applied.length + formLevel.length > 0) {
+        await this.showSummary([
+          ...applied.map((a) => ({ label: labelOf(a.control), message: a.message, control: a.control })),
+          ...formLevel.map((d) => ({ label: '', message: d.message })),
+        ]);
+        return;
+      }
       this.saveStatus = 'error';
-      this.saveError = isApiError(err) ? err.message : 'Something went wrong. Please try again.';
+      this.saveError = err instanceof ApiError ? err.message : 'Something went wrong. Please try again.';
       return;
     }
     this.saveStatus = 'idle';
@@ -144,10 +172,12 @@ export class EditFormDemo extends LitElement {
         ${this.fieldErrors.length
           ? html`
             <u-alert id="edit-errors" open status="error" tabindex="-1" style="margin-block-end: var(--u-space-lg)"
-              title=${this.fieldErrors.length === 1 ? 'Fix 1 field to save' : `Fix ${this.fieldErrors.length} fields to save`}>
+              title=${this.summaryTitle}>
               <ul style="margin: 0; padding-inline-start: 1.25em">
                 ${this.fieldErrors.map((error) => html`
-                  <li><a href="#" @click=${(e: Event) => { e.preventDefault(); error.control.focus(); }}>${error.label}: ${error.message}</a></li>
+                  <li>${error.control
+                    ? html`<a href="#" @click=${(e: Event) => { e.preventDefault(); error.control?.focus(); }}>${error.label}: ${error.message}</a>`
+                    : error.message}</li>
                 `)}
               </ul>
             </u-alert>`

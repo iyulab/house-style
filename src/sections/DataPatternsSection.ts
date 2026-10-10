@@ -398,12 +398,16 @@ export class DataPatternsSection extends LitElement {
             the constraint, not only the marker. Clear the delivery date and save to see it.
           </p>
           <p>
-            Saving also demonstrates a two-tier error split: a typed API error (a
-            server-shaped <code>{ code, message }</code>) shows its <code>message</code>
+            A rejection that names fields lands on those fields too: an
+            <code>ApiError</code> whose <code>details</code> carry a <code>target</code> goes through
+            <code>applyFieldErrors</code> from <code>@iyulab/enterprise</code>, which puts each message
+            on the control whose <code>name</code> is the target — it clears as soon as the user edits
+            that field — and the same summary lists them, plus any detail it could not place.
+            Otherwise the split is two-tier: an <code>ApiError</code> shows its <code>message</code>
             as-is, because the server wrote it to be read. Anything else — a raw
             <code>TypeError</code> from a failed <code>fetch</code>, or any other
             exception shape — collapses to one generic sentence instead. Pick a
-            scenario below, then Save, to see both.
+            scenario below, then Save, to see each.
           </p>
           <house-data-patterns-edit-form></house-data-patterns-edit-form>
           <house-demo-source label="EditFormDemo.ts" .source=${editFormSrc}></house-demo-source>
