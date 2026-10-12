@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0] - 2026-10-12
+
+### Changed
+
+- 🔴**No size containment.** `.hs-detail` no longer establishes the `hs-detail` container, and the patterns no
+  longer use `@container` — in Chromium a size container could stay collapsed after a commit that changed layout
+  elsewhere on the page. Each pattern now folds by its own width:
+  - `.hs-grid-2` / `.hs-grid-3` drop to one column below 480px of grid width; `.hs-grid-3` shows two columns between
+    480px and 728px (it went from three straight to one before). Empty trailing cells are kept, as before.
+  - `.hs-stats` stacks when the strip is narrower than 640px — all stats at once, with the dividers turning
+    horizontal. Before, a strip outside a size container never stacked.
+  - `.hs-detail__cols` puts the side panel (340px) next to the main column when the columns are at least 960px wide.
+  If your CSS queried `@container hs-detail`, give that element `container: hs-detail / inline-size` yourself.
+
 ## [0.1.5] - 2026-10-09
 
 ### Fixed
