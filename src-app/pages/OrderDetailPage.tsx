@@ -19,6 +19,7 @@ import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';
 import { svc } from '../lib/odata.js';
 import { usePermission } from '../lib/permissions.js';
+import { useDiscardableForm } from '../lib/unsaved.js';
 import type { Order, OrderStatus, OrderItem, Product } from '../mocks/data.js';
 
 // The edit form's Status choices deliberately exclude "cancelled" — cancelling is a separate,
@@ -49,6 +50,11 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [itemsError, setItemsError] = useState('');
+
+  // The edit drawer holds unsaved input once a field differs from the order — leaving the screen or closing the
+  // drawer asks first (Discard / Keep editing) instead of dropping it.
+  const editDirty = editOpen && !!order && (editCustomer !== order.Customer || editStatus !== order.Status);
+  const editForm = useDiscardableForm(editDirty, () => setEditOpen(false));
 
   async function fetchItems(): Promise<OrderItem[]> {
     return svc.odataGet<OrderItem>('OrderItems', { $filter: `OrderId eq '${orderId}'` });
@@ -256,7 +262,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               open={editOpen}
               placement="right"
               closable
-              onHide={() => setEditOpen(false)}
+              onHide={editForm.onHide}
             >
               <span slot="header">Edit order {order.Id}</span>
               <fieldset disabled={saving} style={{ display: 'contents' }}>
@@ -265,7 +271,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   <UInput
                     label="Customer"
                     value={editCustomer}
-                    onChange={(e) => setEditCustomer((e.target as UInputElement).value ?? '')}
+                    onInput={(e) => setEditCustomer((e.target as UInputElement).value ?? '')}
                   />
                 </FormRow>
                 <FormRow full>
@@ -286,7 +292,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               </fieldset>
               {saveError && <UAlert open status="error">{saveError}</UAlert>}
               <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
-                <UButton appearance="plain" onClick={() => setEditOpen(false)} disabled={saving}>Cancel</UButton>
+                <UButton appearance="plain" onClick={editForm.cancel} disabled={saving}>Cancel</UButton>
                 <UButton color="primary" onClick={saveEdit} loading={saving} disabled={saving}>
                   Save
                 </UButton>

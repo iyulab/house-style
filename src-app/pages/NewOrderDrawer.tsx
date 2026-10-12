@@ -4,6 +4,7 @@ import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
 import { svc } from '../lib/odata.js';
 import type { Order } from '../mocks/data.js';
+import { useDiscardableForm } from '../lib/unsaved.js';
 
 export default function NewOrderDrawer({ open, onClose, onCreated }: {
   open: boolean;
@@ -13,6 +14,8 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
   const [customer, setCustomer] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  // A typed customer name is unsaved input — closing the drawer or leaving the screen asks first.
+  const form = useDiscardableForm(open && customer.trim() !== '', onClose);
 
   useEffect(() => {
     if (open) {
@@ -48,7 +51,7 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
   }
 
   return (
-    <UDrawer open={open} placement="right" closable onHide={onClose}>
+    <UDrawer open={open} placement="right" closable onHide={form.onHide}>
       <span slot="header">New order</span>
       <fieldset disabled={saving} style={{ display: 'contents' }}>
       <FormSection title="Details">
@@ -56,14 +59,14 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
           <UInput
             label="Customer"
             value={customer}
-            onChange={(e) => setCustomer((e.target as UInputElement).value ?? '')}
+            onInput={(e) => setCustomer((e.target as UInputElement).value ?? '')}
           />
         </FormRow>
       </FormSection>
       </fieldset>
       {error && <p role="alert">{error}</p>}
       <div slot="footer" style={{ display: 'flex', gap: 'var(--u-space-md, 16px)' }}>
-        <UButton appearance="plain" onClick={onClose} disabled={saving}>Cancel</UButton>
+        <UButton appearance="plain" onClick={form.cancel} disabled={saving}>Cancel</UButton>
         <UButton color="primary" onClick={save} loading={saving} disabled={saving}>
           Create
         </UButton>

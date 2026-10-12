@@ -4,7 +4,7 @@ import { UOutlet } from '@iyulab/router/react';
 import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
 // The failure screens `app.load()` draws when it gets no `fallback`. This shell builds its own `Router`, so it
 // passes them itself rather than copying the mapping — a copy would miss the package's later fixes to it.
-import { defaultFallback } from '@iyulab/modern-app';
+import { defaultFallback, unsavedChangesGuard } from '@iyulab/modern-app';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
@@ -94,6 +94,9 @@ export function mountAppShell(root: HTMLElement) {
     root,
     basepath: base,
     enter: requireAuth,
+    // A screen with unsaved input asks before it is replaced (`useUnsavedChanges` registers the check) —
+    // `app.load()` wires this itself; an app that builds its own `Router` passes it here.
+    leave: unsavedChangesGuard,
     routes: [
       { path: 'login', render: () => <LoginPage /> },
       {

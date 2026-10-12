@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from 'react';
 import { UButton, UInput, USelect } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import type { Product } from '../mocks/data.js';
+import { useUnsavedChanges } from '@iyulab/modern-app/react';
 
 export interface ItemEntryFormLine {
   productId: string;
@@ -20,6 +21,8 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
   const [productId, setProductId] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [unitPrice, setUnitPrice] = useState('');
+  // A line that was started but not added is unsaved input — leaving the screen asks first.
+  useUnsavedChanges(productId !== '' || quantity !== '1' || unitPrice !== '');
 
   function selectProduct(id: string) {
     setProductId(id);
@@ -70,14 +73,14 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
         type="number"
         value={quantity}
         disabled={disabled}
-        onChange={(e) => setQuantity((e.target as UInputElement).value ?? '1')}
+        onInput={(e) => setQuantity((e.target as UInputElement).value ?? '1')}
       />
       <UInput
         label="Unit price"
         type="number"
         value={unitPrice}
         disabled={disabled}
-        onChange={(e) => setUnitPrice((e.target as UInputElement).value ?? '')}
+        onInput={(e) => setUnitPrice((e.target as UInputElement).value ?? '')}
       />
       <UButton appearance="outlined" onClick={add} disabled={disabled || !productId}>Add item</UButton>
     </div>

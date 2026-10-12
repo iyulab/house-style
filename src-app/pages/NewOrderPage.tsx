@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useUnsavedChanges } from '@iyulab/modern-app/react';
 import { Wizard } from '@iyulab/modern-app/react';
 import type { WizardStep, WizardStepChangeDetail } from '@iyulab/modern-app/react';
 import { FormSection, FormRow } from '@iyulab/enterprise/react';
@@ -24,6 +25,8 @@ export default function NewOrderPage() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState<Order | null>(null);
   const [partialFailure, setPartialFailure] = useState<{ saved: number; total: number } | null>(null);
+  // Until the order is created, a customer or lines entered here are unsaved — leaving asks first.
+  useUnsavedChanges(!done && (customer.trim() !== '' || lines.length > 0));
 
   useEffect(() => { svc.odataGet<Product>('Products').then(setProducts); }, []);
 
@@ -133,7 +136,7 @@ export default function NewOrderPage() {
       <div>
         <FormSection title="Customer">
           <FormRow full>
-            <UInput autofocus label="Customer name" value={customer} onChange={(e) => setCustomer((e.target as UInputElement).value ?? '')} />
+            <UInput autofocus label="Customer name" value={customer} onInput={(e) => setCustomer((e.target as UInputElement).value ?? '')} />
           </FormRow>
         </FormSection>
       </div>
