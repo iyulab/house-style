@@ -73,7 +73,7 @@
     "@iyulab/components": "^2.20.0",
     "@iyulab/data-components": "^0.47.0",
     "@iyulab/enterprise": "^0.32.0",
-    "@iyulab/flex-table": "^0.64.0",
+    "@iyulab/flex-table": "^0.65.0",
     "@iyulab/modern-app": "^0.52.0",
     "@iyulab/router": "^0.23.0",
     "@iyulab/u-widgets": "^0.30.1",
