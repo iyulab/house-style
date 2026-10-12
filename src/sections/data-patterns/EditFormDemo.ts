@@ -13,6 +13,7 @@ import '@iyulab/components/dist/components/field/UField.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import { UFormControlElement } from '@iyulab/components/dist/components/UFormControlElement.js';
 import { ApiError, applyFieldErrors } from '@iyulab/enterprise';
+import { UnsavedChangesController, confirmDiscardChanges } from '@iyulab/modern-app';
 import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 
@@ -50,6 +51,12 @@ const labelOf = (control: Element): string =>
  * `applyFieldErrors` from `@iyulab/enterprise` puts each message on the control whose `name` is the target —
  * it clears when the user edits that field — and the summary lists them, plus any detail it could not place.
  *
+ * Unsaved changes are not dropped without asking: the check compares the controls' values now with the values the
+ * drawer opened with — read at the moment it is asked, so text typed just before Escape counts. Leaving the screen
+ * (a link, Back) and closing the drawer (Escape, the close button, Cancel) both ask «Discard unsaved changes?»; a
+ * reload gets the browser's confirmation. `UnsavedChangesController` registers the check while the demo is connected,
+ * and the drawer's cancellable `hide` asks the same question with `confirmDiscardChanges()`.
+ *
  * Saving also demonstrates a two-tier error split: a typed API error (a server-shaped
  * `{ code, message }`) shows its `message` as-is, because the server wrote it to be
  * read. Anything else — a raw `TypeError` from a failed `fetch`, or any other
@@ -66,6 +73,46 @@ export class EditFormDemo extends LitElement {
   @state() private saveError: string | null = null;
   @state() private fieldErrors: FieldError[] = [];
 
+  /** The values the drawer opened with — «unsaved» means the controls hold something else now. */
+  private snapshot = '';
+  private editing = false;
+  // Not `private` — a controller is held for its effect, and `noUnusedLocals` flags a private field nobody reads.
+  readonly unsaved = new UnsavedChangesController(this, () => this.isUnsaved());
+
+  /** The named controls of the form — the fields the save sends. */
+  private controls(): UFormControlElement<unknown>[] {
+    return Array.from(this.querySelector<HTMLFormElement>('#edit-form')?.elements ?? [])
+      .filter((el): el is UFormControlElement<unknown> => el instanceof UFormControlElement && el.hasAttribute('name'));
+  }
+
+  private values(): string {
+    return JSON.stringify(this.controls().map((control) => [control.getAttribute('name'), control.value]));
+  }
+
+  private isUnsaved(): boolean {
+    return this.editing && this.values() !== this.snapshot;
+  }
+
+  /** Discard: put the opened values back. */
+  private restore() {
+    const opened = new Map<string | null, unknown>(JSON.parse(this.snapshot || '[]'));
+    for (const control of this.controls()) control.value = opened.get(control.getAttribute('name'));
+  }
+
+  /** The drawer is about to close (Escape, the close button, Cancel) — with unsaved values, ask first. */
+  private handleHide = (e: Event) => {
+    if (!this.isUnsaved()) {
+      this.editing = false;
+      return;
+    }
+    e.preventDefault();
+    void confirmDiscardChanges().then((discard) => {
+      if (!discard) return;
+      this.restore();
+      this.closeEditDrawer();
+    });
+  };
+
   private get form(): HTMLFormElement {
     return this.querySelector<HTMLFormElement>('#edit-form')!;
   }
@@ -75,6 +122,8 @@ export class EditFormDemo extends LitElement {
     this.saveError = null;
     this.fieldErrors = [];
     this.querySelector<UDrawer>('#edit-drawer')?.show();
+    this.snapshot = this.values();
+    this.editing = true;
   }
 
   private closeEditDrawer() {
@@ -144,6 +193,8 @@ export class EditFormDemo extends LitElement {
     this.saveError = null;
     try {
       await this.simulateSaveRequest(this.saveScenario);
+      // Saved — what the form holds now is the baseline, so closing does not ask.
+      this.snapshot = this.values();
       this.closeEditDrawer();
     } catch (err) {
       // Unlock first: a disabled control is barred from validation, so a message put on it would not show.
@@ -167,7 +218,7 @@ export class EditFormDemo extends LitElement {
   render() {
     return html`
       <u-button color="primary" @click=${this.openEditDrawer}>Edit order</u-button>
-      <u-drawer id="edit-drawer" placement="right" closable>
+      <u-drawer id="edit-drawer" placement="right" closable @hide=${this.handleHide}>
         <span slot="header">Edit order G-2026-0512</span>
         ${this.fieldErrors.length
           ? html`

@@ -409,6 +409,16 @@ export class DataPatternsSection extends LitElement {
             exception shape — collapses to one generic sentence instead. Pick a
             scenario below, then Save, to see each.
           </p>
+          <p>
+            <strong>Unsaved changes ask before they are dropped.</strong> Register one check with
+            <code>UnsavedChangesController</code> (React: <code>useUnsavedChanges</code>) and the shell asks
+            «Discard unsaved changes?» before any navigation — a link, the sidebar, Back — while a reload or
+            closing the tab gets the browser's own confirmation. Closing the drawer is not a navigation: ask the
+            same question from its cancellable <code>hide</code> event with <code>confirmDiscardChanges()</code>.
+            Compare the controls' values now with the values the drawer opened with, read when the check runs —
+            a draft kept on <code>change</code> misses text typed just before Escape. Change the customer and press
+            Escape to see it.
+          </p>
           <house-data-patterns-edit-form></house-data-patterns-edit-form>
           <house-demo-source label="EditFormDemo.ts" .source=${editFormSrc}></house-demo-source>
         </u-group-box>
