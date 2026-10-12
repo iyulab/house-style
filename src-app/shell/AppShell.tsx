@@ -1,4 +1,4 @@
-import { Router } from '@iyulab/router';
+import { Router, navigate } from '@iyulab/router';
 import type { RouteContext } from '@iyulab/router';
 import { UOutlet } from '@iyulab/router/react';
 import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
@@ -64,9 +64,9 @@ async function signOut() {
   }
   // A hard `location.href` navigation would reload the page — and with it, the MSW mock
   // backend's in-memory orders (see mocks/handlers.ts). Route client-side instead, same
-  // idiom as LoginPage.tsx's post-login redirect.
-  history.pushState({}, '', base + 'login');
-  window.dispatchEvent(new PopStateEvent('popstate'));
+  // idiom as LoginPage.tsx's post-login redirect; replacing keeps Back from returning to the
+  // signed-in screen.
+  navigate(base + 'login', { replace: true });
 }
 
 export function mountAppShell(root: HTMLElement) {
@@ -126,5 +126,10 @@ export function mountAppShell(root: HTMLElement) {
     // route would have used — inside the shell, so the sidebar stays. `defaultFallback` draws it as `no-access`,
     // not `error`: a blocked screen is not an outage. A missing page is `not-found`, and the tab title follows.
     fallback: defaultFallback,
+    // The shell scrolls its main box, not the document, so the browser's own restoration never reaches it. Naming the
+    // box lets Back return to where you were reading — the orders list after looking at one order.
+    scrollRestoration: {
+      container: () => (root.querySelector('u-sidebar-layout') as { mainElement?: HTMLElement | null } | null)?.mainElement,
+    },
   });
 }

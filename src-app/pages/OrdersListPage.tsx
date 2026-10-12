@@ -1,4 +1,7 @@
 import { useState } from 'react';
+// A hard `location.href` navigation would reload the page — and with it the MSW mock backend's in-memory orders.
+// `navigate()` asks the running router for a new entry, so Back returns to the list where it was.
+import { navigate } from '@iyulab/router';
 import { useODataSource } from '@iyulab/flex-table/react';
 import { ListPage } from '@iyulab/enterprise/react';
 import { URichTableReact, UDataViewReact } from '@iyulab/data-components/react';
@@ -16,11 +19,6 @@ import { StatusTag } from '../components/StatusTag.js';
 import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
 import type { Order, OrderStatus } from '../mocks/data.js';
 
-// A hard `location.href` navigation would reload the page — and with it the MSW mock backend's in-memory orders.
-function navigate(path: string) {
-  history.pushState({}, '', path);
-  window.dispatchEvent(new PopStateEvent('popstate'));
-}
 
 const COLUMNS: ColumnDefReact[] = [
   { key: 'Id', label: 'Order', width: '140px', sortable: true },

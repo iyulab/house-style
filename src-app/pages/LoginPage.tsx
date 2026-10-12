@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react';
 import type { UInput as UInputElement } from '@iyulab/components';
 import { UAlert, UButton, UInput, UDrawer } from '../lib/ui-react.js';
+import { navigate } from '@iyulab/router';
 import { auth } from '../lib/auth.js';
 import { DEMO_CREDENTIALS, VIEWER_CREDENTIALS } from '../mocks/data.js';
 import './LoginPage.css';
@@ -48,9 +49,9 @@ export default function LoginPage() {
     }
     // Route client-side rather than with a hard `location.href` redirect: a reload restarts the
     // whole app (and resets the MSW mock backend's in-memory orders — see mocks/handlers.ts) for no
-    // reason. The Router's own popstate handler re-runs the auth guard in place.
-    history.pushState({}, '', import.meta.env.BASE_URL + 'app/');
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    // reason. `navigate()` asks the running router, which re-runs the auth guard in place; replacing
+    // the sign-in entry keeps Back from returning to it.
+    navigate(import.meta.env.BASE_URL + 'app/', { replace: true });
   }
 
   return (
