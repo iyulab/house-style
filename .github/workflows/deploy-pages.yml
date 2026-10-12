@@ -50,6 +50,12 @@ jobs:
       - name: Control ladder
         run: npm run check:ladder
 
+      # Unsaved input in the reference app must not vanish on a way out — Escape, Cancel, Back, a sidebar or list link,
+      # leaving the document. The guard and the dialog are tested in their packages; how a screen wires them (a draft
+      # kept on `change` reads as clean before the field is left) shows only in the built app. Not deployed if so.
+      - name: Leaving with unsaved input
+        run: npm run check:leave
+
       - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'
