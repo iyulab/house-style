@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Requires `@iyulab/components` 2.24.0 or later (peer range `^2.24.0`). The house sets the selection role
+  (`--u-selection-color`), which components reads from 2.24.0 — with an older components a checked box, a selected
+  radio and an on switch keep the primary colour.
+
 ## [0.3.0] - 2026-10-13
 
 ### Changed
