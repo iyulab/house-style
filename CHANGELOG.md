@@ -2,12 +2,27 @@
 
 ## [Unreleased]
 
+### Added
+
+- `<kbd>` outside a component takes the keyboard-hint look (border, canvas background, overline size).
+- `.hs-table-toolbar__actions` — the action group at the end of a table toolbar.
+
 ### Changed
 
 - Requires `@iyulab/components` 2.24.0 or later (peer range `^2.24.0`). The house sets the selection role
   (`--u-selection-color`), which components reads from 2.24.0 — with an older components a checked box, a selected
   radio and an on switch keep the primary colour.
 
+
+### Deprecated
+
+- **`.hs-page-head` and its parts (`__eyebrow` · `__title` · `__description` · `__actions`) — use `u-page-header`**
+  from `@iyulab/modern-app`. The house already draws that component the same way (label-size eyebrow and
+  description, display-size title), and it carries the page's `h1`, a back link and a status slot the class pattern
+  does not. Move the eyebrow, title and description to its `eyebrow`, `title` and `subtitle` attributes and put each
+  scope picker and action in `slot="actions"`. Removed in 0.5.0.
+- **`.hs-kbd` — use a plain `<kbd>`.** The house now draws `<kbd>` as the same small outlined cap, in the monospace
+  face. Removed in 0.5.0.
 ## [0.3.0] - 2026-10-13
 
 ### Changed

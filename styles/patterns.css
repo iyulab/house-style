@@ -9,7 +9,7 @@
  * Prefix `hs-`. Everything sits in `@layer iyu.house`; an application rule always wins.
  *
  * Screen recipes (the guide shows each one):
- *   list   = .hs-page-head → .hs-filter-bar → .hs-stats → .hs-table-card (toolbar · table · pager)
+ *   list   = u-page-header → .hs-filter-bar → .hs-stats → .hs-table-card (toolbar · table · pager)
  *   detail = side sheet: head (id · status · one primary action) → steps → .hs-stats → tabs → cards
  *   edit   = side sheet with .hs-fieldset sections and a pinned .hs-sheet-footer
  *
@@ -35,7 +35,10 @@
 
 /* Page head — eyebrow · title · one-line description on the left; on the right a scope
    picker (data-wide filters such as a season or period), up to two secondary actions and
-   the single primary action, in that order. */
+   the single primary action, in that order.
+   @deprecated Use `u-page-header` (`@iyulab/modern-app`) — `eyebrow` · `title` · `subtitle`, and the
+   scope picker and actions in its `actions` slot. The house already draws it this way
+   (`components.css`), and it carries the page's h1 and a back link. remove: 0.5.0 */
 .hs-page-head {
   display: flex;
   align-items: flex-end;
@@ -232,6 +235,12 @@
 .hs-table-toolbar__title {
   font-size: var(--hs-text-dense-size, 13px);
   font-weight: 600;
+}
+.hs-table-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+  flex-wrap: wrap;
 }
 .hs-pager {
   display: flex;
@@ -563,7 +572,9 @@ a.hs-card:hover,
 }
 .hs-due--soon { background: var(--u-warning-bg-color); color: var(--u-warning-color-strong); }
 .hs-due--over { background: var(--u-danger-bg-color); color: var(--u-danger-color-strong); }
-/* A keyboard hint. */
+/* A keyboard hint.
+   @deprecated Use a plain `<kbd>` — the house draws it the same way (`components.css`), in the
+   monospace face. remove: 0.5.0 */
 .hs-kbd {
   padding: 0 4px;
   border: 1px solid var(--u-border-color);

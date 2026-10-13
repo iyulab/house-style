@@ -100,18 +100,11 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           the top third of the screen. One ink button per view.
         </p>
         <div class="hs-page" style="padding:var(--u-space-lg);background:var(--u-canvas-bg-color);border-radius:var(--u-radius-xl)">
-          <div class="hs-page-head">
-            <div>
-              <p class="hs-page-head__eyebrow">Sales</p>
-              <h3 class="hs-page-head__title">Orders</h3>
-              <p class="hs-page-head__description">Select an order number to open its details on the right.</p>
-            </div>
-            <div class="hs-page-head__actions">
-              <u-button appearance="outlined">Season 2027</u-button>
-              <u-button appearance="outlined">Export</u-button>
-              <u-button>New order</u-button>
-            </div>
-          </div>
+          <u-page-header eyebrow="Sales" title="Orders" subtitle="Select an order number to open its details on the right.">
+            <u-button slot="actions" appearance="outlined">Season 2027</u-button>
+            <u-button slot="actions" appearance="outlined">Export</u-button>
+            <u-button slot="actions">New order</u-button>
+          </u-page-header>
 
           <div class="hs-views" role="tablist" aria-label="Saved views">
             <button class="hs-views__tab" role="tab" aria-selected="true">All <span class="hs-count">962</span></button>
@@ -138,7 +131,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           <div class="hs-table-card">
             <div class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
               <span class="hs-table-toolbar__title">${this.selected.size ? `${this.selected.size} selected` : '4 orders'}</span>
-              <div class="hs-page-head__actions">
+              <div class="hs-table-toolbar__actions">
                 <u-button size="sm" appearance="outlined">Advance step</u-button>
                 <u-button size="sm" appearance="outlined">Print</u-button>
               </div>

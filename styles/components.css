@@ -64,6 +64,17 @@
 :where(code, kbd, samp, pre) {
   font-family: var(--u-font-mono);
 }
+/* A key the reader presses — a small outlined cap, quieter than the text around it. */
+:where(kbd) {
+  padding: 0 4px;
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-md, 4px);
+  background: var(--u-canvas-bg-color);
+  font-size: var(--u-text-overline-size, 11px);
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--u-txt-color-weak);
+}
 /* A measure for running text — opt in where a paragraph can be wider than reads well. */
 :where(.hs-prose) :where(p, ul, ol, dl, blockquote) {
   max-inline-size: var(--hs-measure);
