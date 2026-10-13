@@ -3,6 +3,9 @@ import { customElement, state } from 'lit/decorators.js';
 
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
+import '@iyulab/modern-app/dist/components/InfoSection.js';
+import '@iyulab/modern-app/dist/components/InfoField.js';
+import '@iyulab/modern-app/dist/components/ActionBar.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
@@ -121,12 +124,12 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-button class="hs-filter-bar__end" appearance="plain">Save view</u-button>
           </div>
 
-          <div class="hs-stats">
-            <div class="hs-stat"><div class="hs-stat__label">Orders</div><div class="hs-stat__value">962<span class="hs-stat__unit">orders</span></div><div class="hs-stat__sub">1,764,211 units</div></div>
-            <div class="hs-stat"><div class="hs-stat__label">Invoiced</div><div class="hs-stat__value">₩761,234,820</div><div class="hs-stat__sub">Settled ₩743,188,120</div></div>
-            <div class="hs-stat hs-stat--warning"><div class="hs-stat__label">Due in 7 days</div><div class="hs-stat__value">14</div><div class="hs-stat__sub">3 not started</div></div>
-            <div class="hs-stat hs-stat--danger"><div class="hs-stat__label">Overdue</div><div class="hs-stat__value">₩0</div><div class="hs-stat__sub">0 orders</div></div>
-          </div>
+          <u-info-section layout="strip">
+            <u-info-field size="lg" label="Orders" value="962" unit="orders" description="1,764,211 units"></u-info-field>
+            <u-info-field size="lg" label="Invoiced" value="₩761,234,820" description="Settled ₩743,188,120"></u-info-field>
+            <u-info-field size="lg" label="Due in 7 days" value="14" tone="warning" description="3 not started"></u-info-field>
+            <u-info-field size="lg" label="Overdue" value="₩0" tone="negative" description="0 orders"></u-info-field>
+          </u-info-section>
 
           <div class="hs-table-card">
             <div class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
@@ -216,10 +219,11 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
               <label class="hs-field"><span class="hs-field__label">Delivery note</span><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></label>
             </fieldset>
           </div>
-          <div class="hs-sheet-footer">
-            <span class="hs-sheet-footer__summary">1 change · Order number</span>
-            <span class="hs-sheet-footer__actions"><u-button appearance="outlined" size="lg">Cancel</u-button><u-button size="lg">Save</u-button></span>
-          </div>
+          <u-action-bar sticky style="--action-bar-padding-inline: var(--u-space-xl)">
+            <span slot="summary">1 change · Order number</span>
+            <u-button appearance="outlined" size="lg">Cancel</u-button>
+            <u-button size="lg">Save</u-button>
+          </u-action-bar>
         </div>
         <p>
           Label above, help below, two or three columns — never four. Fields that are computed say where

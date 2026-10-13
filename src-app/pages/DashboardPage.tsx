@@ -35,8 +35,9 @@ export default function DashboardPage() {
     <>
       <PageHeader title="Dashboard" subtitle="Today at a glance" />
       <div style={{ display: 'grid', gap: 'var(--u-space-lg, 18px)', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-      {/* The tile strip is `u-info-field size="lg"` in a `u-info-section` grid — the pattern
-          the guide teaches, not a dedicated stat-tile component. The trend figures are
+      {/* The stat strip is `u-info-field size="lg"` in a `u-info-section layout="strip"` — the
+          pattern the guide teaches: cells on one surface split by hairlines, all side by side or
+          all stacked below 640px. The trend figures are
           illustrative constants, not derived from `ORDERS`; a real dashboard would compute
           them against a prior period.
           ★The third tile is why this pattern is the one to follow here: a falling pending-order
@@ -44,7 +45,7 @@ export default function DashboardPage() {
           the two can disagree. A metric widget infers colour from direction alone, so the same
           tile reads as a warning there. */}
       <div style={{ gridColumn: '1 / -1' }}>
-        <InfoSection min={180}>
+        <InfoSection layout="strip">
           <InfoField label="Orders today" size="lg" value={ORDERS.length} trend="up" trendLabel="+8.2% vs yesterday" />
           <InfoField label="Revenue today" size="lg" format="currency" currency="KRW" value={revenue} trend="up" trendLabel="+12.5% vs yesterday" />
           <InfoField label="Pending orders" size="lg" value={pending} trend="down" trendLabel="−4 vs yesterday" tone="positive" />

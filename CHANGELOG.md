@@ -23,6 +23,20 @@
   scope picker and action in `slot="actions"`. Removed in 0.5.0.
 - **`.hs-kbd` — use a plain `<kbd>`.** The house now draws `<kbd>` as the same small outlined cap, in the monospace
   face. Removed in 0.5.0.
+- **`.hs-stats` / `.hs-stat` and its parts — use `u-info-section layout="strip"`** with `u-info-field size="lg"`
+  (`@iyulab/modern-app` 0.54): `__label` → `label`, `__value` → `value`, `__unit` → `unit`, `__sub` → `description`,
+  `--warning` / `--danger` / `--success` → `tone="warning"` / `"negative"` / `"positive"`. The same strip — one surface,
+  hairline dividers, all side by side or all stacked below 640px. `.hs-stat--hero` has no counterpart (nothing used it)
+  and goes with it. Removed in 0.5.0.
+- **`.hs-sheet-footer` and its parts — use `<u-action-bar sticky>`** (`@iyulab/modern-app` 0.54): the change summary in
+  `slot="summary"`, Cancel and Save as its children, the sheet's inset as `--action-bar-padding-inline`. It also keeps
+  a destructive action apart at the leading edge and puts the main actions on top when narrow. Removed in 0.5.0.
+
+### Fixed
+
+- `.hs-views` no longer draws a vertical scrollbar beside its tabs. The selected tab's underline reached 1px
+  past the scrolling strip (a `-1px` margin over the strip's bottom border); the base line is now an inset shadow the
+  underline paints over.
 ## [0.3.0] - 2026-10-13
 
 ### Changed
