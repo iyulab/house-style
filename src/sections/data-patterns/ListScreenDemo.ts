@@ -3,7 +3,6 @@ import { customElement, state } from 'lit/decorators.js';
 import { createArraySource } from '@iyulab/flex-table/array';
 
 import '@iyulab/enterprise/list-page';
-import '@iyulab/components/dist/components/badge/UBadge.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
@@ -60,12 +59,8 @@ export class ListScreenDemo extends LitElement {
           @click=${() => { this.view = this.view === 'table' ? 'cards' : 'table'; }}>Cards</u-button>
         <u-rich-table slot="view" view-name="table" aria-label="Orders" .columns=${COLUMNS} selectable hide-pagination
           @selection-change=${(e: RichTableEventMap['selection-change']) => { this.selected = e.detail.selectedIds.length; }}>
-          <span slot="bulk-actions">
-            ${this.selected > 0
-              ? html`<u-badge color="primary">${this.selected} selected</u-badge>
-                     <u-button size="sm" color="danger" appearance="outlined" @click=${this.cancelSelected}>Cancel orders</u-button>`
-              : ''}
-          </span>
+          <!-- The table states the count beside these; the slot holds only what to do with the selection. -->
+          <u-button slot="bulk-actions" size="sm" color="danger" appearance="outlined" @click=${this.cancelSelected}>Cancel orders</u-button>
         </u-rich-table>
         <u-data-view slot="view" view-name="cards" hide-toolbar .renderCard=${renderOrderCard}></u-data-view>
         <u-pagination slot="pager" label="Orders pages"></u-pagination>
