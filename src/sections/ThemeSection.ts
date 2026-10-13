@@ -173,6 +173,62 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
         </p>
       </u-group-box>
 
+      <u-group-box level="2" title="Patterns no component owns — plain tables, definition lists, page layouts">
+        <p>
+          A small server-rendered table, a label–value list, a detail page's columns: there is no component for
+          these, so the classes are the house's word for them. A group row carries its subtotal; rows that repeat
+          the row above fade their repeats; one line separates the totals from the body however many total rows
+          there are.
+        </p>
+        <div class="hs-page">
+          <table class="hs-table hs-table--compact">
+            <thead>
+              <tr><th>Customer</th><th>Order</th><th class="hs-center">Lines</th><th>Ship by</th><th class="hs-num">Amount</th></tr>
+            </thead>
+            <tbody>
+              <tr class="hs-group"><td colspan="4">Northwind Trading · 2 orders</td><td class="hs-num">₩1,456,375</td></tr>
+              <tr><td>Northwind Trading</td><td><a class="hs-id" href="#">O-1043</a></td><td class="hs-center">3</td><td class="hs-nowrap">2026-11-10</td><td class="hs-num">₩276,375</td></tr>
+              <tr class="hs-continued"><td>Northwind Trading</td><td class="hs-keep"><a class="hs-id" href="#">O-1042</a></td><td class="hs-center">1</td><td class="hs-nowrap">2026-11-12</td><td class="hs-num">₩1,180,000</td></tr>
+              <tr class="hs-group"><td colspan="4">Fabrikam Inc. · 1 order</td><td class="hs-num">₩5,200,000</td></tr>
+              <tr><td>Fabrikam Inc.</td><td><a class="hs-id" href="#">O-1041</a></td><td class="hs-center">5</td><td class="hs-nowrap"><span class="hs-empty">—</span></td><td class="hs-num">₩5,200,000</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><td colspan="4" class="hs-muted">Subtotal</td><td class="hs-num">₩6,656,375</td></tr>
+              <tr><td colspan="4" class="hs-muted">VAT 10%</td><td class="hs-num">₩665,638</td></tr>
+              <tr><td colspan="4" class="hs-strong">Total</td><td class="hs-num hs-strong">₩7,322,013</td></tr>
+            </tfoot>
+          </table>
+
+          <table class="hs-table hs-table--top">
+            <thead><tr><th style="width:120px">Date</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td class="hs-nowrap">2026-10-12</td><td>Customer asked for the same cover as last year; only the logo changes. Proof goes out on Friday.</td></tr>
+              <tr><td class="hs-nowrap">2026-10-09</td><td>Quantity raised from 70 to 100.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="hs-detail__cols">
+            <u-group-box level="3" title="Order O-1042">
+              <dl class="hs-dl">
+                <dt>Customer</dt><dd>Contoso Ltd.</dd>
+                <dt>Channel</dt><dd>Direct</dd>
+                <dt>Payment due</dt><dd>2027-02-28</dd>
+                <dt>Original number</dt><dd><span class="hs-empty">—</span></dd>
+              </dl>
+            </u-group-box>
+            <u-group-box level="3" title="Side panel">
+              <p class="hs-muted">With 960px of room this column sits beside the main one at 340px; with less it drops below it.</p>
+            </u-group-box>
+          </div>
+
+          <div class="hs-grid-cards">
+            ${['Received', 'In production', 'Shipped'].map(stage => html`
+              <u-group-box level="3" title=${stage}><p class="hs-muted">Cards fill the row at 320px or more each.</p></u-group-box>
+            `)}
+          </div>
+        </div>
+      </u-group-box>
+
       <u-group-box level="2" title="Callouts — the conclusion in the title">
         <div class="hs-page">
           <div class="hs-callout hs-callout--warning">
@@ -216,7 +272,10 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             </fieldset>
             <fieldset class="hs-fieldset">
               <legend class="hs-fieldset__legend">Notes</legend>
-              <label class="hs-field"><span class="hs-field__label">Delivery note</span><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></label>
+              <div class="hs-grid-2">
+                <label class="hs-field"><span class="hs-field__label">Courier</span><u-input placeholder="Any"></u-input></label>
+                <label class="hs-field hs-span-all"><span class="hs-field__label">Delivery note</span><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></label>
+              </div>
             </fieldset>
           </div>
           <u-action-bar sticky style="--action-bar-padding-inline: var(--u-space-xl)">

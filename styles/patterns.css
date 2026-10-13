@@ -293,7 +293,9 @@
 }
 /* One line separates the totals from the body — not one per totals row (subtotal · tax · total). */
 .hs-table tfoot tr:first-child td { border-top: 1px solid var(--u-border-color); }
-.hs-table--compact td { height: var(--hs-row-compact, 32px); }
+/* Totals rows follow the compact height too (`tfoot td` would otherwise win on specificity). */
+.hs-table--compact td,
+.hs-table--compact tfoot td { height: var(--hs-row-compact, 32px); }
 .hs-table--top td { vertical-align: top; padding-block: var(--u-space-sm, 8px); height: auto; }
 /* Cells (`th` too — header text aligns with its values) */
 .hs-num,

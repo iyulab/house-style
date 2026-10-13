@@ -37,6 +37,8 @@
 - `.hs-views` no longer draws a vertical scrollbar beside its tabs. The selected tab's underline reached 1px
   past the scrolling strip (a `-1px` margin over the strip's bottom border); the base line is now an inset shadow the
   underline paints over.
+- `.hs-table--compact` totals rows take the compact height too. `.hs-table tfoot td` set 40px with a higher
+  specificity, so a compact table's subtotal, tax and total rows stood taller than its body rows.
 ## [0.3.0] - 2026-10-13
 
 ### Changed
