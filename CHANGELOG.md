@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 🔴**The house now sets the text between components.** Paragraphs, headings, lists and code spans an application
+  writes outside any component drew at the browser's defaults — a 16px body with `line-height: normal`, an `h2` of
+  1.5em that outranked every component title, 1em gaps above and below. They now take the house ladder: the body at
+  the body step (14px · 1.571), `h1`/`h2`/`h3` at display/title/subtitle, `h4`–`h6` at the body step in semibold;
+  one gap below each block (`--u-space-sm` after a heading, `--u-space-md` after a paragraph, list, quote, figure or
+  `pre`), none above and none after the last block in its box; `code`, `kbd`, `samp` and `pre` in the house monospace.
+  All zero-specificity inside `iyu.house` — your own rules win. A screen that relied on the browser's defaults draws
+  smaller and tighter; set your own rule on that element to keep the old look.
+- **Native checkboxes, radios and ranges take the selection colour** (`accent-color`), and scrollbars the strong line
+  colour (`scrollbar-color`).
+
+### Added
+
+- `--u-selection-color` / `--u-selection-txt-color` — the mark of a chosen option (a checked box, a selected radio) and
+  the check drawn on it: the interaction blue, light and dark, held to 3:1 against the surface and its check.
+- `.hs-prose` and `--hs-measure` (70ch) — running text that can grow wider than reads well stops its paragraphs and
+  lists at the measure.
+
 ### Fixed
 
 - **A hovered table header or toolbar strip is visibly different from its rest state.** `--u-bg-color-raised-hover`

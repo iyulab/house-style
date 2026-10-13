@@ -1,6 +1,6 @@
 /* src/styles/page-shell.css
  *
- * The landing page and each of the 7 category pages (house-style-page,
+ * The landing page and each of the 9 category pages (house-style-page,
  * house-identity-section, ...) are each the root element of their own route —
  * every one renders into light DOM (createRenderRoot() { return this; }), so this
  * file can reach across those element boundaries to set the page's vertical
@@ -29,7 +29,9 @@ house-depth-section,
 house-data-patterns-section,
 house-flows-section,
 house-feedback-section,
-house-voice-a11y-section {
+house-voice-a11y-section,
+house-theme-section,
+house-deployment-section {
   display: flex;
   flex-direction: column;
   gap: var(--u-space-xl, 20px);
@@ -66,8 +68,15 @@ pre {
 code,
 kbd,
 samp {
-  font-family: var(--u-font-mono);
-  font-size: 0.9em;
+  font-size: 0.9em;   /* the family comes from the house document-flow layer */
+}
+
+/* The guide's running prose takes the house measure (`--hs-measure`) — a sentence that spans a 1100px card is
+ * about 150 characters, past where the eye finds the next line. */
+:is(house-style-page, house-identity-section, house-layout-section, house-depth-section,
+  house-data-patterns-section, house-flows-section, house-feedback-section, house-voice-a11y-section,
+  house-theme-section, house-deployment-section) p {
+  max-inline-size: var(--hs-measure);
 }
 :not(pre) > code {
   padding: 0.1em 0.35em;

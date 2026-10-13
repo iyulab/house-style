@@ -83,6 +83,8 @@ const PAIRS = [
   ['--u-input-border-color', '--u-bg-color', GRAPHIC],
   ['--u-focus-ring-color', '--u-bg-color', GRAPHIC],
   ['--u-focus-ring-color', '--u-canvas-bg-color', GRAPHIC],
+  ['--u-selection-color', '--u-bg-color', GRAPHIC],
+  ['--u-selection-txt-color', '--u-selection-color', GRAPHIC],
   ['--hs-brand-ink', '--hs-brand-soft', TEXT],
   ...['info', 'success', 'warning', 'danger'].flatMap(r => [
     [`--u-${r}-color-strong`, `--u-${r}-bg-color`, TEXT],

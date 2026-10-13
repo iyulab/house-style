@@ -21,6 +21,59 @@
   color: var(--u-txt-color);
   -webkit-font-smoothing: antialiased;
 }
+/* ── Document flow — the text an application writes between components ─────────────────── *
+ * Paragraphs, headings, lists and code spans outside any component would draw at the browser's
+ * defaults — 16px body with `line-height: normal`, an h2 of 1.5em that outranks every component
+ * title, 1em gaps — so a screen's own words looked unlike the components around them. Here they
+ * take the house ladder. Zero specificity inside the house layer: any application rule wins. */
+:where(body) {
+  font-size: var(--u-text-body-size);
+  line-height: var(--u-text-body-leading);
+}
+:where(h1) {
+  font-size: var(--u-text-display-size);
+  font-weight: var(--u-text-display-weight);
+  line-height: var(--u-text-display-leading);
+}
+:where(h2) {
+  font-size: var(--u-text-title-size);
+  font-weight: var(--u-text-title-weight);
+  line-height: var(--u-text-title-leading);
+}
+:where(h3) {
+  font-size: var(--u-text-subtitle-size);
+  font-weight: var(--u-text-subtitle-weight);
+  line-height: var(--u-text-subtitle-leading);
+}
+:where(h4, h5, h6) {
+  font-size: var(--u-text-body-size);
+  font-weight: 600;
+  line-height: var(--u-text-body-leading);
+}
+/* One gap below each block, none above — the gap between two blocks is one step, not two
+ * collapsed margins; the last block in its box adds none. */
+:where(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0 var(--u-space-sm);
+}
+:where(p, ul, ol, dl, blockquote, figure, pre) {
+  margin-block: 0 var(--u-space-md);
+}
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, blockquote, figure, pre):where(:last-child) {
+  margin-block-end: 0;
+}
+:where(code, kbd, samp, pre) {
+  font-family: var(--u-font-mono);
+}
+/* A measure for running text — opt in where a paragraph can be wider than reads well. */
+:where(.hs-prose) :where(p, ul, ol, dl, blockquote) {
+  max-inline-size: var(--hs-measure);
+}
+/* Native controls (a checkbox in a plain form, a range) and scrollbars take the house colours. */
+:root {
+  accent-color: var(--u-selection-color);
+  scrollbar-color: var(--u-border-color-strong) transparent;
+}
+
 /* A plain link takes the house link colour instead of the browser's — in light and dark alike.
  * Zero specificity: a class on the link (`hs-*`, an app's own) and any application rule win.
  * Visited links keep the same colour (an application, not a document); the underline stays,

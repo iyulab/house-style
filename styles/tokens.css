@@ -83,9 +83,11 @@
   --u-primary-txt-color:     #FFFFFF;
   --u-primary-bg-color:      #EEF3FD;   /* selected rows, current item */
 
-  /* Interaction — blue, for links and focus only */
+  /* Interaction — blue, for links, focus and the mark of a chosen option (a checked box or radio) */
   --u-link-txt-color:   #1F5FCC;
   --u-focus-ring-color: #2F6FEB;
+  --u-selection-color:     #2F6FEB;
+  --u-selection-txt-color: #FFFFFF;   /* the check drawn on that fill */
 
   /* Status — `-color-strong` is the text step (on surface and on its own tint), `-bg-color`
      the tint, `-color` the solid fill (with `-txt-color` on top). */
@@ -204,6 +206,8 @@
 
   --u-link-txt-color:   #8DB3F7;
   --u-focus-ring-color: #6E9CF7;
+  --u-selection-color:     #6E9CF7;
+  --u-selection-txt-color: #0E0F10;
 
   --u-info-color-weakest:    #1F3152;
   --u-info-color-weaker:     #2C4A7E;
@@ -310,6 +314,9 @@
      callouts. Hero = a headline figure, display + 6 (28 at 22). */
   --hs-text-dense-size: calc((var(--u-text-body-size) + var(--u-text-label-size)) / 2);
   --hs-text-hero-size:  calc(var(--u-text-display-size) + 6px);
+
+  /* Prose measure — a running paragraph stops around 70 characters a line (`.hs-prose`). */
+  --hs-measure: 70ch;
 
   /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections. In em, so the box
      follows the control density with the buttons (resolved at the field: 4.5px / 12px at the default 14px). */

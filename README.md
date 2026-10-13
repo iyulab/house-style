@@ -37,7 +37,7 @@ so its preflight would beat the theme; `tailwind.css` imports the theme into Tai
 | `styles/index.css` (package root) | everything below plus Pretendard — for apps without Tailwind |
 | `styles/theme.css` | the theme without fonts (bring your own face) |
 | `styles/tokens.css` | house values for the `--u-*` token axes, light and dark; brand tokens `--hs-brand*` |
-| `styles/components.css` | sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
+| `styles/components.css` | the document flow (body text, `h1`–`h6`, block gaps, code spans, native control and scrollbar colours) and sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
 | `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
 | `styles/tailwind.css` | the Tailwind v4 entry: fonts + theme (in Tailwind's `components` layer) + role utilities — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
 | `styles/tailwind-neutrals.css` | optional: Tailwind's grey ramps (`gray`, `slate`, `zinc`, `neutral`, `stone`) follow the house neutrals |
@@ -81,6 +81,17 @@ The type ladder is the `--u-text-*-size` steps plus two house steps derived from
 `--hs-text-dense-size` (between body and label: table cells, definition lists, callouts) and
 `--hs-text-hero-size` (display + 6px: a headline figure). Every pattern reads a step, so rescaling the
 ladder (a larger mode, a product system) carries the patterns along.
+
+### Text outside components
+
+The theme also sets the text an application writes between components, so a screen's own words match
+the components around them: the body draws at the body step (14px · 1.571), `h1`/`h2`/`h3` at the
+display/title/subtitle steps and `h4`–`h6` at the body step in semibold, and paragraphs, lists and
+headings get one gap below (none above, none after the last block in a box). Code spans use the house
+monospace. A checked native checkbox or radio takes the selection colour (`--u-selection-color`, the
+interaction blue) and scrollbars the strong line colour. Running text that can grow wider than reads
+well opts into the measure: `<div class="hs-prose">` stops its paragraphs and lists at `--hs-measure`
+(70ch). All of it is zero-specificity in the house layer — any rule of yours wins.
 
 ## The guide
 

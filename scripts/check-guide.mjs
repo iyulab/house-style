@@ -9,6 +9,11 @@
 // the outlet's element is a defined custom element and it takes up space (sections render into light DOM
 // or a shadow root — either way the box has height); and the
 // page raised no error. Run after `npm run build`.
+//
+// And the guide is the house's first consumer of its document-flow layer: every paragraph the page writes
+// itself draws at the body step (`--u-text-body-size` · `-leading`) and stops at the prose measure
+// (`--hs-measure`). Before that layer, guide prose drew at the browser's 16px · `line-height: normal`
+// across a whole 1100px card.
 import { readFileSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -62,6 +67,30 @@ try {
         }),
       );
     if (result.failed) failures.push(`/${path}: <${result.tag}> ${result.defined ? 'renders nothing' : 'is not defined — its module never loaded'}`);
+    else {
+      const prose = await page.evaluate(() => {
+        const el = document.querySelector('u-sidebar-layout')?.querySelector('u-outlet')?.firstElementChild;
+        const root = getComputedStyle(document.documentElement);
+        const size = parseFloat(root.getPropertyValue('--u-text-body-size'));
+        const leading = parseFloat(root.getPropertyValue('--u-text-body-leading'));
+        const probe = document.createElement('p');
+        probe.style.cssText = 'position:absolute;visibility:hidden;inline-size:var(--hs-measure)';
+        el.appendChild(probe);
+        const measure = probe.getBoundingClientRect().width;
+        probe.remove();
+        const off = [];
+        for (const p of el.querySelectorAll('p')) {
+          // Demos and pattern samples (`hs-*`, a classed paragraph) set their own step — only the guide's prose is measured.
+          if (p.matches('[class]') || p.closest('[class*="demo"], [class*="hs-"], pre, table, u-card')) continue;
+          const cs = getComputedStyle(p);
+          const lh = parseFloat(cs.lineHeight);
+          if (parseFloat(cs.fontSize) !== size || Math.abs(lh - size * leading) > 0.5) off.push(`${cs.fontSize}/${cs.lineHeight}`);
+          else if (p.getBoundingClientRect().width > measure + 0.5) off.push(`${Math.round(p.getBoundingClientRect().width)}px wide > measure ${Math.round(measure)}px`);
+        }
+        return { count: el.querySelectorAll('p').length, off: [...new Set(off)] };
+      });
+      if (prose.off.length) failures.push(`/${path}: prose off the body step or the measure — ${prose.off.join(', ')}`);
+    }
     for (const e of errors) failures.push(`/${path}: ${e}`);
     if (!result.failed) console.log(`  ✓ /${path} — <${result.tag}> ${Math.round(result.height)}px`);
     await page.close();
