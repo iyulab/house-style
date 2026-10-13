@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- **A hovered table header or toolbar strip is visibly different from its rest state.** `--u-bg-color-raised-hover`
+  (light) moves from `#EAEAE7` to `#E5E5E2` — the step from `--u-bg-color-raised` was 0.021 in OKLab lightness, below
+  what reads as a change. The token contract now holds state and depth steps to perception floors in both modes
+  (hover ≥ 0.03, press ≥ 0.05, selection ≥ 0.03, a surface step ≥ 0.025, which also carries a hairline edge).
+
 ## [0.2.0] - 2026-10-12
 
 ### Changed

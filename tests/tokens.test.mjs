@@ -4,6 +4,8 @@
 //   above the built-in defaults, so a light value the dark block forgets beats the built-in
 //   dark value — it leaks into dark mode silently.
 // ⑵ Contrast floors for the pairs the theme promises (WCAG 2.x relative luminance).
+// ⑵′ Perception floors for state and depth steps (OKLab lightness difference) — a quiet theme
+//    must still let a hover, a press, a selection and a surface step be seen.
 // ⑶ The sheet declares the shared layer order and keeps everything inside `iyu.house`.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -88,6 +90,43 @@ const PAIRS = [
     [`--u-${r}-txt-color`, `--u-${r}-color`, TEXT],
   ]),
 ];
+
+// ── perception of state and depth (OKLab L) ─────────────────────────────
+// WCAG ratios are for text and graphics; neighbouring surfaces differ by far less, and the ratio's
+// flare term flattens dark ones. OKLab lightness is perceptually even across light and dark.
+function oklabL(hex) {
+  const [r, g, b] = rgb(hex).map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
+  const m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
+  const s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
+  return 0.2104542553 * Math.cbrt(l) + 0.793617785 * Math.cbrt(m) - 0.0040720468 * Math.cbrt(s);
+}
+/** Floors (|ΔL|): a hover step, a press step, a selection against its surface, a depth step. */
+const HOVER = 0.03;
+const PRESS = 0.05;
+const SELECTED = 0.03;
+/** Depth steps also carry a hairline edge (cards, tables), so the fill difference can be smaller. */
+const DEPTH = 0.025;
+const STEPS = [
+  ['--u-bg-color-hover', '--u-bg-color', HOVER],
+  ['--u-bg-color-active', '--u-bg-color', PRESS],
+  ['--u-bg-color-raised-hover', '--u-bg-color-raised', HOVER],
+  ['--u-primary-bg-color', '--u-bg-color', SELECTED],
+  ['--u-bg-color', '--u-canvas-bg-color', DEPTH],
+  ['--u-bg-color-raised', '--u-bg-color', DEPTH],
+];
+
+for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
+  for (const [a, b, floor] of STEPS) {
+    test(`${mode}: ${a} differs from ${b} by ΔL ≥ ${floor}`, () => {
+      const x = map.get(a);
+      const y = map.get(b);
+      assert.ok(x && y && x.startsWith('#') && y.startsWith('#'), `${a}=${x} ${b}=${y} must be literal hex`);
+      const d = Math.abs(oklabL(x) - oklabL(y));
+      assert.ok(d >= floor, `${a} ${x} vs ${b} ${y}: ΔL ${d.toFixed(3)} < ${floor}`);
+    });
+  }
+}
 
 for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
   for (const [fg, bg, floor] of PAIRS) {

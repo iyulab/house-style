@@ -40,12 +40,14 @@ export class DepthSection extends LitElement {
       <u-group-box level="2" title="Surfaces">
         <u-info-section min="220">
           <u-card>
-            <strong slot="header">Default card</strong>
-            Raised surface with the standard border and radius.
+            <strong slot="header">Card</strong>
+            A flat surface with a hairline border and the standard radius — the edge, not a shadow,
+            separates it from the page.
           </u-card>
           <u-card shadowless>
-            <strong slot="header">Flat card</strong>
-            Same box, no elevation — for dense lists.
+            <strong slot="header">Card, <code>shadowless</code></strong>
+            Looks the same here: the house keeps shadows for things that float (menus, dialogs,
+            toasts). The attribute matters under the built-in theme, whose cards cast one.
           </u-card>
           <u-card hoverable>
             <strong slot="header">Interactive card</strong>
@@ -59,8 +61,8 @@ export class DepthSection extends LitElement {
           Colour says <em>which</em> action this region exists for; the variant says how loud the
           others are. A screen where every button is a solid block has no hierarchy — the eye has
           nowhere to land. Note that a bare <code>&lt;u-button&gt;</code> is <strong>not</strong> a quiet
-          button: its default colour, <code>neutral</code>, follows the brand colour, so it draws
-          exactly like <code>color="primary"</code>. Give every non-primary action a variant.
+          button: with no <code>color</code> it takes the primary role, so it draws exactly like
+          <code>color="primary"</code>. Give every non-primary action a variant.
         </p>
         <div class="table-scroll" role="region" aria-label="Action hierarchy" tabindex="0">
         <table>
