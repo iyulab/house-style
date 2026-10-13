@@ -17,6 +17,8 @@ import { FormSection, FormRow } from '@iyulab/enterprise/react';
 import { UButton, UInput, USelect, UDrawer, UAlert } from '../lib/ui-react.js';
 import type { UInput as UInputElement, USelect as USelectElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';
+import { URichTableReact } from '@iyulab/data-components/react';
+import type { ColumnDef } from '@iyulab/data-components';
 import { svc } from '../lib/odata.js';
 import { usePermission } from '../lib/permissions.js';
 import { useDiscardableForm } from '../lib/unsaved.js';
@@ -26,6 +28,22 @@ import type { Order, OrderStatus, OrderItem, Product } from '../mocks/data.js';
 // one-way destructive action (the button below), not a step in the normal fulfillment flow
 // this select edits. Matches the house-style guide's own "Edit form" recipe (Data Patterns).
 const EDITABLE_STATUSES: OrderStatus[] = ['pending', 'shipped', 'delivered'];
+
+const won = (v: unknown) => `₩${Number(v).toLocaleString()}`;
+
+// The guide's «Line items» pattern (Data patterns): a group box holding a rich table, with the columns
+// trimmed to what belongs on a line. Quantity is the one editable cell — double-click or Enter edits it.
+function lineItemColumns(editable: boolean): ColumnDef[] {
+  return [
+    { key: 'ProductName', label: 'Item', minWidth: '12rem' },
+    {
+      key: 'Quantity', label: 'Qty', type: 'number', width: '96px', editable,
+      validator: (v) => (Number(v) > 0 && Number.isInteger(Number(v)) ? null : 'Enter a whole number above 0'),
+    },
+    { key: 'UnitPrice', label: 'Unit price', align: 'end', width: '128px', render: won },
+    { key: 'Amount', label: 'Amount', align: 'end', width: '136px', render: won },
+  ];
+}
 
 function itemsTotal(items: OrderItem[]): number {
   return items.reduce((sum, i) => sum + i.Quantity * i.UnitPrice, 0);
@@ -214,11 +232,12 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
             </GroupBox>
 
             {/* The count is `meta`, not part of the title: it states how many lines there are right now,
-                one step below the section's name. Omitted at zero — the empty state already says so. */}
+                one step below the section's name ("lines", not a second "items"). Omitted at zero — the
+                empty state already says so. */}
             <GroupBox
               level={2}
               title="Items"
-              meta={items.length === 0 ? undefined : `${items.length} ${items.length === 1 ? 'item' : 'items'}`}
+              meta={items.length === 0 ? undefined : `${items.length} ${items.length === 1 ? 'line' : 'lines'}`}
             >
               {items.length === 0 && (
                 <EmptyState
@@ -227,31 +246,20 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   description={canEdit ? 'Add the first line below.' : 'Nothing has been added to this order.'}
                 />
               )}
-              {items.map((item) => (
-                <div
-                  key={item.Id}
-                  style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
-                >
-                  {/* A flexible name with a floor: without `flex-wrap` + a basis the name is the only thing
-                      that can shrink, so on a phone it collapses to a few pixels and wraps one letter per
-                      line. With them the name takes its own line once the row no longer fits. */}
-                  <span style={{ flex: '1 1 10rem', minWidth: 0 }}>{item.ProductName}</span>
-                  <UInput
-                    type="number"
-                    label="Quantity"
-                    value={String(item.Quantity)}
-                    disabled={!canEdit || order.Status === 'cancelled'}
-                    onChange={(e) => {
-                      const q = Number((e.target as UInputElement).value);
-                      if (q > 0) updateItemQuantity(item.Id, q);
-                    }}
-                  />
-                  <span>₩{(item.Quantity * item.UnitPrice).toLocaleString()}</span>
-                  {canEdit && order.Status !== 'cancelled' && (
-                    <UButton color="danger" appearance="plain" size="sm" onClick={() => removeItem(item.Id)}>Remove</UButton>
-                  )}
-                </div>
-              ))}
+              {items.length > 0 && (
+                <URichTableReact
+                  aria-label="Order items"
+                  dataMode="client"
+                  hidePagination
+                  columns={lineItemColumns(canEdit && order.Status !== 'cancelled')}
+                  data={items.map((i) => ({ ...i, _id: i.Id, Amount: i.Quantity * i.UnitPrice }))}
+                  deletable={canEdit && order.Status !== 'cancelled'}
+                  onRowUpdate={(e) => {
+                    if (e.detail.field === 'Quantity') updateItemQuantity(String(e.detail.row._id), Number(e.detail.value));
+                  }}
+                  onRowDelete={(e) => removeItem(String(e.detail.row._id))}
+                />
+              )}
               {canEdit && order.Status !== 'cancelled' && (
                 <ItemEntryForm products={products} onAdd={addItem} />
               )}

@@ -45,13 +45,15 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
   }
 
   return (
-    // A grid with declared tracks, not a wrapping flex row: an empty `u-select` has no intrinsic
-    // width (nothing is selected yet, so it measured the chevron alone — 45px), and flex sized it to
-    // that. Each control fills its track (`--u-*-display: block`), so the row reads as one form line.
+    // A wrapping row with declared bases: an empty `u-select` has no intrinsic width (nothing is
+    // selected yet, so it measured the chevron alone — 45px), so each control states its own basis and
+    // fills it (`--u-*-display: block`). Wide, the four sit on one form line; in a narrow detail pane
+    // (a phone) the product takes its own line and quantity, price and the button share the next —
+    // a fixed four-track grid needed ~560px and scrolled the pane sideways.
     <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(12rem, 2fr) minmax(7rem, 1fr) minmax(8rem, 1fr) auto',
+        display: 'flex',
+        flexWrap: 'wrap',
         gap: 'var(--u-space-md, 16px)',
         alignItems: 'end',
         ['--u-select-display' as string]: 'block',
@@ -59,6 +61,7 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
       } as CSSProperties}
     >
       <USelect
+        style={{ flex: '2 1 14rem', minWidth: 0 }}
         label="Product"
         value={productId}
         disabled={disabled}
@@ -69,6 +72,7 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
         ))}
       </USelect>
       <UInput
+        style={{ flex: '1 1 5.5rem', minWidth: 0 }}
         label="Quantity"
         type="number"
         value={quantity}
@@ -76,6 +80,7 @@ export default function ItemEntryForm({ products, onAdd, disabled }: {
         onInput={(e) => setQuantity((e.target as UInputElement).value ?? '1')}
       />
       <UInput
+        style={{ flex: '1 1 6.5rem', minWidth: 0 }}
         label="Unit price"
         type="number"
         value={unitPrice}

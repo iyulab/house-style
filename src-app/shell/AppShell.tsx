@@ -8,6 +8,7 @@ import { defaultFallback, unsavedChangesGuard } from '@iyulab/modern-app';
 import { auth } from '../lib/auth.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
+import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 import { NAV_ITEMS } from './nav.js';
 import LoginPage from '../pages/LoginPage.js';
 import DashboardPage from '../pages/DashboardPage.js';
@@ -110,7 +111,10 @@ export function mountAppShell(root: HTMLElement) {
                 type: 'link', label: n.label, icon: n.icon, lib: n.lib, href: base.slice(0, -1) + n.path,
                 requirePermission: n.permission,
               })),
-              footer: [{ type: 'button', label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut }],
+              footer: [
+                { type: 'button', label: 'Toggle theme', icon: 'circle-half', lib: 'bootstrap', onClick: () => Theme.set(Theme.resolved() === 'dark' ? 'light' : 'dark') },
+                { type: 'button', label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut },
+              ],
               hasPermission,
             }}
           >

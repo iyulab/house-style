@@ -9,7 +9,7 @@ import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
  */
 export async function bootTheme(): Promise<void> {
   await Theme.init({
-    default: 'light',
+    default: 'system',
     store: {
       type: 'cookie',
       prefix: 'house-style-',

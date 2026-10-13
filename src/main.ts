@@ -50,7 +50,7 @@ app.load({
   ],
 
   theme: {
-    default: 'light',
+    default: 'system',
     store: {
       type: 'cookie',
       prefix: 'house-style-',

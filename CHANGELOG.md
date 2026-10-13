@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.3.0] - 2026-10-13
 
 ### Changed
 
@@ -35,6 +35,16 @@
   (light) moves from `#EAEAE7` to `#E5E5E2` — the step from `--u-bg-color-raised` was 0.021 in OKLab lightness, below
   what reads as a change. The token contract now holds state and depth steps to perception floors in both modes
   (hover ≥ 0.03, press ≥ 0.05, selection ≥ 0.03, a surface step ≥ 0.025, which also carries a hairline edge).
+
+### Guide and reference app
+
+- The guide's prose follows the new document-flow layer and stops at the measure; the theme and deployment pages
+  take the same page layout as the others; the «Component depth» cards say what the house draws (cards stay flat).
+- Both sites follow the system theme (`Theme.init({ default: 'system' })`) and carry a favicon; the reference app
+  has a theme toggle.
+- Reference app order detail: the items are a `u-rich-table` (the guide's «Line items» pattern) — columns line up,
+  quantity edits in place, rows delete from the table — and the add-item line folds in a narrow pane instead of
+  scrolling it sideways.
 
 ## [0.2.0] - 2026-10-12
 
