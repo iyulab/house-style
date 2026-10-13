@@ -40,6 +40,34 @@ house-deployment-section {
   margin: 0 auto;
 }
 
+/* The landing page opens on a live screen — framed like an app window on the page canvas, so it reads
+ * as "a screen you can build", with the theme switch beside its title. */
+.start-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-md, 12px);
+}
+.start-showcase__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--u-space-md, 12px);
+}
+.start-showcase__title {
+  margin: 0;
+}
+.start-showcase__lead {
+  margin: var(--u-space-2xs, 4px) 0 0;
+  color: var(--u-txt-color-weak);
+}
+.start-showcase__screen {
+  padding: var(--u-space-xl, 20px);
+  border: 1px solid var(--u-border-color);
+  border-radius: var(--u-radius-xl, 10px);
+  background: var(--u-canvas-bg-color);
+}
+
 /* cards inside group-boxes need visual separation from their container (both
  * would otherwise read --u-panel-bg-color, making them indistinguishable)
  */

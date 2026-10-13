@@ -1,9 +1,13 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 import '@iyulab/modern-app/dist/components/PageHeader.js';
 import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/components/dist/components/copy-button/UCopyButton.js';
+import '@iyulab/components/dist/components/radio/URadio.js';
+import '@iyulab/components/dist/components/option/UOption.js';
+import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
+import '../sections/data-patterns/ListScreenDemo.js';
 import '../internals/DemoSource.js';
 import { CATEGORIES, TIERS } from '../categories.js';
 import { BOOT, CREATE, INDEX_HTML, INSTALL, STARTER } from '../start-here.js';
@@ -13,15 +17,39 @@ import listConstantsSrc from '../sections/data-patterns/constants.ts?raw';
 const base = import.meta.env.BASE_URL;
 
 /**
- * The landing page — the way in for someone about to build a screen: install, boot, build one
- * list screen, then where each kind of answer lives. How the guide came to be (the design audit
- * it grew out of) is at the bottom, not the top: it is not what a new reader asks first.
+ * The landing page — the way in for someone about to build a screen. It opens on a working screen
+ * built from the house parts (the Data patterns list screen, live), with the theme switch beside it so
+ * both sides of the house show in place; then install, boot, build that screen, and where each kind of
+ * answer lives. How the guide came to be (the design audit it grew out of) is at the bottom, not the
+ * top: it is not what a new reader asks first.
  */
 @customElement('house-style-page')
 export class HouseStylePage extends LitElement {
   protected createRenderRoot() {
     return this;
   }
+
+  /** The theme on the page now — followed, not owned: the sidebar's toggle and the system change it too. */
+  @state() private theme: 'light' | 'dark' = 'light';
+  private themeObserver?: MutationObserver;
+
+  connectedCallback() {
+    super.connectedCallback();
+    const read = () => { this.theme = Theme.resolved() === 'dark' ? 'dark' : 'light'; };
+    read();
+    this.themeObserver = new MutationObserver(read);
+    this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'] });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.themeObserver?.disconnect();
+  }
+
+  private onThemePick = (e: Event) => {
+    const value = (e.target as HTMLElement & { value?: string }).value;
+    if (value === 'light' || value === 'dark') Theme.set(value);
+  };
 
   private renderCode(code: string, label: string) {
     return html`
@@ -38,6 +66,25 @@ export class HouseStylePage extends LitElement {
         title="iyulab House Style"
         subtitle="How iyulab business screens look and behave — and the parts that build them"
       ></u-page-header>
+
+      <section class="start-showcase" aria-labelledby="start-showcase-title">
+        <div class="start-showcase__bar">
+          <div>
+            <h2 id="start-showcase-title" class="start-showcase__title">A working screen, built from the house</h2>
+            <p class="start-showcase__lead">
+              Search it, switch it to cards, select rows — it is running, not a picture. The recipe below is its source.
+            </p>
+          </div>
+          <u-radio type="button" orientation="horizontal" appearance="soft" aria-label="Theme"
+            .value=${this.theme} @change=${this.onThemePick}>
+            <u-option value="light">Light</u-option>
+            <u-option value="dark">Dark</u-option>
+          </u-radio>
+        </div>
+        <div class="start-showcase__screen">
+          <house-data-patterns-list-screen></house-data-patterns-list-screen>
+        </div>
+      </section>
 
       <u-group-box level="2" title="Start here">
         <ol class="start-steps">
@@ -74,12 +121,12 @@ export class HouseStylePage extends LitElement {
       </u-group-box>
 
       <u-group-box level="2" title="Recipe: a list screen">
-        <a slot="actions" href="${base}data-patterns">See it running →</a>
+        <a slot="actions" href="${base}data-patterns">More data patterns →</a>
         <p>
           Most business apps start with a list: search, a criterion or two, a table that can turn into
-          cards, a pager, and actions on the selected rows. This is the one the Data patterns page runs
-          live — copy both files whole, then replace the columns and the data. The "no data yet" state
-          that goes with it is on the same page.
+          cards, a pager, and actions on the selected rows. This is the screen at the top of this page —
+          copy both files whole, then replace the columns and the data. The "no data yet" state that goes
+          with it is on the Data patterns page.
         </p>
         <ol class="start-recipe">
           <li><strong>Skeleton and source</strong> — <code>u-list-page</code> binds one data source to the table, the cards and the pager, and turns the search box's <code>search</code> into the source's search. The rows are already loaded here (<code>createArraySource</code>); a server list uses <code>createODataSource</code> instead.</li>
