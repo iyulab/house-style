@@ -89,6 +89,20 @@
   --u-selection-color:     #2F6FEB;
   --u-selection-txt-color: #FFFFFF;   /* the check drawn on that fill */
 
+  /* Chart series — eight, in order (slot one first, never cycled). Slot one is the interaction blue, so a
+     one-series chart draws in the colour the rest of the screen uses for "this is the thing"; the other seven
+     are muted, warm-leaning hues chosen as a set: OKLCH L 0.50–0.68, chroma ≥ 0.10, neighbours ΔE ≥ 15 for
+     full colour vision and ≥ 8 under red–green deficiency (Machado 2009), every slot at least ΔE 10 from a
+     status colour. Slot six (light olive) is 2.8:1 on white — six or more series need a legend or labels. */
+  --u-chart-color-1: #2F6FEB;
+  --u-chart-color-2: #B55F40;
+  --u-chart-color-3: #14938D;
+  --u-chart-color-4: #AF8020;
+  --u-chart-color-5: #7D4B92;
+  --u-chart-color-6: #86A645;
+  --u-chart-color-7: #C46E83;
+  --u-chart-color-8: #834B14;
+
   /* Status — `-color-strong` is the text step (on surface and on its own tint), `-bg-color`
      the tint, `-color` the solid fill (with `-txt-color` on top). */
   --u-info-color-weakest:    #D6E3FB;
@@ -208,6 +222,18 @@
   --u-focus-ring-color: #6E9CF7;
   --u-selection-color:     #6E9CF7;
   --u-selection-txt-color: #0E0F10;
+
+  /* Chart series, dark — the same hues stepped into the dark band (L 0.52–0.66), every slot ≥ 3:1 on the
+     surface and the raised surface. Slot one is the dark interaction blue taken to the band's top (#6E9CF7
+     itself is lighter than a filled mark should be on this surface). */
+  --u-chart-color-1: #628FEA;
+  --u-chart-color-2: #C97152;
+  --u-chart-color-3: #04A19B;
+  --u-chart-color-4: #B8892D;
+  --u-chart-color-5: #9760AF;
+  --u-chart-color-6: #57833D;
+  --u-chart-color-7: #CF7188;
+  --u-chart-color-8: #9A5F1A;
 
   --u-info-color-weakest:    #1F3152;
   --u-info-color-weaker:     #2C4A7E;

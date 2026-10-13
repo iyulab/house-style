@@ -225,10 +225,12 @@ export class IdentitySection extends LitElement {
             Charts colour <strong>series</strong> with <code>--u-chart-color-1</code> …
             <code>-8</code>: series one takes slot one, and so on. Never cycle — a ninth series
             is folded into "Other" or split into small multiples — and a series keeps its colour
-            when a filter hides the others. The eight were chosen together (similar lightness,
-            separable under red–green colour-vision deficiency), so they do not follow the brand
-            colour, and none of them is a status colour. Slot six is light on white: a chart with
-            six or more series needs a legend or direct labels.
+            when a filter hides the others. Slot one is the interaction blue, so a one-series chart
+            draws in the colour the screen already uses for the thing in focus; the other seven are
+            muted, warm-leaning hues chosen together (similar lightness, separable under red–green
+            colour-vision deficiency), they do not follow the brand colour, and none of them is a
+            status colour. Slot six is light on white: a chart with six or more series needs a legend
+            or direct labels.
           </p>
           <div class="chart-swatches">
             ${CHART_SLOTS.map(n => html`

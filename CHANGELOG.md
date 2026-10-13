@@ -17,6 +17,13 @@
 
 ### Added
 
+- **House chart colours** — `--u-chart-color-1` … `-8`, light and dark. Slot one is the interaction blue (`#2F6FEB`;
+  dark `#628FEA`, the dark blue taken to the mark band), so a one-series chart draws in the colour the screen already
+  uses for links, focus and selection; the other seven are muted, warm-leaning hues chosen as a set — neighbours
+  ΔE ≥ 15 for full colour vision and ≥ 8 under red–green deficiency, no slot within ΔE 10 of a status colour, every
+  dark slot ≥ 3:1 on the surfaces. Light slot six (olive) is 2.8:1 on white: six or more series need a legend or
+  labels. Before, the house set no chart colours and series drew in the built-in Material palette. Charts drawn
+  through `@iyulab/u-widgets/themes/components.css` pick them up slot for slot.
 - `--u-selection-color` / `--u-selection-txt-color` — the mark of a chosen option (a checked box, a selected radio) and
   the check drawn on it: the interaction blue, light and dark, held to 3:1 against the surface and its check.
 - `.hs-prose` and `--hs-measure` (70ch) — running text that can grow wider than reads well stops its paragraphs and

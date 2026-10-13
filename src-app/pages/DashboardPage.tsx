@@ -4,8 +4,8 @@ import '@iyulab/u-widgets/charts';
 // loads @iyulab/components, and without this sheet the two disagree on five axes at once
 // (primary color, body text, secondary text, font family, corner radius). The sheet binds one
 // token set to the other by reference — including the chart palette, slot for slot — so the chart
-// below draws its series in the house chart colours (`--u-chart-color-*`), starting with the same
-// blue as everything around it.
+// below draws its series in the house chart colours (`--u-chart-color-*`) — slot one is the house
+// interaction blue, the colour of links, focus and selection around it.
 import '@iyulab/u-widgets/themes/components.css';
 import { UWidget } from '@iyulab/u-widgets/react';
 import { InfoField } from '@iyulab/modern-app/react/InfoField.js';

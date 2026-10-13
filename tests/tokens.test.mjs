@@ -118,6 +118,47 @@ const STEPS = [
   ['--u-bg-color-raised', '--u-bg-color', DEPTH],
 ];
 
+// ── chart series ─────────────────────────────────────────────────────────
+// The eight were validated as a set (lightness band, chroma, colour-vision simulation — an external
+// validator's job). These checks keep an edit from quietly breaking what can be computed from the values:
+// eight distinct hexes; neighbours ΔE ≥ 15 (full colour vision); no slot within ΔE 10 of a status colour;
+// marks ≥ 3:1 on the surface and the raised surface — in light, slot six alone may fall short (it is
+// documented to need a legend or labels).
+function oklab(hex) {
+  const [r, g, b] = rgb(hex).map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+const deltaE = (a, b) => { const [x, y] = [oklab(a), oklab(b)]; return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]) * 100; };
+
+for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
+  const pal = [1, 2, 3, 4, 5, 6, 7, 8].map(n => map.get(`--u-chart-color-${n}`));
+  test(`${mode}: eight distinct chart colours`, () => {
+    assert.ok(pal.every(c => /^#[0-9A-F]{6}$/i.test(c ?? '')), pal.join(' '));
+    assert.equal(new Set(pal.map(c => c.toUpperCase())).size, 8);
+  });
+  test(`${mode}: chart neighbours ΔE ≥ 15`, () => {
+    const weak = pal.slice(1).map((c, i) => [i + 1, deltaE(pal[i], c)]).filter(([, d]) => d < 15);
+    assert.deepEqual(weak.map(([i, d]) => `${i}↔${i + 1} ${d.toFixed(1)}`), []);
+  });
+  test(`${mode}: no chart colour reads as a status colour (ΔE ≥ 10)`, () => {
+    const status = ['success', 'warning', 'danger'].map(r => map.get(`--u-${r}-color`));
+    const near = pal.flatMap((c, i) => status.filter(s => deltaE(c, s) < 10).map(s => `${i + 1} ${c}~${s}`));
+    assert.deepEqual(near, []);
+  });
+  test(`${mode}: chart marks ≥ 3:1 on the surfaces${mode === 'light' ? ' (slot six excepted)' : ''}`, () => {
+    const surfaces = [map.get('--u-bg-color'), map.get('--u-bg-color-raised')];
+    const low = pal.flatMap((c, i) => surfaces.filter(s => contrast(c, s) < 3).map(s => `${i + 1}@${s} ${contrast(c, s).toFixed(2)}`));
+    assert.deepEqual(mode === 'light' ? low.filter(x => !x.startsWith('6@')) : low, []);
+  });
+}
+
 for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
   for (const [a, b, floor] of STEPS) {
     test(`${mode}: ${a} differs from ${b} by ΔL ≥ ${floor}`, () => {
