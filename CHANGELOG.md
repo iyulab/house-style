@@ -1,6 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [0.6.1] - 2026-10-14
+
+### Fixed
+
+- Requires `@iyulab/modern-app` 0.54.0 or later when it is installed (optional peer range `>=0.54.0`, was `>=0.39.0`).
+  The 0.6.0 table toolbar recipe pads the card list page's `u-action-bar` through `--action-bar-padding-inline`, which
+  `u-action-bar` reads from 0.54.0 — with an older modern-app the toolbar row lost its side padding without a
+  warning.
 
 ### Guide
 
