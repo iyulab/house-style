@@ -140,6 +140,54 @@ u-tag {
   --tag-padding-inline: 8px;
   --tag-gap: 5px;
 }
+/* The small step — 18px marks inside a line of text (an attribute next to an id): no block padding, 5px sides. */
+u-tag[size='sm'] {
+  --tag-padding-block: 0;
+  --tag-padding-inline: 5px;
+  --tag-gap: 4px;
+}
+
+/* ── Tab strip of links (saved views) — ink, not blue: the current view is ink text with an ink underline,
+ *    at the dense text step. ── */
+u-tab-nav {
+  --tab-nav-color: var(--u-txt-color);
+  font-size: var(--hs-text-dense-size, 13px);
+}
+u-tab-nav u-tab[active] {
+  font-weight: 600;
+}
+
+/* ── Inline alert — the house callout: actions in a right-hand column beside the title and body, at the dense
+ *    text step. A floating alert (no `inline`) keeps the component layout. ── */
+u-alert[inline]::part(container) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--u-space-md, 12px);
+  align-items: center;
+}
+u-alert[inline]::part(header),
+u-alert[inline]::part(content) {
+  grid-column: 1;
+}
+u-alert[inline]::part(footer) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  gap: var(--u-space-sm, 8px);
+}
+u-alert[inline]::part(header) {
+  margin-bottom: 0;
+  font-size: var(--hs-text-dense-size, 13px);
+}
+u-alert[inline]::part(title) {
+  line-height: 20px;
+}
+u-alert[inline]::part(content) {
+  font-size: var(--hs-text-dense-size, 13px);
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--u-txt-color-weak);
+}
 
 /* ── Card — flat surface, hairline border; shadow is for things that float ── */
 u-card {

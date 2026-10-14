@@ -2,15 +2,16 @@
  * @iyulab/house-style — layout patterns
  * ==========================================================================
  * Class-based patterns for the arrangements a line-of-business screen repeats and no single
- * component owns: the page head, the filter bar, the stat strip, the plain data table, the
- * callout, the form section, the side-sheet footer. They work in any framework (plain HTML,
- * Lit, React) and read tokens only — no literal colours.
+ * component owns: the filter bar, the table card, the plain data table, the form section, the
+ * detail layout. They work in any framework (plain HTML, Lit, React) and read tokens only — no
+ * literal colours. Where a component owns the arrangement, the component is the canonical form
+ * and the pattern is deprecated with the version it goes in (`remove:`).
  *
  * Prefix `hs-`. Everything sits in `@layer iyu.house`; an application rule always wins.
  *
  * Screen recipes (the guide shows each one):
  *   list   = u-page-header → .hs-filter-bar → u-info-section layout="strip" → .hs-table-card (toolbar · table · pager)
- *   detail = side sheet: head (id · status · one primary action) → steps → stat strip → tabs → cards
+ *   detail = side sheet: head (id · status · one primary action) → steps → u-info-section strip → tabs → cards
  *   edit   = side sheet with .hs-fieldset sections and a pinned u-action-bar (summary slot)
  *
  * Rules the patterns encode:
@@ -33,47 +34,12 @@
   min-width: 0;
 }
 
-/* Page head — eyebrow · title · one-line description on the left; on the right a scope
-   picker (data-wide filters such as a season or period), up to two secondary actions and
-   the single primary action, in that order.
-   @deprecated Use `u-page-header` (`@iyulab/modern-app`) — `eyebrow` · `title` · `subtitle`, and the
-   scope picker and actions in its `actions` slot. The house already draws it this way
-   (`components.css`), and it carries the page's h1 and a back link. remove: 0.5.0 */
-.hs-page-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--u-space-lg, 16px);
-  flex-wrap: wrap;
-}
-.hs-page-head__eyebrow {
-  margin: 0 0 2px;
-  font-size: var(--u-text-label-size, 12px);
-  line-height: 16px;
-  color: var(--u-txt-color-weak);
-}
-.hs-page-head__title {
-  margin: 0;
-  font-size: var(--u-text-display-size, 22px);
-  line-height: var(--u-text-display-leading, 1.364);
-  font-weight: var(--u-text-display-weight, 700);
-  letter-spacing: var(--u-text-display-tracking, -0.01em);
-  color: var(--u-txt-color);
-}
-.hs-page-head__description {
-  margin: 2px 0 0;
-  font-size: var(--u-text-label-size, 12px);
-  line-height: 18px;
-  color: var(--u-txt-color-weak);
-}
-.hs-page-head__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--u-space-sm, 8px);
-  flex-wrap: wrap;
-}
 
 /* ── Saved views — tabs above the filter bar, each with a count ─────────── */
+/* @deprecated Use `<u-tab-nav label>` with `<u-tab href count>` (`@iyulab/components` 2.25) — the same strip as a
+   navigation landmark of links: the current view is `aria-current="page"` (these tabs are URLs, so they are links,
+   not a tablist), each link is a Tab stop, and `count` is the quiet count. The house draws it this way
+   (`components.css`). `.hs-count` goes with it. remove: 0.6.0 */
 .hs-views {
   display: flex;
   gap: var(--u-space-2xs, 4px);
@@ -150,66 +116,6 @@
   display: none;
 }
 
-/* ── Stat strip — the result's totals as cells, not a sentence ───────────
- * 3–5 cells: label → value → one supporting line. One hero value per screen at most. */
-/* Side by side, or stacked when the strip is narrower than 640px — all or nothing, never a ragged row.
- * No size container: the threshold is each stat's flex-basis, calc((640px - 100%) * 999) — negative
- * (so 0) when wide, huge when narrow (the "Holy Albatross"). The dividers are the 1px gap showing the
- * strip's border-coloured background, so they turn from vertical to horizontal on their own.
- * @deprecated Use `u-info-section layout="strip"` with `u-info-field size="lg"` (`@iyulab/modern-app` 0.54) — the
- * same strip as a component: `label` · `value` · `unit` · `description` (the supporting line) and `tone` for the
- * warning, danger and success values. `.hs-stat--hero` has no counterpart and goes with it. remove: 0.5.0 */
-.hs-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1px;
-  background: var(--u-border-color);
-  border: 1px solid var(--u-border-color);
-  border-radius: var(--u-radius-xl, 10px);
-  overflow: hidden;
-}
-.hs-stat {
-  flex: 1 1 calc((640px - 100%) * 999);
-  min-width: 0;
-  padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
-  background: var(--u-bg-color);
-}
-.hs-stat__label {
-  font-size: var(--u-text-label-size, 12px);
-  line-height: 16px;
-  font-weight: 500;
-  color: var(--u-txt-color-weak);
-}
-.hs-stat__value {
-  margin-top: 2px;
-  font-size: var(--u-text-title-size, 18px);
-  line-height: 26px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--u-txt-color);
-}
-.hs-stat__unit {
-  margin-inline-start: 2px;
-  font-size: var(--u-text-caption-size, 12px);
-  font-weight: 500;
-  color: var(--u-txt-color-weak);
-}
-.hs-stat__sub {
-  font-size: var(--u-text-caption-size, 12px);
-  line-height: 18px;
-  color: var(--u-txt-color-weaker);
-}
-.hs-stat--hero .hs-stat__value {
-  font-size: var(--hs-text-hero-size, 28px);
-  line-height: 34px;
-  letter-spacing: -0.01em;
-}
-.hs-stat--warning .hs-stat__value { color: var(--u-warning-color-strong); }
-.hs-stat--danger .hs-stat__value { color: var(--u-danger-color-strong); }
-.hs-stat--success .hs-stat__value { color: var(--u-success-color-strong); }
 
 /* ── Table card — toolbar · table · pager on one surface ──────────────── */
 .hs-table-card {
@@ -373,6 +279,8 @@ tr[aria-selected='true'] .hs-row-actions {
   text-decoration: none;
 }
 .hs-card__link:hover { text-decoration: underline; }
+/* @deprecated A whole card as a link: use `<u-card href>` (`@iyulab/components` 2.25) — the outer box is the link,
+   the border carries hover and the card does not lift. remove: 0.6.0 */
 a.hs-card,
 .hs-card--link { cursor: pointer; transition: border-color 0.12s ease-out; }
 /* A whole card as a link reads as a card: ink text, no underline — the border carries hover. */
@@ -396,7 +304,8 @@ a.hs-card:hover,
 .hs-dl > dd { margin: 0; min-width: 0; }
 
 /* Two-column detail: main column plus a 340px side panel once the columns are 960px wide, one column
- * below that. No size container — the threshold is each column's flex-basis (see .hs-stats). */
+ * below that. No size container — the threshold is each column's flex-basis, calc((960px - 100%) * 999):
+ * negative (so 0) when wide, huge when narrow (the "Holy Albatross"). */
 .hs-detail__cols {
   display: flex;
   flex-wrap: wrap;
@@ -419,6 +328,10 @@ a.hs-card:hover,
 }
 
 /* ── Callout — a conclusion in the title, two lines of body at most ──────
+ * @deprecated Use `<u-alert inline open>` (`@iyulab/components` 2.25) — `status` for the tone, `title` for the
+ * conclusion, the body as content, actions in `slot="footer"`, and `slot="icon"` for a note's pencil; a note is a
+ * neutral alert with `role="note"`. The house lays the footer out as the right-hand action column
+ * (`components.css`). remove: 0.6.0
  * No thick coloured edge: an icon and a tint carry the tone. `--note` is a person's note
  * (a remark on a record), not a warning — it is neutral on purpose. */
 .hs-callout {
@@ -528,30 +441,10 @@ a.hs-card:hover,
 }
 .hs-span-all { grid-column: 1 / -1; }
 
-/* ── Side sheet footer — change summary on the left, Cancel / Save on the right ──
- * @deprecated Use `<u-action-bar sticky>` (`@iyulab/modern-app` 0.54): the summary in `slot="summary"`, Cancel and
- * Save as its children, the sheet's inset as `--action-bar-padding-inline`. It also keeps a destructive action
- * apart at the leading edge and puts the main actions on top when narrow. remove: 0.5.0 */
-.hs-sheet-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--u-space-sm, 8px);
-  padding: var(--u-space-md, 12px) var(--u-space-xl, 20px);
-  border-top: 1px solid var(--u-border-color);
-  background: var(--u-bg-color);
-}
-.hs-sheet-footer__summary {
-  font-size: var(--u-text-caption-size, 12px);
-  color: var(--u-txt-color-weak);
-}
-.hs-sheet-footer__actions {
-  display: flex;
-  gap: var(--u-space-sm, 8px);
-}
 
 /* ── Small marks ───────────────────────────────────────────────────────── */
-/* A quiet attribute label next to an identifier (not a status — no colour). */
+/* A quiet attribute label next to an identifier (not a status — no colour).
+   @deprecated Use `<u-tag size="sm" appearance="outlined">` (`@iyulab/components` 2.25). remove: 0.6.0 */
 .hs-attr {
   display: inline-flex;
   align-items: center;
@@ -582,16 +475,5 @@ a.hs-card:hover,
 }
 .hs-due--soon { background: var(--u-warning-bg-color); color: var(--u-warning-color-strong); }
 .hs-due--over { background: var(--u-danger-bg-color); color: var(--u-danger-color-strong); }
-/* A keyboard hint.
-   @deprecated Use a plain `<kbd>` — the house draws it the same way (`components.css`), in the
-   monospace face. remove: 0.5.0 */
-.hs-kbd {
-  padding: 0 4px;
-  border: 1px solid var(--u-border-color);
-  border-radius: var(--u-radius-md, 4px);
-  background: var(--u-canvas-bg-color);
-  font: 500 11px/16px var(--u-font-base);
-  color: var(--u-txt-color-weak);
-}
 
 } /* @layer iyu.house */

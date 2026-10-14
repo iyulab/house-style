@@ -1,5 +1,45 @@
 # Changelog
 
+## [0.5.0] - 2026-10-14
+
+### Added
+
+- **The inline alert as the house callout.** `u-alert[inline]` lays its footer out as a right-hand action column
+  beside the title and body, at the dense text step (13px · 20px lines), with the body in the weak text colour.
+- `u-tag[size='sm']` — the small step stays an 18px mark (no block padding, 5px sides) under the house tag padding.
+- `u-tab-nav` — the tab strip of links draws the current view in ink (ink text, ink underline, semibold) at the dense
+  text step.
+
+### Changed
+
+- Requires `@iyulab/components` 2.25.0 or later (peer range `^2.25.0`) — the recipes above style its `u-tab-nav`,
+  `u-tag size` and `u-alert inline`.
+
+### Deprecated
+
+- **`.hs-callout` and its parts — use `<u-alert inline open>`** (`@iyulab/components` 2.25): `--warning` / `--info` /
+  `--success` / `--danger` → `status`, `__title` → `title`, `__body` → the content, `__actions` → `slot="footer"`
+  (the house puts it in the right-hand column). A note (`--note`) is `status="notice"` with `role="note"` and its
+  pencil in `slot="icon"`, so it is not announced as news. Removed in 0.6.0.
+- **`.hs-views` / `.hs-views__tab` and `.hs-count` — use `<u-tab-nav label>` with `<u-tab href count>`**
+  (`@iyulab/components` 2.25). Saved views are URLs, so the tabs are links in a navigation landmark: the current view
+  is `aria-current="page"` (set `value` on the strip), and each link is a Tab stop. Removed in 0.6.0.
+- **A whole card as a link (`a.hs-card`, `.hs-card--link`) — use `<u-card href>`** (`@iyulab/components` 2.25): the
+  outer box is the link, the border carries hover, the card does not lift. The titled card itself stays. Removed in
+  0.6.0.
+- **`.hs-attr` — use `<u-tag size="sm" appearance="outlined">`** (`@iyulab/components` 2.25). Removed in 0.6.0.
+
+### Removed
+
+- The 0.4.0 deprecations: `.hs-page-head` and its parts (use `u-page-header`), `.hs-kbd` (use `<kbd>`), `.hs-stats` /
+  `.hs-stat` and its parts including `.hs-stat--hero` (use `u-info-section layout="strip"` with
+  `u-info-field size="lg"`), and `.hs-sheet-footer` and its parts (use `<u-action-bar sticky>`).
+
+### Guide
+
+- The list screen's saved views are a `u-tab-nav`, the attribute next to an order id is a small tag, and the callouts
+  are inline alerts.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added

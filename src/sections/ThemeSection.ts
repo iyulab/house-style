@@ -13,6 +13,9 @@ import '@iyulab/components/dist/components/textarea/UTextarea.js';
 import '@iyulab/components/dist/components/option/UOption.js';
 import '@iyulab/components/dist/components/tag/UTag.js';
 import '@iyulab/components/dist/components/icon/UIcon.js';
+import '@iyulab/components/dist/components/tab/UTab.js';
+import '@iyulab/components/dist/components/tab-nav/UTabNav.js';
+import '@iyulab/components/dist/components/alert/UAlert.js';
 import { readToken } from '../internals/readToken.js';
 
 /**
@@ -109,12 +112,12 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-button slot="actions">New order</u-button>
           </u-page-header>
 
-          <div class="hs-views" role="tablist" aria-label="Saved views">
-            <button class="hs-views__tab" role="tab" aria-selected="true">All <span class="hs-count">962</span></button>
-            <button class="hs-views__tab" role="tab" aria-selected="false">Received today</button>
-            <button class="hs-views__tab" role="tab" aria-selected="false">Due in 7 days</button>
-            <button class="hs-views__tab" role="tab" aria-selected="false">Not invoiced</button>
-          </div>
+          <u-tab-nav label="Saved views" value="all">
+            <u-tab value="all" href="#view-all" count="962">All</u-tab>
+            <u-tab value="today" href="#view-today">Received today</u-tab>
+            <u-tab value="due" href="#view-due">Due in 7 days</u-tab>
+            <u-tab value="uninvoiced" href="#view-uninvoiced">Not invoiced</u-tab>
+          </u-tab-nav>
 
           <div class="hs-filter-bar">
             <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…" aria-label="Search orders"></u-input>
@@ -150,7 +153,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
                 ${this.rows.map(r => html`
                   <tr aria-selected=${this.selected.has(r.id) ? 'true' : 'false'}>
                     <td><input type="checkbox" .checked=${this.selected.has(r.id)} @change=${() => this.toggle(r.id)} aria-label="Select ${r.id}" /></td>
-                    <td><a class="hs-id" href="#">${r.id}</a> ${r.tag ? html`<span class="hs-attr">${r.tag}</span>` : ''}</td>
+                    <td><a class="hs-id" href="#">${r.id}</a> ${r.tag ? html`<u-tag size="sm" appearance="outlined">${r.tag}</u-tag>` : ''}</td>
                     <td>${r.customer}</td>
                     <td><u-tag dot color=${r.status[1]}>${r.status[0]}</u-tag></td>
                     <td>${r.due === '—' ? html`<span class="hs-empty">—</span>` : html`<span class="hs-due ${r.dueTone ? `hs-due--${r.dueTone}` : ''}">${r.due}</span>`}</td>
@@ -231,25 +234,25 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
 
       <u-group-box level="2" title="Callouts — the conclusion in the title">
         <div class="hs-page">
-          <div class="hs-callout hs-callout--warning">
-            <span class="hs-callout__icon"><u-icon lib="bootstrap" name="exclamation-triangle"></u-icon></span>
-            <div><div class="hs-callout__title">Some customers need their due date checked</div><div class="hs-callout__body">Due dates are not computed for barter and offset accounts.</div></div>
-            <div class="hs-callout__actions"><u-button size="sm" appearance="outlined">Show them</u-button></div>
-          </div>
-          <div class="hs-callout hs-callout--info">
-            <span class="hs-callout__icon"><u-icon lib="bootstrap" name="info-circle"></u-icon></span>
-            <div><div class="hs-callout__title">Totals follow the filters above</div><div class="hs-callout__body">Clear a filter chip to widen them.</div></div>
-            <span></span>
-          </div>
-          <div class="hs-callout hs-callout--note">
-            <span class="hs-callout__icon"><u-icon lib="bootstrap" name="pencil"></u-icon></span>
-            <div><div class="hs-callout__title">Note</div><div class="hs-callout__body">Customer asked for the same cover as last year; only the logo changes.</div></div>
-            <div class="hs-callout__actions"><u-button size="sm" appearance="plain">Edit</u-button></div>
-          </div>
+          <u-alert inline open status="warning" title="Some customers need their due date checked">
+            Due dates are not computed for barter and offset accounts.
+            <u-button slot="footer" size="sm" appearance="outlined">Show them</u-button>
+          </u-alert>
+          <u-alert inline open status="info" title="Totals follow the filters above">
+            Clear a filter chip to widen them.
+          </u-alert>
+          <u-alert inline open status="notice" role="note" title="Note">
+            <u-icon slot="icon" lib="bootstrap" name="pencil"></u-icon>
+            Customer asked for the same cover as last year; only the logo changes.
+            <u-button slot="footer" size="sm" appearance="plain">Edit</u-button>
+          </u-alert>
         </div>
         <p>
-          One callout per screen. No thick coloured edge — an icon and a tint carry the tone. A person's
-          note on a record is <code>--note</code>: it is not a warning.
+          A callout is <code>&lt;u-alert inline open&gt;</code>: the conclusion in <code>title</code>, the body as
+          content, actions in <code>slot="footer"</code> (the house puts them in a right-hand column). One callout per
+          screen. No thick coloured edge — an icon and a tint carry the tone. A person's note on a record is a
+          <code>notice</code> alert with <code>role="note"</code> and a pencil in <code>slot="icon"</code>: it is not a
+          warning, and it is not announced as news.
         </p>
       </u-group-box>
 

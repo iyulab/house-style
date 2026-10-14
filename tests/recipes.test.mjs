@@ -48,3 +48,27 @@ test('one line separates the totals from the body', () => {
   assert.equal(rule(patterns, '.hs-table tfoot tr:first-child td')?.get('border-top'),
     '1px solid var(--u-border-color)');
 });
+
+test('a small tag stays an 18px mark under the house tag padding', () => {
+  assert.equal(rule(components, 'u-tag')?.get('--tag-padding-block'), '1px');
+  assert.equal(rule(components, "u-tag[size='sm']")?.get('--tag-padding-block'), '0',
+    'the house padding on every tag would make the small step 20px');
+});
+
+test('the tab strip of links draws the current view in ink', () => {
+  assert.equal(rule(components, 'u-tab-nav')?.get('--tab-nav-color'), 'var(--u-txt-color)');
+  assert.equal(rule(components, 'u-tab-nav u-tab[active]')?.get('font-weight'), '600');
+});
+
+test('an inline alert puts its actions in a right-hand column', () => {
+  assert.equal(rule(components, 'u-alert[inline]::part(container)')?.get('display'), 'grid');
+  const footer = rule(components, 'u-alert[inline]::part(footer)');
+  assert.equal(footer?.get('grid-column'), '2');
+  assert.equal(footer?.get('grid-row'), '1 / span 2');
+});
+
+test('the 0.4.0 deprecations are gone', () => {
+  for (const cls of ['.hs-page-head', '.hs-kbd', '.hs-stats', '.hs-stat', '.hs-sheet-footer']) {
+    assert.equal(rule(patterns, cls), undefined, `${cls} was removed in 0.5.0`);
+  }
+});
