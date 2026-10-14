@@ -92,7 +92,11 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Filter bar — search · up to three key filters · "Filters" panel · applied chips ── */
+/* ── Filter bar — search · up to three key filters · "Filters" panel · applied chips ──
+ * @deprecated Use `u-list-page` (`@iyulab/enterprise` 0.33): the search and filters in `slot="filters"` (the house
+ * gives a search field 240–360px and centres the row — `components.css`), the applied chips (`u-chip removable`) in
+ * `slot="applied"`, which folds when empty. `__end` → `style="margin-inline-start: auto"` on the last filter.
+ * `.hs-chips` goes with it. remove: 0.7.0 */
 .hs-filter-bar {
   display: flex;
   flex-wrap: wrap;
@@ -117,7 +121,10 @@
 }
 
 
-/* ── Table card — toolbar · table · pager on one surface ──────────────── */
+/* ── Table card — toolbar · table · pager on one surface ────────────────
+ * @deprecated `.hs-table-card` and `.hs-pager`: use `<u-list-page appearance="card">` (`@iyulab/enterprise` 0.33) —
+ * the toolbar, view and pager regions on one surface with lines between them, and `u-pagination` in `slot="pager"`.
+ * `.hs-table-toolbar` stays until the table toolbars expose a title and a selected state. remove: 0.7.0 */
 .hs-table-card {
   background: var(--u-bg-color);
   border: 1px solid var(--u-border-color);
@@ -142,6 +149,10 @@
 .hs-table-toolbar[data-selected],
 .hs-table-toolbar--selected {
   background: var(--u-primary-bg-color);
+}
+/* In a `u-list-page appearance="card"` toolbar the region draws the line below. */
+u-list-page > .hs-table-toolbar {
+  border-bottom: 0;
 }
 .hs-table-toolbar__title {
   font-size: var(--hs-text-dense-size, 13px);

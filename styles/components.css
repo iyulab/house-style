@@ -172,6 +172,27 @@ u-field[invalid]::part(footer) {
   color: var(--u-danger-color-strong);
 }
 
+/* ── List page (`@iyulab/enterprise`) — the list screen: filters on one centred row with an 8px gap and a search field
+ *    that takes 240–360px, applied chips below, and with `appearance="card"` toolbar · table · pager on one flat
+ *    surface (the toolbar row draws its own 48px band, a quiet pager line). ── */
+u-list-page::part(filters) {
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+}
+u-list-page > u-input[slot='filters'][type='search'] {
+  flex: 0 1 360px;
+  min-width: 240px;
+}
+u-list-page[appearance='card']::part(surface) {
+  border-radius: var(--u-radius-xl, 10px);
+  background-color: var(--u-bg-color);
+}
+u-list-page[appearance='card']::part(pager) {
+  font-size: var(--u-text-label-size, 12px);
+  color: var(--u-txt-color-weak);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── Tab strip of links (saved views) — ink, not blue: the current view is ink text with an ink underline,
  *    at the dense text step. ── */
 u-tab-nav {

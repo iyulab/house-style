@@ -8,8 +8,17 @@
   step in the weak colour, the help line in the weaker colour and the error in the danger colour. Needs
   `@iyulab/components` 2.26 (the `header` · `label` · `footer` parts).
 
+- **`u-list-page` as the house list screen** — the filters row centred with an 8px gap, a search field
+  (`type="search"`) at 240–360px, and with `appearance="card"` a flat surface (10px radius) with a 48px toolbar and a
+  quiet pager line (12px, weak, tabular). Needs `@iyulab/enterprise` 0.33.
+
 ### Deprecated
 
+- **`.hs-filter-bar` (and `__search` · `__end`) and `.hs-chips` — use `u-list-page`** (`@iyulab/enterprise` 0.33): the
+  search and filters in `slot="filters"`, the applied chips in `slot="applied"` (it folds when empty), `__end` →
+  `margin-inline-start: auto` on the last filter. Removed in 0.7.0.
+- **`.hs-table-card` and `.hs-pager` — use `<u-list-page appearance="card">`** with `u-pagination` in `slot="pager"`.
+  `.hs-table-toolbar` stays for now. Removed in 0.7.0.
 - **`.hs-field` and its parts — use `<u-field label>`** (`@iyulab/components` 2.26): `__label` → `label`, `__required`
   → `required`, `__help` → `description`, `__error` → `invalid` with `validation-message`. The component also names the
   control it wraps (the class pattern relied on a wrapping `<label>`). Removed in 0.7.0.
@@ -17,6 +26,8 @@
 ### Guide
 
 - The edit form's fields are `u-field`.
+- The list screen is a `u-list-page appearance="card"` — filters, an applied chip, the toolbar, the table and a
+  `u-pagination`.
 
 ## [0.5.0] - 2026-10-14
 

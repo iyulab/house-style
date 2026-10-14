@@ -17,6 +17,9 @@ import '@iyulab/components/dist/components/tab/UTab.js';
 import '@iyulab/components/dist/components/tab-nav/UTabNav.js';
 import '@iyulab/components/dist/components/alert/UAlert.js';
 import '@iyulab/components/dist/components/field/UField.js';
+import '@iyulab/components/dist/components/chip/UChip.js';
+import '@iyulab/components/dist/components/pagination/UPagination.js';
+import '@iyulab/enterprise/list-page';
 import { readToken } from '../internals/readToken.js';
 
 /**
@@ -120,14 +123,6 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-tab value="uninvoiced" href="#view-uninvoiced">Not invoiced</u-tab>
           </u-tab-nav>
 
-          <div class="hs-filter-bar">
-            <u-input class="hs-filter-bar__search" placeholder="Order, customer, product…" aria-label="Search orders"></u-input>
-            <u-select value="all" aria-label="Channel"><u-option value="all">Channel: all</u-option></u-select>
-            <u-select value="all" aria-label="Status"><u-option value="all">Status: all</u-option></u-select>
-            <u-button appearance="outlined">Filters · 1</u-button>
-            <u-button class="hs-filter-bar__end" appearance="plain">Save view</u-button>
-          </div>
-
           <u-info-section layout="strip">
             <u-info-field size="lg" label="Orders" value="962" unit="orders" description="1,764,211 units"></u-info-field>
             <u-info-field size="lg" label="Invoiced" value="₩761,234,820" description="Settled ₩743,188,120"></u-info-field>
@@ -135,15 +130,21 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-info-field size="lg" label="Overdue" value="₩0" tone="negative" description="0 orders"></u-info-field>
           </u-info-section>
 
-          <div class="hs-table-card">
-            <div class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
+          <u-list-page appearance="card">
+            <u-input slot="filters" type="search" placeholder="Order, customer, product…" aria-label="Search orders"></u-input>
+            <u-select slot="filters" value="all" aria-label="Channel"><u-option value="all">Channel: all</u-option></u-select>
+            <u-select slot="filters" value="all" aria-label="Status"><u-option value="all">Status: all</u-option></u-select>
+            <u-button slot="filters" appearance="outlined">Filters · 1</u-button>
+            <u-button slot="filters" appearance="plain" style="margin-inline-start: auto">Save view</u-button>
+            <u-chip slot="applied" removable>Season: 2027</u-chip>
+            <div slot="toolbar" class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
               <span class="hs-table-toolbar__title">${this.selected.size ? `${this.selected.size} selected` : '4 orders'}</span>
               <div class="hs-table-toolbar__actions">
                 <u-button size="sm" appearance="outlined">Advance step</u-button>
                 <u-button size="sm" appearance="outlined">Print</u-button>
               </div>
             </div>
-            <table class="hs-table">
+            <table slot="view" class="hs-table">
               <thead>
                 <tr>
                   <th style="width:36px"><span class="guide-visually-hidden">Select</span></th><th>Order</th><th>Customer</th><th>Status</th><th>Due</th>
@@ -167,8 +168,8 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
                   </tr>`)}
               </tbody>
             </table>
-            <div class="hs-pager"><span>1–4 / 962</span><span><u-button size="sm" appearance="outlined">Previous</u-button> <u-button size="sm" appearance="outlined">Next</u-button></span></div>
-          </div>
+            <u-pagination slot="pager" size="sm" page-size="4" total-count="962" label="Orders pages"></u-pagination>
+          </u-list-page>
         </div>
         <p>
           Row actions are in the DOM for keyboard and assistive technology and appear on hover, focus or
