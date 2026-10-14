@@ -147,6 +147,31 @@ u-tag[size='sm'] {
   --tag-gap: 4px;
 }
 
+/* ── Field — a labelled field is a form row: 40px controls (the side-sheet and edit-form size; toolbars keep 32px
+ *    with unlabelled controls), the label at the label step in the weak colour, the help line in the weaker colour.
+ *    A control's own size wins (`size="sm"` / `"lg"` set the padding on the control itself). ── */
+u-field {
+  --u-field-padding-block: calc(8.5em / 14);   /* 14px: 21 + 17 + 2 = 40 — and with the density */
+}
+u-field::part(header) {
+  margin-bottom: 6px;
+  font-size: var(--u-text-label-size, 12px);
+}
+u-field::part(label) {
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--u-txt-color-weak);
+}
+u-field::part(footer) {
+  margin-top: 6px;
+  font-size: var(--u-text-caption-size, 12px);
+  line-height: 18px;
+  color: var(--u-txt-color-weaker);
+}
+u-field[invalid]::part(footer) {
+  color: var(--u-danger-color-strong);
+}
+
 /* ── Tab strip of links (saved views) — ink, not blue: the current view is ink text with an ink underline,
  *    at the dense text step. ── */
 u-tab-nav {

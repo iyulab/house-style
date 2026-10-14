@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`u-field` as the house form row** — 40px controls (the edit-form size, with the density), the label at the label
+  step in the weak colour, the help line in the weaker colour and the error in the danger colour. Needs
+  `@iyulab/components` 2.26 (the `header` · `label` · `footer` parts).
+
+### Deprecated
+
+- **`.hs-field` and its parts — use `<u-field label>`** (`@iyulab/components` 2.26): `__label` → `label`, `__required`
+  → `required`, `__help` → `description`, `__error` → `invalid` with `validation-message`. The component also names the
+  control it wraps (the class pattern relied on a wrapping `<label>`). Removed in 0.7.0.
+
+### Guide
+
+- The edit form's fields are `u-field`.
+
 ## [0.5.0] - 2026-10-14
 
 ### Added

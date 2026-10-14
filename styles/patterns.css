@@ -388,6 +388,10 @@ a.hs-card:hover,
   clear: both;
   margin-top: 0;
 }
+/* @deprecated Use `<u-field label>` (`@iyulab/components` 2.26) — `label`, `required`, `description` for the help line
+   and `invalid` + `validation-message` for the error; it names the control it wraps and fills the cell. The house
+   draws it this way (`components.css`: 40px controls, label and help steps). `.hs-field__label` · `__required` ·
+   `__help` · `__error` go with it. remove: 0.7.0 */
 .hs-field {
   display: grid;
   gap: 6px;

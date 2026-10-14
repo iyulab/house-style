@@ -16,6 +16,7 @@ import '@iyulab/components/dist/components/icon/UIcon.js';
 import '@iyulab/components/dist/components/tab/UTab.js';
 import '@iyulab/components/dist/components/tab-nav/UTabNav.js';
 import '@iyulab/components/dist/components/alert/UAlert.js';
+import '@iyulab/components/dist/components/field/UField.js';
 import { readToken } from '../internals/readToken.js';
 
 /**
@@ -92,7 +93,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           ${(['--hs-brand', '--hs-brand-soft', '--hs-brand-ink'] as const).map(name => html`
             <div class="hs-card">
               <div style="height:32px;border-radius:var(--u-radius-lg);background:var(${name});border:1px solid var(--u-border-color)"></div>
-              <p class="hs-field__help"><code>${name}</code> — <code>${readToken(name)}</code></p>
+              <p class="hs-muted"><code>${name}</code> — <code>${readToken(name)}</code></p>
             </div>`)}
         </div>
         <pre tabindex="0"><code>:root { --hs-brand: #c8161d; --hs-brand-soft: #fcebec; --hs-brand-ink: #a3121a; }
@@ -262,22 +263,22 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <fieldset class="hs-fieldset">
               <legend class="hs-fieldset__legend">Identity</legend>
               <div class="hs-grid-2">
-                <label class="hs-field"><span class="hs-field__label">Order number<span class="hs-field__required">*</span></span><u-input value="O-1043"></u-input></label>
-                <label class="hs-field"><span class="hs-field__label">Original number</span><u-input placeholder="None"></u-input></label>
+                <u-field label="Order number" required><u-input value="O-1043"></u-input></u-field>
+                <u-field label="Original number"><u-input placeholder="None"></u-input></u-field>
               </div>
             </fieldset>
             <fieldset class="hs-fieldset">
               <legend class="hs-fieldset__legend">Schedule</legend>
               <div class="hs-grid-2">
-                <label class="hs-field"><span class="hs-field__label">Order date</span><u-input value="2026-08-26"></u-input></label>
-                <label class="hs-field"><span class="hs-field__label">Payment due</span><u-input value="2027-02-28"></u-input><span class="hs-field__help">From the channel rule · editable</span></label>
+                <u-field label="Order date"><u-input value="2026-08-26"></u-input></u-field>
+                <u-field label="Payment due" description="From the channel rule · editable"><u-input value="2027-02-28"></u-input></u-field>
               </div>
             </fieldset>
             <fieldset class="hs-fieldset">
               <legend class="hs-fieldset__legend">Notes</legend>
               <div class="hs-grid-2">
-                <label class="hs-field"><span class="hs-field__label">Courier</span><u-input placeholder="Any"></u-input></label>
-                <label class="hs-field hs-span-all"><span class="hs-field__label">Delivery note</span><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></label>
+                <u-field label="Courier"><u-input placeholder="Any"></u-input></u-field>
+                <u-field class="hs-span-all" label="Delivery note"><u-textarea min-rows="3" placeholder="Shown to the courier"></u-textarea></u-field>
               </div>
             </fieldset>
           </div>
