@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.6.0] - 2026-10-14
 
 ### Added
 
@@ -40,9 +40,18 @@
   the link in `slot="actions"`; an untitled surface is `<u-card>`, or `<u-group-box flush>` when the content runs to
   the edge and holds a sticky footer (`u-card` clips its overflow). Removed in 0.7.0.
 
+### Removed
+
+- The 0.5.0 deprecations: `.hs-callout` and its parts (use `<u-alert inline open>`), `.hs-views` / `.hs-views__tab`
+  and `.hs-count` (use `<u-tab-nav>` with `<u-tab href count>`), a whole card as a link — `a.hs-card` and
+  `.hs-card--link` (use `<u-card href>`) — and `.hs-attr` (use `<u-tag size="sm" appearance="outlined">`).
+
 ### Guide
 
 - The edit form's fields are `u-field`.
+- The table toolbar is a `u-action-bar` with the title in `slot="summary"`; the raw table speaks `selection-change`, so
+  the toolbar turns into the bulk-action bar while a row is selected.
+- The brand swatches are `u-card`s and the edit form sits in a `u-group-box flush`.
 - The list screen is a `u-list-page appearance="card"` — filters, an applied chip, the toolbar, the table and a
   `u-pagination`.
 

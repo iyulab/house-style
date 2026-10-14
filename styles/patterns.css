@@ -35,63 +35,6 @@
 }
 
 
-/* ── Saved views — tabs above the filter bar, each with a count ─────────── */
-/* @deprecated Use `<u-tab-nav label>` with `<u-tab href count>` (`@iyulab/components` 2.25) — the same strip as a
-   navigation landmark of links: the current view is `aria-current="page"` (these tabs are URLs, so they are links,
-   not a tablist), each link is a Tab stop, and `count` is the quiet count. The house draws it this way
-   (`components.css`). `.hs-count` goes with it. remove: 0.6.0 */
-.hs-views {
-  display: flex;
-  gap: var(--u-space-2xs, 4px);
-  /* The base line is an inset shadow, not a border: a tab's 2px underline paints over it without the tab
-     reaching past the box — with a border and a -1px tab margin the scroll container overflowed by 1px and
-     drew a vertical scrollbar beside the tabs. */
-  box-shadow: inset 0 -1px 0 var(--u-border-color);
-  overflow-x: auto;
-}
-.hs-views__tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
-  border: 0;
-  border-bottom: 2px solid transparent;
-  background: none;
-  font: inherit;
-  font-size: var(--hs-text-dense-size, 13px);
-  line-height: 20px;
-  color: var(--u-txt-color-weak);
-  text-decoration: none;   /* a tab may be a link (`aria-current="page"`) */
-  white-space: nowrap;
-  cursor: pointer;
-}
-.hs-views__tab:hover {
-  color: var(--u-txt-color);
-}
-.hs-views__tab[aria-selected='true'],
-.hs-views__tab[aria-current='page'] {
-  color: var(--u-txt-color);
-  border-bottom-color: var(--u-txt-color);
-  font-weight: 600;
-}
-.hs-views__tab:focus-visible {
-  outline: 2px solid var(--u-focus-ring-color);
-  outline-offset: -2px;
-}
-.hs-count {
-  display: inline-block;
-  min-width: 20px;
-  padding: 0 6px;
-  border-radius: var(--u-radius-pill, 9999px);
-  background: var(--u-bg-color-raised);
-  color: var(--u-txt-color-weak);
-  font-size: var(--u-text-overline-size, 11px);
-  line-height: 16px;
-  font-weight: 500;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
 /* ── Filter bar — search · up to three key filters · "Filters" panel · applied chips ──
  * @deprecated Use `u-list-page` (`@iyulab/enterprise` 0.33): the search and filters in `slot="filters"` (the house
  * gives a search field 240–360px and centres the row — `components.css`), the applied chips (`u-chip removable`) in
@@ -296,17 +239,6 @@ tr[aria-selected='true'] .hs-row-actions {
   text-decoration: none;
 }
 .hs-card__link:hover { text-decoration: underline; }
-/* @deprecated A whole card as a link: use `<u-card href>` (`@iyulab/components` 2.25) — the outer box is the link,
-   the border carries hover and the card does not lift. remove: 0.6.0 */
-a.hs-card,
-.hs-card--link { cursor: pointer; transition: border-color 0.12s ease-out; }
-/* A whole card as a link reads as a card: ink text, no underline — the border carries hover. */
-a.hs-card { color: inherit; text-decoration: none; }
-a.hs-card:hover,
-.hs-card--link:hover { border-color: var(--u-border-color-strong); }
-@media (prefers-reduced-motion: reduce) {
-  a.hs-card, .hs-card--link { transition: none; }
-}
 
 /* Description list — label / value pairs inside a card. */
 .hs-dl {
@@ -343,38 +275,6 @@ a.hs-card:hover,
   gap: var(--u-space-lg, 16px);
   align-items: start;
 }
-
-/* ── Callout — a conclusion in the title, two lines of body at most ──────
- * @deprecated Use `<u-alert inline open>` (`@iyulab/components` 2.25) — `status` for the tone, `title` for the
- * conclusion, the body as content, actions in `slot="footer"`, and `slot="icon"` for a note's pencil; a note is a
- * neutral alert with `role="note"`. The house lays the footer out as the right-hand action column
- * (`components.css`). remove: 0.6.0
- * No thick coloured edge: an icon and a tint carry the tone. `--note` is a person's note
- * (a remark on a record), not a warning — it is neutral on purpose. */
-.hs-callout {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: var(--u-space-md, 12px);
-  align-items: start;
-  padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
-  border-radius: var(--u-radius-xl, 10px);
-  background: var(--u-bg-color-raised);
-  font-size: var(--hs-text-dense-size, 13px);
-  line-height: 20px;
-}
-.hs-callout__icon { color: var(--u-txt-color-weak); line-height: 20px; }
-.hs-callout__title { font-weight: 600; color: var(--u-txt-color); }
-.hs-callout__body { color: var(--u-txt-color-weak); }
-.hs-callout__actions { display: flex; gap: var(--u-space-sm, 8px); align-items: center; }
-.hs-callout--info { background: var(--u-info-bg-color); }
-.hs-callout--info .hs-callout__icon { color: var(--u-info-color-strong); }
-.hs-callout--success { background: var(--u-success-bg-color); }
-.hs-callout--success .hs-callout__icon { color: var(--u-success-color-strong); }
-.hs-callout--warning { background: var(--u-warning-bg-color); }
-.hs-callout--warning .hs-callout__icon { color: var(--u-warning-color-strong); }
-.hs-callout--danger { background: var(--u-danger-bg-color); }
-.hs-callout--danger .hs-callout__icon { color: var(--u-danger-color-strong); }
-.hs-callout--note { background: var(--u-bg-color-raised); }
 
 /* ── Form — label above, help below; sections instead of one long grid ── */
 .hs-fieldset {
@@ -464,22 +364,6 @@ a.hs-card:hover,
 
 
 /* ── Small marks ───────────────────────────────────────────────────────── */
-/* A quiet attribute label next to an identifier (not a status — no colour).
-   @deprecated Use `<u-tag size="sm" appearance="outlined">` (`@iyulab/components` 2.25). remove: 0.6.0 */
-.hs-attr {
-  display: inline-flex;
-  align-items: center;
-  height: 18px;
-  padding: 0 5px;
-  border: 1px solid var(--u-border-color);
-  border-radius: var(--u-radius-md, 4px);
-  font-size: var(--u-text-overline-size, 11px);
-  line-height: 16px;
-  font-weight: 500;
-  color: var(--u-txt-color-weak);
-  white-space: nowrap;
-  vertical-align: middle;
-}
 /* Days left: neutral, soon (warning), overdue (danger). */
 .hs-due {
   display: inline-flex;

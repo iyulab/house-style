@@ -35,13 +35,6 @@ test('a plain link takes the house link colour at zero specificity', () => {
   assert.equal(link.get('color'), 'var(--u-link-txt-color)');
 });
 
-test('a whole card as a link reads as a card, and a tab link has no underline', () => {
-  const card = rule(patterns, 'a.hs-card');
-  assert.equal(card?.get('color'), 'inherit');
-  assert.equal(card?.get('text-decoration'), 'none');
-  assert.equal(rule(patterns, '.hs-views__tab')?.get('text-decoration'), 'none');
-});
-
 test('one line separates the totals from the body', () => {
   assert.equal(rule(patterns, '.hs-table tfoot td')?.has('border-top'), false,
     'every totals row would get the line');
