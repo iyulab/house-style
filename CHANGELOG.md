@@ -12,6 +12,11 @@
   (`type="search"`) at 240–360px, and with `appearance="card"` a flat surface (10px radius) with a 48px toolbar and a
   quiet pager line (12px, weak, tabular). Needs `@iyulab/enterprise` 0.33.
 
+### Changed
+
+- Requires `@iyulab/components` 2.26.0 or later (peer range `^2.26.0`) — the `u-field` recipe styles its `header`,
+  `label` and `footer` parts.
+
 ### Deprecated
 
 - **`.hs-filter-bar` (and `__search` · `__end`) and `.hs-chips` — use `u-list-page`** (`@iyulab/enterprise` 0.33): the

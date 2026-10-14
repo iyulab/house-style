@@ -58,7 +58,7 @@
     "pretendard": "^1.3.9"
   },
   "peerDependencies": {
-    "@iyulab/components": "^2.25.0",
+    "@iyulab/components": "^2.26.0",
     "@iyulab/flex-table": ">=0.41.0",
     "@iyulab/modern-app": ">=0.39.0"
   },
@@ -71,9 +71,9 @@
     }
   },
   "devDependencies": {
-    "@iyulab/components": "^2.25.0",
+    "@iyulab/components": "^2.26.0",
     "@iyulab/data-components": "^0.49.0",
-    "@iyulab/enterprise": "^0.32.0",
+    "@iyulab/enterprise": "^0.33.0",
     "@iyulab/flex-table": "^0.67.0",
     "@iyulab/modern-app": "^0.54.0",
     "@iyulab/router": "^0.24.0",
