@@ -12,6 +12,12 @@
   (`type="search"`) at 240–360px, and with `appearance="card"` a flat surface (10px radius) with a 48px toolbar and a
   quiet pager line (12px, weak, tabular). Needs `@iyulab/enterprise` 0.33.
 
+- **The table toolbar as the bulk-action bar** — a 48px band above the rows; while rows are selected it takes the
+  primary tint, and its title (the count, or what the list holds) sits at the dense step, semibold, in ink. On a card
+  list page the toolbar row is a `u-action-bar` with the title in `slot="summary"`, and the tint follows the page's
+  `:state(selected)` (`@iyulab/enterprise` 0.34.1); `u-rich-table` gets the same look on its own toolbar and selection
+  bar (`@iyulab/data-components` 0.50).
+
 ### Changed
 
 - Requires `@iyulab/components` 2.26.0 or later (peer range `^2.26.0`) — the `u-field` recipe styles its `header`,
@@ -23,7 +29,10 @@
   search and filters in `slot="filters"`, the applied chips in `slot="applied"` (it folds when empty), `__end` →
   `margin-inline-start: auto` on the last filter. Removed in 0.7.0.
 - **`.hs-table-card` and `.hs-pager` — use `<u-list-page appearance="card">`** with `u-pagination` in `slot="pager"`.
-  `.hs-table-toolbar` stays for now. Removed in 0.7.0.
+  Removed in 0.7.0.
+- **`.hs-table-toolbar` (`--selected` · `__title` · `__actions`) — use `<u-action-bar slot="toolbar">`** on a card list
+  page, the title in `slot="summary"`; the selected tint follows the page's `:state(selected)`. `u-rich-table` styles
+  its own toolbar. Removed in 0.7.0.
 - **`.hs-field` and its parts — use `<u-field label>`** (`@iyulab/components` 2.26): `__label` → `label`, `__required`
   → `required`, `__help` → `description`, `__error` → `invalid` with `validation-message`. The component also names the
   control it wraps (the class pattern relied on a wrapping `<label>`). Removed in 0.7.0.

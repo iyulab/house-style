@@ -193,6 +193,38 @@ u-list-page[appearance='card']::part(pager) {
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Table toolbar — a 48px band above the rows; while rows are selected it is the bulk-action bar: the primary tint,
+ *    and its title (the count, or what the list holds) at the dense step, semibold, in ink. On a card list page the
+ *    toolbar row is a `u-action-bar` with its title in `slot="summary"`; the tint follows the page's
+ *    `:state(selected)` (the visible view's selection, `@iyulab/enterprise` 0.34). `u-rich-table` draws its own
+ *    toolbar and selection bar (`@iyulab/data-components` 0.50). ── */
+u-list-page[appearance='card'] > u-action-bar[slot='toolbar'] {
+  --action-bar-padding-inline: var(--u-space-md, 12px);
+  box-sizing: border-box;
+  min-height: 48px;
+  padding-block: var(--u-space-sm, 8px);
+}
+u-list-page[appearance='card'] > u-action-bar[slot='toolbar']::part(summary) {
+  font-size: var(--hs-text-dense-size, 13px);
+  font-weight: 600;
+  color: var(--u-txt-color);
+}
+u-list-page[appearance='card']:state(selected)::part(toolbar),
+u-rich-table:state(selected)::part(toolbar),
+u-rich-table:state(selected)::part(selection-bar) {
+  background-color: var(--u-primary-bg-color);
+}
+u-rich-table::part(toolbar),
+u-rich-table::part(selection-bar) {
+  box-sizing: border-box;
+  min-height: 48px;
+}
+u-rich-table::part(selection-info) {
+  font-size: var(--hs-text-dense-size, 13px);
+  font-weight: 600;
+  color: var(--u-txt-color);
+}
+
 /* ── Tab strip of links (saved views) — ink, not blue: the current view is ink text with an ink underline,
  *    at the dense text step. ── */
 u-tab-nav {

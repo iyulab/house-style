@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@iyulab/components": "^2.24.0",
-    "@iyulab/data-components": "^0.49.0",
-    "@iyulab/enterprise": "^0.33.0",
+    "@iyulab/data-components": "^0.50.0",
+    "@iyulab/enterprise": "^0.34.1",
     "@iyulab/flex-table": "^0.67.0",
     "@iyulab/house-style": "^0.5.0",
     "@iyulab/modern-app": "^0.54.0",

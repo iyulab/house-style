@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import '@iyulab/modern-app/dist/components/PageHeader.js';
@@ -47,6 +47,18 @@ export class ThemeSection extends LitElement {
     if (next.has(id)) next.delete(id);
     else next.add(id);
     this.selected = next;
+  }
+
+  /**
+   * The table speaks the list's view vocabulary — `selection-change {selectedIds}` — so the card list page knows a row is
+   * selected and its toolbar turns into the bulk-action bar (`u-list-page:state(selected)`). A `flex-table` or
+   * `u-rich-table` in `slot="view"` does this on its own.
+   */
+  protected updated(changed: PropertyValues) {
+    if (!changed.has('selected')) return;
+    this.querySelector('u-list-page > table[slot="view"]')?.dispatchEvent(new CustomEvent('selection-change', {
+      detail: { selectedIds: [...this.selected] }, bubbles: true, composed: true,
+    }));
   }
 
   render() {
@@ -137,13 +149,11 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-button slot="filters" appearance="outlined">Filters · 1</u-button>
             <u-button slot="filters" appearance="plain" style="margin-inline-start: auto">Save view</u-button>
             <u-chip slot="applied" removable>Season: 2027</u-chip>
-            <div slot="toolbar" class="hs-table-toolbar ${this.selected.size ? 'hs-table-toolbar--selected' : ''}">
-              <span class="hs-table-toolbar__title">${this.selected.size ? `${this.selected.size} selected` : '4 orders'}</span>
-              <div class="hs-table-toolbar__actions">
-                <u-button size="sm" appearance="outlined">Advance step</u-button>
-                <u-button size="sm" appearance="outlined">Print</u-button>
-              </div>
-            </div>
+            <u-action-bar slot="toolbar">
+              <span slot="summary">${this.selected.size ? `${this.selected.size} selected` : '4 orders'}</span>
+              <u-button size="sm" appearance="outlined">Advance step</u-button>
+              <u-button size="sm" appearance="outlined">Print</u-button>
+            </u-action-bar>
             <table slot="view" class="hs-table">
               <thead>
                 <tr>

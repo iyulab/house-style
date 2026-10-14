@@ -124,7 +124,10 @@
 /* ── Table card — toolbar · table · pager on one surface ────────────────
  * @deprecated `.hs-table-card` and `.hs-pager`: use `<u-list-page appearance="card">` (`@iyulab/enterprise` 0.33) —
  * the toolbar, view and pager regions on one surface with lines between them, and `u-pagination` in `slot="pager"`.
- * `.hs-table-toolbar` stays until the table toolbars expose a title and a selected state. remove: 0.7.0 */
+ * @deprecated `.hs-table-toolbar` (`--selected` · `__title` · `__actions`): on a card list page use
+ * `<u-action-bar slot="toolbar">` with the title in `slot="summary"` — the house recipe gives it the 48px band and the
+ * selected tint follows the page's `:state(selected)` (`@iyulab/enterprise` 0.34); `u-rich-table` styles its own toolbar
+ * (`@iyulab/data-components` 0.50). remove: 0.7.0 */
 .hs-table-card {
   background: var(--u-bg-color);
   border: 1px solid var(--u-border-color);
