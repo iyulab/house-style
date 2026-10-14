@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Guide
+
+- The reference app's orders list is a card list page: the toolbar says how many orders are selected and turns into
+  the bulk-action bar while they are, and the table draws no selection bar of its own (`hide-toolbar`,
+  `@iyulab/data-components` 0.51). «Cancel selected» acts only on the table view's selection.
+
 ## [0.6.0] - 2026-10-14
 
 ### Added

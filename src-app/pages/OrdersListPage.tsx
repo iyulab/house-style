@@ -60,8 +60,13 @@ export default function OrdersListPage() {
     setMessage(`Cancelled ${ids.length} order(s).`);
   }
 
+  // The selection lives on the table — hidden behind the cards view, it is not what the toolbar acts on.
+  const selecting = view === 'table' && selectedIds.length > 0;
+
   return (
-    <ListPage source={orders.source} view={view}>
+    // A card list page: toolbar, table and pager on one surface; while rows are selected the toolbar is the
+    // bulk-action bar (the house tints it from the page's `:state(selected)`) and its title says how many.
+    <ListPage source={orders.source} view={view} appearance="card">
       <PageHeader slot="header" title="Orders" subtitle={`${orders.totalCount} order(s)`} />
       <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" />
       <USelect slot="filters" label="Status" value={status} onChange={(e) => setStatus(String((e.target as USelectElement).value ?? ''))}>
@@ -72,13 +77,14 @@ export default function OrdersListPage() {
         <u-option value="cancelled">Cancelled</u-option>
       </USelect>
       <ActionBar slot="toolbar">
+        {selecting && <span slot="summary">{selectedIds.length} selected</span>}
         <UButton appearance="outlined" aria-pressed={view === 'cards'} onClick={() => setView(view === 'table' ? 'cards' : 'table')}>Cards</UButton>
         {/* Write actions follow the same permission the new-order route guards — hidden, not disabled: a read-only
             account has nothing to wait for. */}
         {canWrite && (
           <>
-            <UButton slot="danger" color="danger" appearance="outlined" disabled={selectedIds.length === 0} onClick={cancelSelected}>
-              Cancel selected ({selectedIds.length})
+            <UButton slot="danger" color="danger" appearance="outlined" disabled={!selecting} onClick={cancelSelected}>
+              Cancel selected
             </UButton>
             <UButton color="primary" onClick={() => setNewOrderOpen(true)}>New order</UButton>
             <UButton appearance="outlined" onClick={() => navigate(`${import.meta.env.BASE_URL}app/orders/new`)}>New order with items</UButton>
@@ -86,7 +92,7 @@ export default function OrdersListPage() {
         )}
       </ActionBar>
       {message && <UAlert slot="toolbar" open status="success">{message}</UAlert>}
-      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable={canWrite} hidePagination
+      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable={canWrite} hidePagination hideToolbar
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UDataViewReact slot="view" view-name="cards" hideToolbar
