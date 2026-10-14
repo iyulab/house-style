@@ -265,7 +265,10 @@ tr[aria-selected='true'] .hs-row-actions {
   .hs-row-actions { display: none; }
 }
 
-/* ── Card — a titled surface for detail panels and dashboards ─────────── */
+/* ── Card — a titled surface for detail panels and dashboards ───────────
+ * @deprecated `.hs-card` (`__head` · `__title` · `__link`): a titled card is `<u-group-box title>` (`@iyulab/modern-app`)
+ * with the link in `slot="actions"`; an untitled surface is `<u-card>` (`@iyulab/components`), or `<u-group-box flush>`
+ * when its content runs to the edge and holds a sticky footer (`u-card` clips its overflow). remove: 0.7.0 */
 .hs-card {
   background: var(--u-bg-color);
   border: 1px solid var(--u-border-color);

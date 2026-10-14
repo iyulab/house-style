@@ -36,6 +36,9 @@
 - **`.hs-field` and its parts — use `<u-field label>`** (`@iyulab/components` 2.26): `__label` → `label`, `__required`
   → `required`, `__help` → `description`, `__error` → `invalid` with `validation-message`. The component also names the
   control it wraps (the class pattern relied on a wrapping `<label>`). Removed in 0.7.0.
+- **`.hs-card` (`__head` · `__title` · `__link`) — a titled card is `<u-group-box title>`** (`@iyulab/modern-app`) with
+  the link in `slot="actions"`; an untitled surface is `<u-card>`, or `<u-group-box flush>` when the content runs to
+  the edge and holds a sticky footer (`u-card` clips its overflow). Removed in 0.7.0.
 
 ### Guide
 

@@ -6,6 +6,7 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/modern-app/dist/components/ActionBar.js';
+import '@iyulab/components/dist/components/card/UCard.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
@@ -106,10 +107,10 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
         </p>
         <div class="hs-grid-3">
           ${(['--hs-brand', '--hs-brand-soft', '--hs-brand-ink'] as const).map(name => html`
-            <div class="hs-card">
+            <u-card shadowless>
               <div style="height:32px;border-radius:var(--u-radius-lg);background:var(${name});border:1px solid var(--u-border-color)"></div>
               <p class="hs-muted"><code>${name}</code> — <code>${readToken(name)}</code></p>
-            </div>`)}
+            </u-card>`)}
         </div>
         <pre tabindex="0"><code>:root { --hs-brand: #c8161d; --hs-brand-soft: #fcebec; --hs-brand-ink: #a3121a; }
 :root[theme="dark"] { --hs-brand-soft: #3a1a1c; --hs-brand-ink: #ff9a9e; }</code></pre>
@@ -269,7 +270,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
       </u-group-box>
 
       <u-group-box level="2" title="Edit form — sections and a pinned footer">
-        <div class="hs-card" style="padding:0;max-width:560px">
+        <u-group-box flush style="max-width:560px">
           <div style="padding:var(--u-space-xl)">
             <fieldset class="hs-fieldset">
               <legend class="hs-fieldset__legend">Identity</legend>
@@ -298,7 +299,7 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
             <u-button appearance="outlined" size="lg">Cancel</u-button>
             <u-button size="lg">Save</u-button>
           </u-action-bar>
-        </div>
+        </u-group-box>
         <p>
           Label above, help below, two or three columns — never four. Fields that are computed say where
           the value came from. Save stays disabled until something changes, and the footer names what did.
