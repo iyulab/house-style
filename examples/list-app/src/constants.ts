@@ -20,8 +20,8 @@ const STATUS_TAG_COLOR: Record<string, 'neutral' | 'info' | 'success'> = {
 export function renderStatusTag(value: unknown): HTMLElement {
   const status = String(value);
   const tag = document.createElement('u-tag');
-  tag.setAttribute('variant', 'filled');
   tag.setAttribute('color', STATUS_TAG_COLOR[status] ?? 'neutral');
+  tag.setAttribute('dot', '');
   tag.textContent = status.charAt(0).toUpperCase() + status.slice(1);
   return tag;
 }
