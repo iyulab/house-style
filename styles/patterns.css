@@ -10,7 +10,7 @@
  * Prefix `hs-`. Everything sits in `@layer iyu.house`; an application rule always wins.
  *
  * Screen recipes (the guide shows each one):
- *   list   = u-page-header → .hs-filter-bar → u-info-section layout="strip" → .hs-table-card (toolbar · table · pager)
+ *   list   = u-page-header → u-list-page (filters · applied · appearance="card": toolbar · table · pager)
  *   detail = side sheet: head (id · status · one primary action) → steps → u-info-section strip → tabs → cards
  *   edit   = side sheet with .hs-fieldset sections and a pinned u-action-bar (summary slot)
  *
@@ -34,93 +34,6 @@
   min-width: 0;
 }
 
-
-/* ── Filter bar — search · up to three key filters · "Filters" panel · applied chips ──
- * @deprecated Use `u-list-page` (`@iyulab/enterprise` 0.33): the search and filters in `slot="filters"` (the house
- * gives a search field 240–360px and centres the row — `components.css`), the applied chips (`u-chip removable`) in
- * `slot="applied"`, which folds when empty. `__end` → `style="margin-inline-start: auto"` on the last filter.
- * `.hs-chips` goes with it. remove: 0.7.0 */
-.hs-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--u-space-sm, 8px);
-}
-.hs-filter-bar__search {
-  flex: 0 1 360px;
-  min-width: 240px;
-}
-.hs-filter-bar__end {
-  margin-inline-start: auto;
-}
-.hs-chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--u-space-xs, 6px);
-}
-.hs-chips:empty {
-  display: none;
-}
-
-
-/* ── Table card — toolbar · table · pager on one surface ────────────────
- * @deprecated `.hs-table-card` and `.hs-pager`: use `<u-list-page appearance="card">` (`@iyulab/enterprise` 0.33) —
- * the toolbar, view and pager regions on one surface with lines between them, and `u-pagination` in `slot="pager"`.
- * @deprecated `.hs-table-toolbar` (`--selected` · `__title` · `__actions`): on a card list page use
- * `<u-action-bar slot="toolbar">` with the title in `slot="summary"` — the house recipe gives it the 48px band and the
- * selected tint follows the page's `:state(selected)` (`@iyulab/enterprise` 0.34); `u-rich-table` styles its own toolbar
- * (`@iyulab/data-components` 0.50). remove: 0.7.0 */
-.hs-table-card {
-  background: var(--u-bg-color);
-  border: 1px solid var(--u-border-color);
-  border-radius: var(--u-radius-xl, 10px);
-  overflow: hidden;
-  min-width: 0;
-}
-.hs-table-card > flex-table {
-  border: 0;
-}
-.hs-table-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--u-space-sm, 8px);
-  min-height: 48px;
-  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
-  border-bottom: 1px solid var(--u-border-color);
-  flex-wrap: wrap;
-}
-/* With a selection the toolbar becomes the bulk-action bar. */
-.hs-table-toolbar[data-selected],
-.hs-table-toolbar--selected {
-  background: var(--u-primary-bg-color);
-}
-/* In a `u-list-page appearance="card"` toolbar the region draws the line below. */
-u-list-page > .hs-table-toolbar {
-  border-bottom: 0;
-}
-.hs-table-toolbar__title {
-  font-size: var(--hs-text-dense-size, 13px);
-  font-weight: 600;
-}
-.hs-table-toolbar__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--u-space-sm, 8px);
-  flex-wrap: wrap;
-}
-.hs-pager {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--u-space-sm, 8px);
-  padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
-  border-top: 1px solid var(--u-border-color);
-  font-size: var(--u-text-label-size, 12px);
-  color: var(--u-txt-color-weak);
-  font-variant-numeric: tabular-nums;
-}
 
 /* ── Plain table — for small server-rendered tables that do not need a grid ── */
 .hs-table {
@@ -208,38 +121,6 @@ tr[aria-selected='true'] .hs-row-actions {
   .hs-row-actions { display: none; }
 }
 
-/* ── Card — a titled surface for detail panels and dashboards ───────────
- * @deprecated `.hs-card` (`__head` · `__title` · `__link`): a titled card is `<u-group-box title>` (`@iyulab/modern-app`)
- * with the link in `slot="actions"`; an untitled surface is `<u-card>` (`@iyulab/components`), or `<u-group-box flush>`
- * when its content runs to the edge and holds a sticky footer (`u-card` clips its overflow). remove: 0.7.0 */
-.hs-card {
-  background: var(--u-bg-color);
-  border: 1px solid var(--u-border-color);
-  border-radius: var(--u-radius-xl, 10px);
-  padding: var(--u-space-lg, 16px);
-  min-width: 0;
-}
-.hs-card__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--u-space-sm, 8px);
-  margin-bottom: var(--u-space-md, 12px);
-}
-.hs-card__title {
-  margin: 0;
-  font-size: var(--u-text-subtitle-size, 15px);
-  line-height: 22px;
-  font-weight: 600;
-}
-.hs-card__link {
-  font-size: var(--u-text-label-size, 12px);
-  font-weight: 500;
-  color: var(--u-link-txt-color);
-  text-decoration: none;
-}
-.hs-card__link:hover { text-decoration: underline; }
-
 /* Description list — label / value pairs inside a card. */
 .hs-dl {
   display: grid;
@@ -304,45 +185,6 @@ tr[aria-selected='true'] .hs-row-actions {
 .hs-fieldset__legend + * {
   clear: both;
   margin-top: 0;
-}
-/* @deprecated Use `<u-field label>` (`@iyulab/components` 2.26) — `label`, `required`, `description` for the help line
-   and `invalid` + `validation-message` for the error; it names the control it wraps and fills the cell. The house
-   draws it this way (`components.css`: 40px controls, label and help steps). `.hs-field__label` · `__required` ·
-   `__help` · `__error` go with it. remove: 0.7.0 */
-.hs-field {
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  min-width: 0;
-}
-.hs-field__label {
-  font-size: var(--u-text-label-size, 12px);
-  line-height: 16px;
-  font-weight: 500;
-  color: var(--u-txt-color-weak);
-}
-.hs-field__required {
-  margin-inline-start: 2px;
-  color: var(--u-danger-color-strong);
-}
-.hs-field__help {
-  font-size: var(--u-text-caption-size, 12px);
-  line-height: 18px;
-  color: var(--u-txt-color-weaker);
-}
-.hs-field__error {
-  font-size: var(--u-text-caption-size, 12px);
-  line-height: 18px;
-  color: var(--u-danger-color-strong);
-}
-/* Form fields are 40px (the side-sheet and edit-form size); toolbars keep 32px. */
-.hs-field {
-  --u-field-padding-block: calc(8.5em / 14);   /* 14px: 21 + 17 + 2 = 40 — and with the density */
-}
-.hs-field :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker) {
-  width: 100%;
-  --u-input-display: block;
-  --u-select-display: block;
 }
 /* Two or three columns — never four or more in a row. A column is at least half of a 480px row, so
  * both grids drop to one column below 480px and .hs-grid-3 shows two between 480px and 728px. No size

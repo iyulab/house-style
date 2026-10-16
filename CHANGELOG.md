@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.7.0] - 2026-10-16
+
+### Removed
+
+- The patterns deprecated in 0.6.0, each replaced by a component:
+  - `.hs-filter-bar` (`__search` · `__end`) and `.hs-chips` → `u-list-page` `slot="filters"` / `slot="applied"` (`@iyulab/enterprise`).
+  - `.hs-table-card` and `.hs-pager` → `<u-list-page appearance="card">` with `u-pagination` in `slot="pager"`.
+  - `.hs-table-toolbar` (`--selected` · `__title` · `__actions`) → `<u-action-bar slot="toolbar">` with the title in `slot="summary"`.
+  - `.hs-card` (`__head` · `__title` · `__link`) → `<u-group-box title>` (`@iyulab/modern-app`) or `<u-card>` (`@iyulab/components`).
+  - `.hs-field` (`__label` · `__required` · `__help` · `__error`) → `<u-field label>` (`@iyulab/components`).
+
+### Fixed
+
+- `u-list-page` filters keep the page’s bottom alignment. The house rule set `align-items: center` on the filters row, so
+  a button next to a search field with a visible label stood level with the middle of «label + field» — about 10px above
+  the field.
+
 ## [0.6.1] - 2026-10-14
 
 ### Fixed

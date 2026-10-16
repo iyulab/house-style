@@ -4,6 +4,7 @@
 //   application rule still win.
 // ⑵ Links the patterns style as something else (a card, a tab) do not inherit the link look.
 // ⑶ A table's totals are separated from the body by one line, not one per totals row.
+// ⑷ The list page's filters row keeps the page's bottom alignment.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -64,4 +65,12 @@ test('the 0.4.0 deprecations are gone', () => {
   for (const cls of ['.hs-page-head', '.hs-kbd', '.hs-stats', '.hs-stat', '.hs-sheet-footer']) {
     assert.equal(rule(patterns, cls), undefined, `${cls} was removed in 0.5.0`);
   }
+});
+
+// ⑷ The list page's filters row keeps the page's own bottom alignment — a field with a visible label stays level with
+//   the buttons beside it. Centring it put a button level with the middle of «label + field», about 10px above the field.
+test('the list page filters row does not override the page alignment', () => {
+  const filters = rule(components, 'u-list-page::part(filters)');
+  assert.ok(filters, 'components.css styles the filters row');
+  assert.equal(filters.has('align-items'), false, 'the page aligns the row to the bottom (`flex-end`)');
 });

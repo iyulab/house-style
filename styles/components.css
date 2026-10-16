@@ -172,11 +172,10 @@ u-field[invalid]::part(footer) {
   color: var(--u-danger-color-strong);
 }
 
-/* ── List page (`@iyulab/enterprise`) — the list screen: filters on one centred row with an 8px gap and a search field
- *    that takes 240–360px, applied chips below, and with `appearance="card"` toolbar · table · pager on one flat
+/* ── List page (`@iyulab/enterprise`) — the list screen: filters on one row with an 8px gap, bottom-aligned (the page’s
+ *    own alignment — a labelled field’s input stays level with the buttons beside it), a search field that takes 240–360px, applied chips below, and with `appearance="card"` toolbar · table · pager on one flat
  *    surface (the toolbar row draws its own 48px band, a quiet pager line). ── */
 u-list-page::part(filters) {
-  align-items: center;
   gap: var(--u-space-sm, 8px);
 }
 u-list-page > u-input[slot='filters'][type='search'] {
