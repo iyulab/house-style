@@ -36,7 +36,7 @@ so its preflight would beat the theme; `tailwind.css` imports the theme into Tai
 |---|---|
 | `styles/index.css` (package root) | everything below plus Pretendard — for apps without Tailwind |
 | `styles/theme.css` | the theme without fonts (bring your own face) |
-| `styles/tokens.css` | house values for the `--u-*` token axes, light and dark; brand tokens `--hs-brand*` |
+| `styles/tokens.css` | the presets (`cool` · `warm` · `contrast`, light and dark) for the `--u-*` token axes, the seeds `--hs-accent` · `--hs-secondary` and their derived steps, and the house scale |
 | `styles/components.css` | the document flow (body text, `h1`–`h6`, block gaps, code spans, native control and scrollbar colours) and sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
 | `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
 | `styles/tailwind.css` | the Tailwind v4 entry: fonts + theme (in Tailwind's `components` layer) + role utilities — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
@@ -56,30 +56,46 @@ Requires `@iyulab/components` 2.0 or later (the release that put its defaults in
 Because the application is unlayered, a plain `:root { … }` rule overrides the theme — no
 specificity tricks, no load-order rules. Scope a mode-specific value with `:root[theme="dark"]`.
 
-### Brand it
+### Palette — seeds from the app, balance from a preset
 
-The house is neutral on purpose. An application sets its identity colour with three tokens and
-keeps it out of buttons and warnings (a red brand next to a red "danger" reads as one colour):
+The application decides its colours; the house decides how the screen is balanced around them.
+
+**Seeds.** Two colours on `:root`. Every step the components need is derived from them — a fill that white text
+can sit on, a soft tint (the current navigation item, a selected row), a readable ink (links, the current tab),
+and the dark-mode steps:
 
 ```css
 :root {
-  --hs-brand: #c8161d;        /* logo mark */
-  --hs-brand-soft: #fcebec;   /* current navigation item */
-  --hs-brand-ink: #a3121a;    /* its text */
-}
-:root[theme="dark"] {
-  --hs-brand-soft: #3a1a1c;
-  --hs-brand-ink: #ff9a9e;
+  --hs-accent: #c8161d;      /* identity: the main action, the current item, links, focus */
+  --hs-secondary: #0f766e;   /* a second emphasis: color="secondary", the second chart series */
 }
 ```
 
-Everything else — warm-grey neutrals, the ink primary action, blue for links and focus, status
-tints, the 22/18/15/14/13/12/11 type ladder, 28/32/40 controls, 40px table rows — comes from the
-theme and can be overridden token by token.
+A derivation cannot promise contrast for every seed (a pale yellow cannot carry white text). Each derived step is
+its own token — `--hs-accent-fill` · `--hs-accent-contrast` · `--hs-accent-soft` · `--hs-accent-ink` (and the same
+for `--hs-secondary`) — so an application overrides only the step its seed defeats. Set seeds on `:root`: a step
+derived there does not follow a seed set further down the tree. Status colours (info · success · warning · danger)
+never follow the seeds, so a red brand and «danger» stay two colours.
+
+**Presets.** The balance of the whole screen — the temperature of the neutrals, the distance between canvas,
+surface, lines and text, whether the main action is the accent or ink, and how dark the shell is. Each has a light
+and a dark side (`theme="dark"`):
+
+| `<html hs-palette="…">` | Neutrals | Main action | Sidebar | Current tab |
+|---|---|---|---|---|
+| *(none)* `cool` | cool grey | accent fill | light | accent |
+| `warm` | warm grey | ink | light, neutral current item | ink |
+| `contrast` | cool grey | accent fill | dark | accent |
+
+One filled button per view under every preset — the rest are outlined, plain or in a menu.
+
+**Fixed by the house** (token by token overridable): the 24/18/15/14/13/12/11 type ladder in Pretendard,
+32/36/40 controls, 8px controls and menu items, 10px cards, pill status tags, 44px table rows (36px compact),
+a 240px sidebar of 38px rows.
 
 The type ladder is the `--u-text-*-size` steps plus two house steps derived from them —
 `--hs-text-dense-size` (between body and label: table cells, definition lists, callouts) and
-`--hs-text-hero-size` (display + 6px: a headline figure). Every pattern reads a step, so rescaling the
+`--hs-text-hero-size` (display + 4px: a headline figure). Every pattern reads a step, so rescaling the
 ladder (a larger mode, a product system) carries the patterns along.
 
 ### Text outside components

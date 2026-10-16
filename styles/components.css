@@ -93,25 +93,28 @@
   color: var(--u-link-txt-color);
 }
 
-/* ── Button — 28 / 32 / 40, medium weight ─────────────────────────────── *
+/* ── Button — 32 / 36 / 40, semibold ──────────────────────────────────── *
  * Height follows the components' own formula (1.5em line + 2 × padding + 2px border), so
  * these are padding values, not fixed heights: text and icon-only buttons stay equal.
- * The font sizes are terms of that height formula (the control ladder 28/32/40), not steps of
+ * The font sizes are terms of that height formula (the control ladder 32/36/40), not steps of
  * the text ladder — tying them to `--u-text-*` would change control heights whenever the text
  * ladder is rescaled. They are steps of the control density instead (`--u-density`, the
- * components' size axis): at the default 14px they are 12 / 13 / 14 and the heights 28/32/40;
+ * components' size axis): at the default 14px they are 12 / 14 / 14 and the heights 32/36/40;
  * a host that raises the density (a field or touch mode) grows all three together and in order.
- * Padding is in em for the same reason — the n/13, n/12, n/14 factors give the px values at the
+ * Padding is in em for the same reason — the n/12 and n/14 factors give the px values at the
  * default density exactly. (sm takes the components' own size: density × 6/7.)            */
+u-button {
+  font-weight: 600;
+}
 u-button:not([size]),
 u-button[size='md'] {
-  font-size: calc(var(--u-density, 14px) * 13 / 14);
-  --btn-padding-block: calc(5.25em / 13);   /* 13px: 19.5 + 10.5 + 2 = 32 */
-  --btn-padding-inline: calc(12em / 13);
+  font-size: var(--u-density, 14px);
+  --btn-padding-block: calc(6.5em / 14);    /* 14px: 21 + 13 + 2 = 36 */
+  --btn-padding-inline: calc(14em / 14);
 }
 u-button[size='sm'] {
-  --btn-padding-block: calc(4em / 12);      /* 12px: 18 + 8 + 2 = 28 */
-  --btn-padding-inline: calc(8em / 12);
+  --btn-padding-block: calc(6em / 12);      /* 12px: 18 + 12 + 2 = 32 */
+  --btn-padding-inline: calc(10em / 12);
 }
 u-button[size='lg'] {
   font-size: var(--u-density, 14px);
@@ -122,20 +125,21 @@ u-button[appearance='link'] {
   --btn-padding-inline: 0;
 }
 
-/* ── Text fields — the same three heights as buttons: 28 / 32 / 40.
+/* ── Text fields — the same three heights as buttons: 32 / 36 / 40.
  *    (Components 2.0 renders fields at 14px by default, so a field no longer grows with the
  *    surrounding text; the house sets the box padding per size.) ── */
 :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='sm'] {
-  --u-field-padding-block: calc(4em / 12);     /* 12px: 18 + 8 + 2 = 28 */
+  --u-field-padding-block: calc(6em / 12);     /* 12px: 18 + 12 + 2 = 32 */
 }
 :is(u-input, u-select, u-textarea, u-date-picker, u-date-range-picker)[size='lg'] {
   font-size: var(--u-density, 14px);           /* with the density, like md — the step is the padding */
   --u-field-padding-block: calc(8.5em / 14);   /* 14px: 21 + 17 + 2 = 40 */
 }
 
-/* ── Tag — 22px labels (12px text · 1px block padding · hairline) to sit inside 40px rows.
+/* ── Tag — 22px pills (12px text · 1px block padding · hairline) to sit inside 44px rows.
  *    A status label is the default `soft` appearance (tint, no outline) with `dot`. ── */
 u-tag {
+  border-radius: var(--u-radius-pill, 9999px);
   --tag-padding-block: 1px;
   --tag-padding-inline: 8px;
   --tag-gap: 5px;
@@ -147,7 +151,7 @@ u-tag[size='sm'] {
   --tag-gap: 4px;
 }
 
-/* ── Field — a labelled field is a form row: 40px controls (the side-sheet and edit-form size; toolbars keep 32px
+/* ── Field — a labelled field is a form row: 40px controls (the side-sheet and edit-form size; toolbars keep 36px
  *    with unlabelled controls), the label at the label step in the weak colour, the help line in the weaker colour.
  *    A control's own size wins (`size="sm"` / `"lg"` set the padding on the control itself). ── */
 u-field {
@@ -224,13 +228,21 @@ u-rich-table::part(selection-info) {
   color: var(--u-txt-color);
 }
 
-/* ── Tab strip of links (saved views) — ink, not blue: the current view is ink text with an ink underline,
- *    at the dense text step. ── */
+/* ── Tabs — the current tab is the preset's tab colour (the accent ink; ink under `warm`) with a 2px bar, at the
+ *    body step, 10px × 12px; the others stay in the weak ink. The same for a strip of links (saved views) and a tab
+ *    panel. ── */
 u-tab-nav {
-  --tab-nav-color: var(--u-txt-color);
-  font-size: var(--hs-text-dense-size, 13px);
+  --tab-nav-color: var(--hs-tab-current-color);
 }
-u-tab-nav u-tab[active] {
+u-tab-panel {
+  --tab-panel-color: var(--hs-tab-current-color);
+}
+:is(u-tab-nav, u-tab-panel) u-tab {
+  font-size: var(--u-text-body-size, 14px);
+  --tab-padding-block: 10px;
+  --tab-padding-inline: 12px;
+}
+:is(u-tab-nav, u-tab-panel) u-tab[active] {
   font-weight: 600;
 }
 
@@ -282,15 +294,15 @@ u-drawer::part(body) {
   scrollbar-color: var(--u-border-color-strong) transparent;
 }
 
-/* ── Data table (`@iyulab/flex-table`) — 40px rows, 13px cells, quiet header,
+/* ── Data table (`@iyulab/flex-table`) — 44px rows, body-size cells, a quiet 13px semibold header,
  *    no zebra (hover and selection carry the row), tabular figures. ──────── */
 flex-table {
   --ft-font-family: var(--u-font-base);
-  --ft-font-size: var(--hs-text-dense-size, 13px);
+  --ft-font-size: var(--u-text-body-size, 14px);
   --ft-row-height: var(--hs-row);
   --ft-cell-padding-inline: 12px;
-  --ft-header-font-size: var(--u-text-label-size, 12px);
-  --ft-header-font-weight: 500;
+  --ft-header-font-size: var(--hs-text-dense-size, 13px);
+  --ft-header-font-weight: 600;
   --ft-header-text-color: var(--u-txt-color-weak);
   --ft-header-bg: var(--u-bg-color-raised);
   --ft-row-odd-bg: var(--u-bg-color);
@@ -317,6 +329,28 @@ u-page-header::part(subtitle) {
  *    (The page already sits on `--u-canvas-bg-color`; padding is `--app-main-padding`.) ── */
 u-sidebar-layout::part(sidebar) {
   border-inline-end: 1px solid var(--u-border-color);
+}
+/* The `contrast` preset's dark shell — the sidebar re-scopes the neutral roles to the shell values, so its links,
+ * groups, section titles and any menu it opens read as one dark surface (custom properties inherit through the
+ * shadow tree). The light presets leave the sidebar on the page's own roles. */
+:root[hs-palette='contrast'] u-sidebar-layout::part(sidebar) {
+  --u-bg-color: var(--hs-shell-bg);
+  --u-panel-bg-color: var(--hs-shell-raised);
+  --u-input-bg-color: var(--hs-shell-raised);
+  --u-bg-color-raised: var(--hs-shell-raised);
+  --u-bg-color-hover: var(--hs-shell-hover);
+  --u-bg-color-active: var(--hs-shell-active);
+  --u-border-color: var(--hs-shell-line);
+  --u-border-color-weak: var(--hs-shell-line);
+  --u-txt-color: var(--hs-shell-ink);
+  --u-txt-color-hover: var(--hs-shell-ink);
+  --u-txt-color-active: var(--hs-shell-ink);
+  --u-txt-color-weak: var(--hs-shell-ink-weak);
+  --u-txt-color-weaker: var(--hs-shell-ink-weaker);
+  --u-icon-color: var(--hs-shell-ink-weak);
+  --u-icon-color-hover: var(--hs-shell-ink);
+  --u-icon-color-active: var(--hs-shell-ink);
+  border-inline-end-color: var(--hs-shell-line);
 }
 @media print {
   u-sidebar-layout::part(main) {

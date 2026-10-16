@@ -1,74 +1,76 @@
 // House tokens — contract tests (node --test, no dependencies).
 //
-// ⑴ Every colour the light block sets is also set by the dark block. The house layer sits
-//   above the built-in defaults, so a light value the dark block forgets beats the built-in
-//   dark value — it leaks into dark mode silently.
+// Every check runs for each preset (`cool` · `warm` · `contrast`) in light and dark, with the colour expressions
+// resolved the way a browser does (tests/lib/css-color.mjs) — derived steps are measured, not assumed.
+//
+// ⑴ Every colour a preset's light block sets is also set by its dark block. The house layer sits above the built-in
+//   defaults, so a light value the dark block forgets beats the built-in dark value — it leaks into dark mode silently.
 // ⑵ Contrast floors for the pairs the theme promises (WCAG 2.x relative luminance).
-// ⑵′ Perception floors for state and depth steps (OKLab lightness difference) — a quiet theme
-//    must still let a hover, a press, a selection and a surface step be seen.
+// ⑵′ Perception floors for state and depth steps (OKLab lightness difference) — a quiet theme must still let a hover,
+//    a press, a selection and a surface step be seen.
 // ⑶ The sheet declares the shared layer order and keeps everything inside `iyu.house`.
+// ⑷ The seed derivations hold for a range of brand seeds, not only the default.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { blocks, cascade, color, contrast, oklabL, deltaE, rgbToHex } from './lib/css-color.mjs';
 
-const css = readFileSync(fileURLToPath(new URL('../styles/tokens.css', import.meta.url)), 'utf8')
-  .replace(/\/\*[\s\S]*?\*\//g, '');
+const source = readFileSync(fileURLToPath(new URL('../styles/tokens.css', import.meta.url)), 'utf8');
+const css = source.replace(/\/\*[\s\S]*?\*\//g, '');
+const all = blocks(source);
 
-/** Top-level rule bodies inside the layer, keyed by selector (first occurrence of each). */
-function blocks(source) {
-  const inner = source.slice(source.indexOf('@layer iyu.house {') + '@layer iyu.house {'.length);
-  const out = [];
-  const re = /([^{}]+)\{([^{}]*)\}/g;
-  let m;
-  while ((m = re.exec(inner))) out.push({ selector: m[1].trim(), body: m[2] });
-  return out;
-}
-function decls(body) {
-  const map = new Map();
-  for (const m of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) map.set(m[1], m[2].trim());
-  return map;
-}
+const ROOT = ':root';
+const DARK = ':root[theme="dark"]';
+const pal = (p) => `:root[hs-palette="${p}"]`;
+const palDark = (p) => `:root[hs-palette="${p}"][theme="dark"]`;
 
-const all = blocks(css);
-const light = decls(all.find(b => b.selector === ':root').body);
-const dark = decls(all.find(b => b.selector === ':root[theme="dark"]').body);
-const scale = decls(all.filter(b => b.selector === ':root').slice(1).map(b => b.body).join('\n'));
+/** Selector sets per preset × mode, in cascade order. */
+const MODES = {
+  'cool light': [ROOT],
+  'cool dark': [ROOT, DARK],
+  'warm light': [ROOT, pal('warm')],
+  'warm dark': [ROOT, DARK, pal('warm'), palDark('warm')],
+  'contrast light': [ROOT, pal('contrast')],
+  'contrast dark': [ROOT, DARK, pal('contrast'), palDark('contrast')],
+};
+const maps = Object.fromEntries(Object.entries(MODES).map(([k, sel]) => [k, cascade(all, sel)]));
 
+const block = (selector) => all.find(b => b.selector === selector)?.decls ?? new Map();
 const isLiteralColour = v => /^#|^rgba?\(/.test(v);
+/** The seeds are the application's choice and the same in both modes — the dark side derives from them. */
+const SEED = /^--hs-(accent|secondary)$/;
 
 test('the sheet declares the shared layer order and wraps everything in iyu.house', () => {
   assert.match(css, /^\s*@layer iyu\.base, iyu\.house;/m);
   assert.equal(css.match(/@layer iyu\.house \{/g)?.length, 1);
 });
 
-test('🔴every literal colour set in light is also set in dark (no light value leaks into dark)', () => {
-  const missing = [...light].filter(([k, v]) => isLiteralColour(v) && !dark.has(k)).map(([k]) => k);
-  assert.deepEqual(missing, []);
+for (const [name, light, dark] of [['cool', ROOT, DARK], ['warm', pal('warm'), palDark('warm')], ['contrast', pal('contrast'), palDark('contrast')]]) {
+  test(`🔴${name}: every literal colour set in light is also set in dark (no light value leaks into dark)`, () => {
+    const d = block(dark);
+    const missing = [...block(light)].filter(([k, v]) => isLiteralColour(v) && !SEED.test(k) && !d.has(k)).map(([k]) => k);
+    assert.deepEqual(missing, []);
+  });
+}
+
+test('🔴the light seed derivations all have a dark form', () => {
+  const derived = [...block(ROOT).keys()].filter(k => /^--hs-(accent|secondary)-/.test(k));
+  assert.ok(derived.length >= 8, derived.join(' '));
+  const d = block(DARK);
+  assert.deepEqual(derived.filter(k => !d.has(k)), []);
 });
 
 test('the scale block holds no colours (shape and type are mode-independent)', () => {
-  const colours = [...scale].filter(([, v]) => isLiteralColour(v)).map(([k]) => k);
-  assert.deepEqual(colours, []);
+  const scale = all.filter(b => b.selector === ROOT)[1]?.decls;
+  assert.ok(scale, 'a second :root block holds the scale');
+  assert.deepEqual([...scale].filter(([, v]) => isLiteralColour(v)).map(([k]) => k), []);
 });
 
 // ── contrast ──────────────────────────────────────────────────────────────
-function rgb(hex) {
-  const h = hex.replace('#', '');
-  return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
-}
-function luminance(hex) {
-  const [r, g, b] = rgb(hex).map(c => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-function contrast(a, b) {
-  const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p);
-  return (x + 0.05) / (y + 0.05);
-}
-
 const TEXT = 4.5;
 const GRAPHIC = 3;
-/** [foreground token, background token, floor] — what the theme promises in both modes. */
+/** [foreground token, background token, floor] — what the theme promises in every preset and mode. */
 const PAIRS = [
   ['--u-txt-color', '--u-bg-color', TEXT],
   ['--u-txt-color', '--u-canvas-bg-color', TEXT],
@@ -78,32 +80,57 @@ const PAIRS = [
   ['--u-txt-color-weaker', '--u-bg-color', TEXT],
   ['--u-txt-color-weaker', '--u-canvas-bg-color', TEXT],
   ['--u-link-txt-color', '--u-bg-color', TEXT],
+  ['--u-link-txt-color', '--u-canvas-bg-color', TEXT],
   ['--u-primary-txt-color', '--u-primary-color', TEXT],
+  ['--u-primary-color-strong', '--u-bg-color', TEXT],
+  ['--u-primary-color-strong', '--u-primary-bg-color', TEXT],
   ['--u-txt-color', '--u-primary-bg-color', TEXT],
+  ['--u-secondary-txt-color', '--u-secondary-color', TEXT],
+  ['--u-secondary-color-strong', '--u-bg-color', TEXT],
+  ['--u-secondary-color-strong', '--u-secondary-bg-color', TEXT],
+  ['--hs-accent-ink', '--hs-accent-soft', TEXT],
+  ['--hs-tab-current-color', '--u-bg-color', TEXT],
+  ['--app-sidebar-fg', '--app-sidebar-bg', TEXT],
+  ['--app-sidebar-active-fg', '--app-sidebar-active-bg', TEXT],
   ['--u-input-border-color', '--u-bg-color', GRAPHIC],
   ['--u-focus-ring-color', '--u-bg-color', GRAPHIC],
   ['--u-focus-ring-color', '--u-canvas-bg-color', GRAPHIC],
   ['--u-selection-color', '--u-bg-color', GRAPHIC],
   ['--u-selection-txt-color', '--u-selection-color', GRAPHIC],
-  ['--hs-brand-ink', '--hs-brand-soft', TEXT],
   ...['info', 'success', 'warning', 'danger'].flatMap(r => [
     [`--u-${r}-color-strong`, `--u-${r}-bg-color`, TEXT],
     [`--u-${r}-color-strong`, '--u-bg-color', TEXT],
     [`--u-${r}-txt-color`, `--u-${r}-color`, TEXT],
   ]),
 ];
+/** The dark shell of the `contrast` preset — its own surface. */
+const SHELL_PAIRS = [
+  ['--hs-shell-ink', '--hs-shell-bg', TEXT],
+  ['--hs-shell-ink-weak', '--hs-shell-bg', TEXT],
+  ['--hs-shell-ink-weaker', '--hs-shell-bg', TEXT],
+  ['--hs-shell-ink', '--hs-shell-hover', TEXT],
+  ['--hs-shell-current-ink', '--hs-shell-current-bg', TEXT],
+];
+
+const rgbOf = (map, token) => {
+  const v = map.get(token);
+  assert.ok(v, `${token} is set`);
+  return color(v, map);
+};
+
+for (const [mode, map] of Object.entries(maps)) {
+  for (const [fg, bg, floor] of [...PAIRS, ...(mode.startsWith('contrast') ? SHELL_PAIRS : [])]) {
+    test(`${mode}: ${fg} on ${bg} ≥ ${floor}`, () => {
+      const [a, b] = [rgbOf(map, fg), rgbOf(map, bg)];
+      const c = contrast(a, b);
+      assert.ok(c >= floor, `${fg} ${rgbToHex(a)} on ${bg} ${rgbToHex(b)} = ${c.toFixed(2)} < ${floor}`);
+    });
+  }
+}
 
 // ── perception of state and depth (OKLab L) ─────────────────────────────
 // WCAG ratios are for text and graphics; neighbouring surfaces differ by far less, and the ratio's
 // flare term flattens dark ones. OKLab lightness is perceptually even across light and dark.
-function oklabL(hex) {
-  const [r, g, b] = rgb(hex).map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
-  const l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
-  const m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
-  const s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
-  return 0.2104542553 * Math.cbrt(l) + 0.793617785 * Math.cbrt(m) - 0.0040720468 * Math.cbrt(s);
-}
-/** Floors (|ΔL|): a hover step, a press step, a selection against its surface, a depth step. */
 const HOVER = 0.03;
 const PRESS = 0.05;
 const SELECTED = 0.03;
@@ -116,69 +143,65 @@ const STEPS = [
   ['--u-primary-bg-color', '--u-bg-color', SELECTED],
   ['--u-bg-color', '--u-canvas-bg-color', DEPTH],
   ['--u-bg-color-raised', '--u-bg-color', DEPTH],
+  ['--app-sidebar-active-bg', '--app-sidebar-bg', SELECTED],
 ];
+for (const [mode, map] of Object.entries(maps)) {
+  for (const [a, b, floor] of STEPS) {
+    test(`${mode}: ${a} differs from ${b} by ΔL ≥ ${floor}`, () => {
+      const [x, y] = [rgbOf(map, a), rgbOf(map, b)];
+      const d = Math.abs(oklabL(x) - oklabL(y));
+      assert.ok(d >= floor, `${a} ${rgbToHex(x)} vs ${b} ${rgbToHex(y)}: ΔL ${d.toFixed(3)} < ${floor}`);
+    });
+  }
+}
 
 // ── chart series ─────────────────────────────────────────────────────────
 // The eight were validated as a set (lightness band, chroma, colour-vision simulation — an external
-// validator's job). These checks keep an edit from quietly breaking what can be computed from the values:
-// eight distinct hexes; neighbours ΔE ≥ 15 (full colour vision); no slot within ΔE 10 of a status colour;
-// marks ≥ 3:1 on the surface and the raised surface — in light, slot six alone may fall short (it is
+// validator's job). These checks keep an edit from quietly breaking what can be computed from the values, with the
+// default seeds: eight distinct colours; neighbours ΔE ≥ 15 (full colour vision); no slot within ΔE 10 of a status
+// colour; marks ≥ 3:1 on the surface and the raised surface — in light, slot six alone may fall short (it is
 // documented to need a legend or labels).
-function oklab(hex) {
-  const [r, g, b] = rgb(hex).map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
-  return [
-    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-  ];
-}
-const deltaE = (a, b) => { const [x, y] = [oklab(a), oklab(b)]; return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]) * 100; };
-
-for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
-  const pal = [1, 2, 3, 4, 5, 6, 7, 8].map(n => map.get(`--u-chart-color-${n}`));
+for (const [mode, map] of Object.entries(maps)) {
+  const series = [1, 2, 3, 4, 5, 6, 7, 8].map(n => rgbOf(map, `--u-chart-color-${n}`));
+  const light = mode.endsWith('light');
   test(`${mode}: eight distinct chart colours`, () => {
-    assert.ok(pal.every(c => /^#[0-9A-F]{6}$/i.test(c ?? '')), pal.join(' '));
-    assert.equal(new Set(pal.map(c => c.toUpperCase())).size, 8);
+    assert.equal(new Set(series.map(rgbToHex)).size, 8, series.map(rgbToHex).join(' '));
   });
   test(`${mode}: chart neighbours ΔE ≥ 15`, () => {
-    const weak = pal.slice(1).map((c, i) => [i + 1, deltaE(pal[i], c)]).filter(([, d]) => d < 15);
+    const weak = series.slice(1).map((c, i) => [i + 1, deltaE(series[i], c)]).filter(([, d]) => d < 15);
     assert.deepEqual(weak.map(([i, d]) => `${i}↔${i + 1} ${d.toFixed(1)}`), []);
   });
   test(`${mode}: no chart colour reads as a status colour (ΔE ≥ 10)`, () => {
-    const status = ['success', 'warning', 'danger'].map(r => map.get(`--u-${r}-color`));
-    const near = pal.flatMap((c, i) => status.filter(s => deltaE(c, s) < 10).map(s => `${i + 1} ${c}~${s}`));
+    const status = ['success', 'warning', 'danger'].map(r => rgbOf(map, `--u-${r}-color`));
+    const near = series.flatMap((c, i) => status.filter(s => deltaE(c, s) < 10).map(s => `${i + 1} ${rgbToHex(c)}~${rgbToHex(s)}`));
     assert.deepEqual(near, []);
   });
-  test(`${mode}: chart marks ≥ 3:1 on the surfaces${mode === 'light' ? ' (slot six excepted)' : ''}`, () => {
-    const surfaces = [map.get('--u-bg-color'), map.get('--u-bg-color-raised')];
-    const low = pal.flatMap((c, i) => surfaces.filter(s => contrast(c, s) < 3).map(s => `${i + 1}@${s} ${contrast(c, s).toFixed(2)}`));
-    assert.deepEqual(mode === 'light' ? low.filter(x => !x.startsWith('6@')) : low, []);
+  test(`${mode}: chart marks ≥ 3:1 on the surfaces${light ? ' (slot six excepted)' : ''}`, () => {
+    const surfaces = [rgbOf(map, '--u-bg-color'), rgbOf(map, '--u-bg-color-raised')];
+    const low = series.flatMap((c, i) => surfaces.filter(s => contrast(c, s) < 3).map(s => `${i + 1}@${rgbToHex(s)} ${contrast(c, s).toFixed(2)}`));
+    assert.deepEqual(light ? low.filter(x => !x.startsWith('6@')) : low, []);
   });
 }
 
-for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
-  for (const [a, b, floor] of STEPS) {
-    test(`${mode}: ${a} differs from ${b} by ΔL ≥ ${floor}`, () => {
-      const x = map.get(a);
-      const y = map.get(b);
-      assert.ok(x && y && x.startsWith('#') && y.startsWith('#'), `${a}=${x} ${b}=${y} must be literal hex`);
-      const d = Math.abs(oklabL(x) - oklabL(y));
-      assert.ok(d >= floor, `${a} ${x} vs ${b} ${y}: ΔL ${d.toFixed(3)} < ${floor}`);
-    });
-  }
-}
-
-for (const [mode, map] of [['light', light], ['dark', new Map([...light, ...dark])]]) {
-  for (const [fg, bg, floor] of PAIRS) {
-    test(`${mode}: ${fg} on ${bg} ≥ ${floor}`, () => {
-      const a = map.get(fg);
-      const b = map.get(bg);
-      assert.ok(a && b && a.startsWith('#') && b.startsWith('#'), `${fg}=${a} ${bg}=${b} must be literal hex`);
-      const c = contrast(a, b);
-      assert.ok(c >= floor, `${fg} ${a} on ${bg} ${b} = ${c.toFixed(2)} < ${floor}`);
-    });
-  }
+// ── seeds ────────────────────────────────────────────────────────────────
+// A brand seed is the application's choice. Mid-tone seeds (the colours a brand is usually given) must come out
+// readable without any manual step: ink on its own soft tint, the contrast colour on the fill, links on the
+// surfaces — in the cool and warm presets, light and dark.
+const SEEDS = ['#1F5FBF', '#0F766E', '#6D28D9', '#C2410C', '#B42318', '#3F6212', '#2F6FEB', '#475569'];
+for (const mode of ['cool light', 'cool dark', 'warm light', 'warm dark']) {
+  test(`${mode}: mid-tone seeds stay readable — ink on soft, contrast on fill, links on the surfaces`, () => {
+    const bad = [];
+    for (const seed of SEEDS) {
+      const map = new Map([...maps[mode], ['--hs-accent', seed], ['--hs-secondary', seed]]);
+      for (const [fg, bg] of [
+        ['--hs-accent-ink', '--hs-accent-soft'], ['--hs-accent-contrast', '--hs-accent-fill'],
+        ['--u-link-txt-color', '--u-bg-color'], ['--u-link-txt-color', '--u-canvas-bg-color'],
+        ['--hs-secondary-ink', '--hs-secondary-soft'], ['--hs-secondary-contrast', '--hs-secondary-fill'],
+      ]) {
+        const c = contrast(color(map.get(fg), map), color(map.get(bg), map));
+        if (c < TEXT) bad.push(`${seed} ${fg}/${bg} ${c.toFixed(2)}`);
+      }
+    }
+    assert.deepEqual(bad, []);
+  });
 }

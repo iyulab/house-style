@@ -6,14 +6,14 @@ import '@iyulab/modern-app/dist/components/GroupBox.js';
 import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 
-import { readToken, typographyRows } from '../internals/readToken.js';
+import { readColour, readToken, typographyRows } from '../internals/readToken.js';
 
 const TYPE_STAGES = ['display', 'title', 'subtitle', 'body', 'label', 'caption', 'overline'] as const;
 const RADIUS_STEPS = ['sm', 'md', 'lg', 'xl'] as const;
 const SHADOW_STEPS = ['sm', 'md', 'lg', 'xl'] as const;
 const SHADOW_COLOR_STEPS = ['weaker', 'weak', 'normal', 'strong', 'stronger'] as const;
 
-const COLOUR_ROLES = ['primary', 'info', 'success', 'warning', 'danger'] as const;
+const COLOUR_ROLES = ['primary', 'secondary', 'info', 'success', 'warning', 'danger'] as const;
 const ROLE_STEPS = [
   { suffix: '-color', job: 'fill' },
   { suffix: '-bg-color', job: 'soft surface' },
@@ -38,7 +38,9 @@ const TOKEN_PLACES = [
   ['Divider, card border', '--u-border-color'],
   ['Row hover', '--u-bg-color-hover'],
   ['Selected row, current item', '--u-primary-bg-color'],
-  ['Focus outline', '--u-primary-color'],
+  ['Main action (one per view)', '--u-primary-color'],
+  ['Second emphasis', '--u-secondary-color'],
+  ['Focus outline', '--u-focus-ring-color'],
   ['Code', '--u-font-mono'],
 ] as const;
 const CHART_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
@@ -61,11 +63,11 @@ export class IdentitySection extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    // Colour and elevation tokens redeclare per theme (`:root[theme='dark']` in tokens.css); the
-    // typography and radius tokens do not. Re-rendering on theme change keeps every
-    // reading below honest about which axes actually move and which don't.
+    // Colour and elevation tokens redeclare per theme and per preset (`theme`, `hs-palette` in tokens.css), and the
+    // seeds are set inline on the root (`style`); the typography and radius tokens do not move. Re-rendering on any of
+    // the three keeps every reading below honest about which axes actually move and which don't.
     this.observer = new MutationObserver(() => (this.tick += 1));
-    this.observer.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'] });
+    this.observer.observe(document.documentElement, { attributes: true, attributeFilter: ['theme', 'hs-palette', 'style'] });
   }
 
   disconnectedCallback() {
@@ -160,18 +162,17 @@ export class IdentitySection extends LitElement {
                   return html`<span class="swatch">
                     <span class="swatch-chip" style="background: var(${token})"></span>
                     <code>${token}</code>
-                    <span class="swatch-note">${step.job} · ${readToken(token) || '—'}</span>
+                    <span class="swatch-note">${step.job} · ${readColour(token) || '—'}</span>
                   </span>`;
                 })}
               </div>
             `)}
           </div>
           <p>
-            Brand the house with three tokens in your own sheet — <code>--hs-brand</code>,
-            <code>--hs-brand-soft</code> and <code>--hs-brand-ink</code> (logo, current navigation item) —
-            and, only if your actions should not be ink, the role tokens (<code>--u-primary-color</code>
-            and its steps). A plain <code>:root</code> rule is enough: the theme sits in a cascade
-            layer, so your unlayered rule always wins. Do not paint components with a ramp hue like
+            <code>primary</code> and <code>secondary</code> follow your two seed colours —
+            <code>--hs-accent</code> and <code>--hs-secondary</code> (see <em>Palette</em> under Theme &amp; layout) —
+            and the four status roles belong to the preset, so a red brand never reads as «danger». A plain
+            <code>:root</code> rule is enough: the theme sits in a cascade layer, so your unlayered rule always wins. Do not paint components with a ramp hue like
             <code>--u-blue-700</code> — a ramp colour is the colour itself; a role follows the theme and
             keeps its contrast pairs.
           </p>
@@ -187,14 +188,14 @@ export class IdentitySection extends LitElement {
               <span class="swatch">
                 <span class="swatch-chip" style="background: var(${token})"></span>
                 <code>${token}</code>
-                <span class="swatch-note">${job} · ${readToken(token) || '—'}</span>
+                <span class="swatch-note">${job} · ${readColour(token) || '—'}</span>
               </span>
             `)}
             ${INK_TOKENS.map(([token, job]) => html`
               <span class="swatch">
                 <span class="swatch-chip swatch-chip--ink" style="color: var(${token})">Aa</span>
                 <code>${token}</code>
-                <span class="swatch-note">${job} · ${readToken(token) || '—'}</span>
+                <span class="swatch-note">${job} · ${readColour(token) || '—'}</span>
               </span>
             `)}
           </div>
@@ -225,18 +226,18 @@ export class IdentitySection extends LitElement {
             Charts colour <strong>series</strong> with <code>--u-chart-color-1</code> …
             <code>-8</code>: series one takes slot one, and so on. Never cycle — a ninth series
             is folded into "Other" or split into small multiples — and a series keeps its colour
-            when a filter hides the others. Slot one is the interaction blue, so a one-series chart
-            draws in the colour the screen already uses for the thing in focus; the other seven are
-            muted, warm-leaning hues chosen together (similar lightness, separable under red–green
-            colour-vision deficiency), they do not follow the brand colour, and none of them is a
-            status colour. Slot six is light on white: a chart with six or more series needs a legend
+            when a filter hides the others. Slot one is the accent and slot two the secondary colour, each
+            held to the series lightness band, so a one-series chart draws in the colour the screen already uses
+            for the thing in focus; the other six are muted, warm-leaning hues chosen together (similar lightness,
+            separable under red–green colour-vision deficiency), they do not follow the seeds, and none of them is
+            a status colour. Slot six is light on white: a chart with six or more series needs a legend
             or direct labels.
           </p>
           <div class="chart-swatches">
             ${CHART_SLOTS.map(n => html`
               <span class="chart-swatch">
                 <span class="swatch-chip" style="background: var(--u-chart-color-${n})"></span>
-                <span class="swatch-note">${n} · ${readToken(`--u-chart-color-${n}`) || '—'}</span>
+                <span class="swatch-note">${n} · ${readColour(`--u-chart-color-${n}`) || '—'}</span>
               </span>
             `)}
           </div>

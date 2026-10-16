@@ -21,10 +21,24 @@ import '@iyulab/components/dist/components/field/UField.js';
 import '@iyulab/components/dist/components/chip/UChip.js';
 import '@iyulab/components/dist/components/pagination/UPagination.js';
 import '@iyulab/enterprise/list-page';
-import { readToken } from '../internals/readToken.js';
+import { contrastRatio, readColour } from '../internals/readToken.js';
+
+type Preset = 'cool' | 'warm' | 'contrast';
+const PRESETS: ReadonlyArray<readonly [Preset, string]> = [
+  ['cool', 'cool — the default'],
+  ['warm', 'warm'],
+  ['contrast', 'contrast'],
+];
+/** Derived steps shown under the seed pickers, with the pair each one has to stay readable against. */
+const DERIVED = [
+  ['accent', '--hs-accent-fill', '--hs-accent-contrast', 'fill · its text'],
+  ['accent', '--hs-accent-soft', '--hs-accent-ink', 'soft · its ink'],
+  ['secondary', '--hs-secondary-fill', '--hs-secondary-contrast', 'fill · its text'],
+  ['secondary', '--hs-secondary-soft', '--hs-secondary-ink', 'soft · its ink'],
+] as const;
 
 /**
- * Theme & layout patterns — how an application loads the house theme, brands it, and assembles a
+ * Theme & layout patterns — how an application loads the house theme, gives it its colours, and assembles a
  * screen from the `hs-*` patterns (`styles/patterns.css`). Every pattern below is the real class
  * an application uses, rendered by the same stylesheet the package ships.
  */
@@ -35,6 +49,30 @@ export class ThemeSection extends LitElement {
   }
 
   @state() private selected = new Set<string>(['O-1042']);
+  @state() private preset: Preset = (document.documentElement.getAttribute('hs-palette') as Preset | null) ?? 'cool';
+  @state() private seedTick = 0;
+
+  /** Switches the preset on the whole guide — the attribute an application puts on its own `<html>`. */
+  private choosePreset(preset: Preset) {
+    const root = document.documentElement;
+    if (preset === 'cool') root.removeAttribute('hs-palette');
+    else root.setAttribute('hs-palette', preset);
+    this.preset = preset;
+  }
+
+  /** Sets a seed on the root, as an application's `:root { --hs-accent: … }` would. */
+  private setSeed(name: '--hs-accent' | '--hs-secondary', value: string) {
+    document.documentElement.style.setProperty(name, value);
+    this.seedTick += 1;
+  }
+
+  private resetPalette() {
+    const root = document.documentElement;
+    root.style.removeProperty('--hs-accent');
+    root.style.removeProperty('--hs-secondary');
+    this.choosePreset('cool');
+    this.seedTick += 1;
+  }
 
   private readonly rows = [
     { id: 'O-1043', customer: 'Northwind Trading', status: ['Received', 'info'], due: 'D-27', dueTone: '', qty: 70, amount: 276375, tag: 'Proof' },
@@ -67,7 +105,7 @@ export class ThemeSection extends LitElement {
     return html`
       <u-page-header
         title="Theme & layout patterns"
-        subtitle="One import for the house look, three tokens for your brand, and the patterns a business screen repeats"
+        subtitle="One import for the house look, two seed colours and a preset for your brand, and the patterns a business screen repeats"
       ></u-page-header>
 
       <u-group-box level="2" title="Load the theme">
@@ -99,28 +137,71 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
         </table>
       </u-group-box>
 
-      <u-group-box level="2" title="Brand it — three tokens">
+      <u-group-box level="2" title="Palette — two seeds, one preset">
         <p>
-          The house is neutral so an unbranded app looks finished. Your identity colour goes on the logo
-          and the current navigation item only — never on buttons or warnings, where a red brand would
-          read as "danger".
+          Your application decides its colours; the house decides how the screen is balanced around them. Give two
+          seed colours on <code>:root</code> — <code>--hs-accent</code> (the main action, the current item, links and
+          focus) and <code>--hs-secondary</code> (a second emphasis: <code>color="secondary"</code>, the second chart
+          series). Every step a component needs is derived from the seed, light and dark. Pick a preset for the
+          balance of the screen with <code>&lt;html hs-palette="…"&gt;</code>. The controls below change this whole
+          guide.
         </p>
-        <div class="hs-grid-3">
-          ${(['--hs-brand', '--hs-brand-soft', '--hs-brand-ink'] as const).map(name => html`
-            <u-card shadowless>
-              <div style="height:32px;border-radius:var(--u-radius-lg);background:var(${name});border:1px solid var(--u-border-color)"></div>
-              <p class="hs-muted"><code>${name}</code> — <code>${readToken(name)}</code></p>
-            </u-card>`)}
+        <div class="palette-controls">
+          <div class="palette-presets" role="group" aria-label="Preset">
+            ${PRESETS.map(([id, label]) => html`
+              <u-button size="sm" appearance=${this.preset === id ? 'solid' : 'outlined'} aria-pressed=${String(this.preset === id)}
+                @click=${() => this.choosePreset(id)}>${label}</u-button>`)}
+          </div>
+          <label class="palette-seed">Accent
+            <input type="color" .value=${readColour('--hs-accent') || '#1F5FBF'}
+              @input=${(e: Event) => this.setSeed('--hs-accent', (e.target as HTMLInputElement).value)} />
+          </label>
+          <label class="palette-seed">Secondary
+            <input type="color" .value=${readColour('--hs-secondary') || '#B55F40'}
+              @input=${(e: Event) => this.setSeed('--hs-secondary', (e.target as HTMLInputElement).value)} />
+          </label>
+          <u-button size="sm" appearance="plain" @click=${() => this.resetPalette()}>Reset</u-button>
         </div>
-        <pre tabindex="0"><code>:root { --hs-brand: #c8161d; --hs-brand-soft: #fcebec; --hs-brand-ink: #a3121a; }
-:root[theme="dark"] { --hs-brand-soft: #3a1a1c; --hs-brand-ink: #ff9a9e; }</code></pre>
+        <div class="hs-grid-2" data-tick=${this.seedTick}>
+          ${DERIVED.map(([seed, surface, text, job]) => {
+            const [bg, fg] = [readColour(surface), readColour(text)];
+            const ratio = bg && fg ? contrastRatio(fg, bg) : 0;
+            return html`
+              <u-card shadowless>
+                <div class="palette-sample" style="background:var(${surface});color:var(${text})">${seed} · ${job}</div>
+                <p class="hs-muted"><code>${surface}</code> ${bg} · <code>${text}</code> ${fg} ·
+                  <strong>${ratio.toFixed(1)}:1</strong>${ratio < 4.5 ? html` — set <code>${text}</code> yourself` : ''}</p>
+              </u-card>`;
+          })}
+        </div>
+        <table class="prose-table">
+          <thead><tr><th><code>hs-palette</code></th><th>Neutrals</th><th>Main action</th><th>Sidebar</th><th>Current tab</th></tr></thead>
+          <tbody>
+            <tr><td><em>(none)</em> <code>cool</code></td><td>cool grey</td><td>accent fill</td><td>light</td><td>accent</td></tr>
+            <tr><td><code>warm</code></td><td>warm grey</td><td>ink</td><td>light, neutral current item</td><td>ink</td></tr>
+            <tr><td><code>contrast</code></td><td>cool grey</td><td>accent fill</td><td>dark</td><td>accent</td></tr>
+          </tbody>
+        </table>
+        <pre tabindex="0"><code>&lt;html hs-palette="warm"&gt;   &lt;!-- omit for cool --&gt;
+
+:root {
+  --hs-accent: #c8161d;
+  --hs-secondary: #0f766e;
+}
+/* only if a seed defeats a derivation */
+:root { --hs-accent-contrast: #1f2023; }</code></pre>
+        <p>
+          A derivation cannot promise contrast for every seed — a pale yellow cannot carry white text — so each
+          derived step (<code>-fill</code> · <code>-contrast</code> · <code>-soft</code> · <code>-ink</code>) is its own
+          token you can set. The status colours never follow the seeds: a red brand and «danger» stay two colours.
+        </p>
       </u-group-box>
 
       <u-group-box level="2" title="List screen — head, views, filters, totals, table">
         <p>
           Conditions fold and results open: saved views and up to three key filters stay on screen, the
           rest go behind <em>Filters</em>, totals are cells rather than a sentence, and the table starts in
-          the top third of the screen. One ink button per view.
+          the top third of the screen. One filled button per view.
         </p>
         <div class="hs-page" style="padding:var(--u-space-lg);background:var(--u-canvas-bg-color);border-radius:var(--u-radius-xl)">
           <u-page-header eyebrow="Sales" title="Orders" subtitle="Select an order number to open its details on the right.">

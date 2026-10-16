@@ -1,12 +1,12 @@
 // Control ladder — contract tests (node --test, no dependencies).
 //
-// Buttons and fields are 28 / 32 / 40 at the default control density (`--u-density` 14px), and the whole ladder is a
+// Buttons and fields are 32 / 36 / 40 at the default control density (`--u-density` 14px), and the whole ladder is a
 // function of that density: font sizes are density steps, paddings are em. So a host that raises the density (a field
 // or touch mode) grows sm, md and lg together and in order. When the font sizes were literal (md 13px, lg 14px) and the
 // components made sm follow the density, a raised density put sm above md (13.7 > 13px).
 //
 // Height = 1.5em line + 2 × block padding + 2px border (the components' formula). The browser measurement behind these
-// numbers: 28 / 32 / 40 at 14px, and buttons and fields equal at every step at 16px.
+// numbers: 32 / 36 / 40 at 14px, and buttons and fields equal at every step at 16px.
 //
 // These tests read the declarations against a copy of the components' sm formula (`SM_FONT`). The rendered composition —
 // the real components under this sheet, four densities, six controls — is `npm run check:ladder` (after a build).
@@ -66,16 +66,16 @@ function fieldSteps(d) {
 
 const round = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, Math.round(v * 100) / 100]));
 
-test('at the default density the ladder is 28 / 32 / 40 — buttons and fields alike', () => {
-  assert.deepEqual(round(buttonSteps(14)), { sm: 28, md: 32, lg: 40 });
-  assert.deepEqual(round(fieldSteps(14)), { sm: 28, md: 32, lg: 40 });
+test('at the default density the ladder is 32 / 36 / 40 — buttons and fields alike', () => {
+  assert.deepEqual(round(buttonSteps(14)), { sm: 32, md: 36, lg: 40 });
+  assert.deepEqual(round(fieldSteps(14)), { sm: 32, md: 36, lg: 40 });
 });
 
 test('a raised density grows every step in order, and buttons stay level with fields', () => {
   const b = buttonSteps(16);
   const f = fieldSteps(16);
   assert.ok(b.sm < b.md && b.md < b.lg, `button order at 16px: ${JSON.stringify(round(b))}`);
-  assert.ok(b.sm > 28 && b.md > 32 && b.lg > 40, 'every button step grows');
+  assert.ok(b.sm > 32 && b.md > 36 && b.lg > 40, 'every button step grows');
   assert.deepEqual(round(f), round(b));
 });
 

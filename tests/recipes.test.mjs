@@ -49,9 +49,22 @@ test('a small tag stays an 18px mark under the house tag padding', () => {
     'the house padding on every tag would make the small step 20px');
 });
 
-test('the tab strip of links draws the current view in ink', () => {
-  assert.equal(rule(components, 'u-tab-nav')?.get('--tab-nav-color'), 'var(--u-txt-color)');
-  assert.equal(rule(components, 'u-tab-nav u-tab[active]')?.get('font-weight'), '600');
+test('tabs draw the current tab in the preset tab colour (accent ink · ink under warm)', () => {
+  assert.equal(rule(components, 'u-tab-nav')?.get('--tab-nav-color'), 'var(--hs-tab-current-color)');
+  assert.equal(rule(components, 'u-tab-panel')?.get('--tab-panel-color'), 'var(--hs-tab-current-color)');
+  assert.equal(rule(components, ':is(u-tab-nav, u-tab-panel) u-tab[active]')?.get('font-weight'), '600');
+});
+
+test('a tag is a pill', () => {
+  assert.equal(rule(components, 'u-tag')?.get('border-radius'), 'var(--u-radius-pill, 9999px)');
+});
+
+test('the contrast preset re-scopes the neutral roles inside the sidebar to the shell', () => {
+  const shell = rule(components, ":root[hs-palette='contrast'] u-sidebar-layout::part(sidebar)");
+  assert.ok(shell, 'components.css scopes the shell');
+  for (const role of ['--u-bg-color', '--u-txt-color', '--u-txt-color-weak', '--u-bg-color-hover', '--u-border-color']) {
+    assert.match(shell.get(role) ?? '', /^var\(--hs-shell-/, role);
+  }
 });
 
 test('an inline alert puts its actions in a right-hand column', () => {

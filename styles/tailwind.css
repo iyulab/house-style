@@ -14,12 +14,13 @@
  * utilities (a utility on an element still wins), and still below your unlayered CSS.
  *
  * Also maps the house roles onto utilities that read the live `--u-*` tokens (`@theme inline`),
- * so dark mode and brand overrides reach Tailwind classes with no rebuild:
+ * so dark mode, the preset (`hs-palette`) and the seed colours reach Tailwind classes with no rebuild:
  *
  *   bg-canvas · bg-surface · bg-raised · bg-selected · border-line · border-line-strong
  *   text-ink · text-ink-weak · text-ink-weaker · text-link · ring-focus
  *   {text,bg,border}-{info,success,warning,danger} (text = readable step) · bg-{role}-soft
- *   rounded-control (6) · rounded-card (10) · shadow-raise · shadow-overlay · font-sans
+ *   {bg,text}-accent · bg-accent-soft · text-accent-ink · text-on-accent (and the same for secondary)
+ *   rounded-control (8) · rounded-card (10) · rounded-pill · shadow-raise · shadow-overlay · font-sans
  *
  * Existing markup full of `text-gray-*` / `bg-slate-*`: add `tailwind-neutrals.css` too.
  * ========================================================================== */
@@ -42,9 +43,14 @@
   --color-focus: var(--u-focus-ring-color);
   --color-action: var(--u-primary-color);
   --color-on-action: var(--u-primary-txt-color);
-  --color-brand: var(--hs-brand);
-  --color-brand-soft: var(--hs-brand-soft);
-  --color-brand-ink: var(--hs-brand-ink);
+  --color-accent: var(--hs-accent-fill);
+  --color-accent-soft: var(--hs-accent-soft);
+  --color-accent-ink: var(--hs-accent-ink);
+  --color-on-accent: var(--hs-accent-contrast);
+  --color-secondary: var(--hs-secondary-fill);
+  --color-secondary-soft: var(--hs-secondary-soft);
+  --color-secondary-ink: var(--hs-secondary-ink);
+  --color-on-secondary: var(--hs-secondary-contrast);
 
   --color-info: var(--u-info-color-strong);
   --color-info-soft: var(--u-info-bg-color);
@@ -58,6 +64,7 @@
   --radius-control: var(--u-radius-lg);
   --radius-card: var(--u-radius-xl);
   --radius-badge: var(--u-radius-md);
+  --radius-pill: var(--u-radius-pill, 9999px);
 
   --shadow-raise: var(--u-shadow-sm);
   --shadow-overlay: var(--u-shadow-lg);

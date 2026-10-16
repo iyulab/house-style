@@ -6,96 +6,127 @@
  *
  *   built-in defaults (iyu.base)  <  this theme (iyu.house)  <  your application (unlayered)
  *
- * An application brands the house by overriding a handful of tokens with plain `:root` rules —
- * see "Brand" below. No specificity tricks are needed.
+ * Three layers of decision:
  *
- * Character — a quiet, dense line-of-business look:
- *   · neutral first: warm greys carry ~90% of the screen; colour is for status and brand only
- *   · one ink action per view (`--u-primary-*` is ink, not blue)
- *   · blue is reserved for interaction: links, focus, selection
- *   · depth by surface and a hairline, shadows only on things that float
- *   · numbers first: tabular figures everywhere
+ *   the application   two seed colours — `--hs-accent` (identity, the main action, the current item, links,
+ *                     focus) and `--hs-secondary` (a second emphasis: the second chart series, a
+ *                     `color="secondary"` tag or button). Every step the components need (a fill, a soft tint,
+ *                     a readable ink, the dark-mode steps) is derived from the seed here.
+ *   a preset          the balance of the whole screen — the temperature of the neutrals, how far apart canvas,
+ *                     surface, lines and text sit, whether the main action is the accent or ink, and how dark
+ *                     the shell is. `<html hs-palette="…">`: `cool` (no attribute — the default) · `warm` ·
+ *                     `contrast`. Each preset has a light and a dark side (`theme="dark"`).
+ *   the house         shape, size and type (the scale block at the end) — the same under every preset.
  *
- * Contrast (light, against the surface #FFFFFF unless noted): body ink 17.4 · secondary 6.5 ·
- * tertiary 5.6 · link 6.2 · status text on its own tint ≥ 5.5 · input border 3.2 (WCAG 1.4.11).
- * The numbers are re-measured by `tests/contrast.test.mjs`.
+ * Status colours (info · success · warning · danger) belong to the preset, never to the seeds: a red brand
+ * must not make «danger» and «brand» one colour.
+ *
+ * The derivations use CSS relative colour syntax and `color-mix()` (Chromium 119 · Safari 16.4 · Firefox 128).
+ * They cannot promise contrast for every seed (a pale yellow cannot carry white text), so each derived step is
+ * its own token an application can set: `--hs-accent-fill` · `-contrast` · `-soft` · `-ink`. Set seeds on
+ * `:root` — a token derived on `:root` does not follow a seed set further down the tree.
+ *
+ * Contrast and perception floors for every preset × mode are re-measured by `tests/tokens.test.mjs`.
  * ========================================================================== */
 
 @layer iyu.base, iyu.house;
 
 @layer iyu.house {
 
-/* ── light (and no theme attribute) ─────────────────────────────────────── */
+/* ── cool · light — the default (no `hs-palette`) ───────────────────────── */
 :root {
-  /* Neutral ramp — warm grey. Most role tokens derive from it. */
+  /* Seeds — an application sets these (and, only if a seed defeats a derivation, the derived steps). */
+  --hs-accent:    #1F5FBF;
+  --hs-secondary: #B55F40;
+
+  /* Derived steps, light */
+  --hs-accent-fill:        oklch(from var(--hs-accent) min(l, 0.55) c h);   /* the seed, darkened only as far as white text needs */
+  --hs-accent-contrast:    #FFFFFF;
+  --hs-accent-soft:        color-mix(in oklab, var(--hs-accent) 11%, var(--u-bg-color));
+  --hs-accent-ink:         oklch(from var(--hs-accent) min(l, 0.5) c h);
+  --hs-secondary-fill:     oklch(from var(--hs-secondary) min(l, 0.55) c h);
+  --hs-secondary-contrast: #FFFFFF;
+  --hs-secondary-soft:     color-mix(in oklab, var(--hs-secondary) 12%, var(--u-bg-color));
+  --hs-secondary-ink:      oklch(from var(--hs-secondary) min(l, 0.48) c h);
+
+  /* Neutral ramp — cool grey. Most role tokens derive from it. */
   --u-neutral-0:    #FFFFFF;
-  --u-neutral-50:   #F6F6F4;
-  --u-neutral-100:  #F1F1EF;
-  --u-neutral-200:  #EAEAE7;
-  --u-neutral-300:  #E3E3DF;
-  --u-neutral-400:  #C8C9C5;
-  --u-neutral-500:  #8F9296;
-  --u-neutral-600:  #666970;
-  --u-neutral-700:  #5B5E63;
-  --u-neutral-800:  #34363A;
-  --u-neutral-900:  #18191B;
-  --u-neutral-1000: #0E0F10;
+  --u-neutral-50:   #F5F6F8;
+  --u-neutral-100:  #EEF0F3;
+  --u-neutral-200:  #E6E8EC;
+  --u-neutral-300:  #E0E0E0;
+  --u-neutral-400:  #C9CDD3;
+  --u-neutral-500:  #858C96;
+  --u-neutral-600:  #6B6F75;
+  --u-neutral-700:  #666666;
+  --u-neutral-800:  #333232;
+  --u-neutral-900:  #1F2023;
+  --u-neutral-1000: #111214;
 
   /* Depth — canvas (page) < surface (cards, tables, controls) < floating (shadow) */
-  --u-canvas-bg-color:       #F6F6F4;
+  --u-canvas-bg-color:       #F5F6F8;
   --u-bg-color:              #FFFFFF;
   --u-panel-bg-color:        #FFFFFF;
   --u-input-bg-color:        #FFFFFF;
-  --u-bg-color-raised:       #F1F1EF;   /* table header, toolbar strip, read-only field */
-  --u-bg-color-raised-hover: #E5E5E2;
-  --u-bg-color-hover:        #F1F1EF;
-  --u-bg-color-active:       #EAEAE7;
-  --u-bg-color-disabled:     #F1F1EF;
-  --u-overlay-bg-color:      rgba(24, 25, 27, 0.32);
+  --u-bg-color-raised:       #F5F6F8;   /* table header, toolbar strip, read-only field */
+  --u-bg-color-raised-hover: #E9EBEF;
+  --u-bg-color-hover:        #EEF0F3;
+  --u-bg-color-active:       #E6E8EC;
+  --u-bg-color-disabled:     #F5F6F8;
+  --u-overlay-bg-color:      rgba(17, 20, 24, 0.36);
 
-  /* Lines */
-  --u-border-color:              #E3E3DF;
-  --u-border-color-weak:         #ECECE9;
-  --u-border-color-strong:       #8F9296;
-  --u-border-color-hover:        #8F9296;
-  --u-input-border-color:        #8F9296;
-  --u-input-border-color-hover:  #5B5E63;
-  --u-input-border-color-focus:  #2F6FEB;
+  /* Lines — a hairline for surfaces, a firmer line for the edge of a field (≥ 3:1, WCAG 1.4.11) */
+  --u-border-color:              #E0E0E0;
+  --u-border-color-weak:         #EAEBED;
+  --u-border-color-strong:       #858C96;
+  --u-border-color-hover:        #858C96;
+  --u-input-border-color:        #858C96;
+  --u-input-border-color-hover:  #5C6168;
+  --u-input-border-color-focus:  var(--hs-accent-fill);
 
   /* Ink */
-  --u-txt-color:           #18191B;
-  --u-txt-color-strong:    #0E0F10;
-  --u-txt-color-weak:      #5B5E63;
-  --u-txt-color-weaker:    #666970;
-  --u-txt-color-hover:     #18191B;
-  --u-txt-color-active:    #18191B;
-  --u-txt-color-disabled:  #A3A5A9;
-  --u-icon-color:          #5B5E63;
-  --u-icon-color-hover:    #18191B;
-  --u-icon-color-active:   #18191B;
+  --u-txt-color:           #333232;
+  --u-txt-color-strong:    #1F2023;
+  --u-txt-color-weak:      #666666;
+  --u-txt-color-weaker:    #6B6F75;
+  --u-txt-color-hover:     #333232;
+  --u-txt-color-active:    #333232;
+  --u-txt-color-disabled:  #A6ABB2;
+  --u-icon-color:          #666666;
+  --u-icon-color-hover:    #333232;
+  --u-icon-color-active:   #333232;
 
-  /* Action — ink. The primary button is near-black; selection stays blue. */
-  --u-primary-color-weakest: #E3E3DF;
-  --u-primary-color-weaker:  #C8C9C5;
-  --u-primary-color-weak:    #5B5E63;
-  --u-primary-color:         #18191B;
-  --u-primary-color-strong:  #18191B;
-  --u-primary-txt-color:     #FFFFFF;
-  --u-primary-bg-color:      #EEF3FD;   /* selected rows, current item */
+  /* Action — the accent. One filled action per view; the rest are outlined. */
+  --u-primary-color-weakest: color-mix(in oklab, var(--hs-accent-fill) 16%, var(--u-bg-color));
+  --u-primary-color-weaker:  color-mix(in oklab, var(--hs-accent-fill) 30%, var(--u-bg-color));
+  --u-primary-color-weak:    color-mix(in oklab, var(--hs-accent-fill) 55%, var(--u-bg-color));
+  --u-primary-color:         var(--hs-accent-fill);
+  --u-primary-color-strong:  var(--hs-accent-ink);
+  --u-primary-txt-color:     var(--hs-accent-contrast);
+  --u-primary-bg-color:      var(--hs-accent-soft);   /* selected rows, current item */
 
-  /* Interaction — blue, for links, focus and the mark of a chosen option (a checked box or radio) */
-  --u-link-txt-color:   #1F5FCC;
-  --u-focus-ring-color: #2F6FEB;
-  --u-selection-color:     #2F6FEB;
-  --u-selection-txt-color: #FFFFFF;   /* the check drawn on that fill */
+  /* Second emphasis — the secondary seed (`color="secondary"`) */
+  --u-secondary-color-weakest: color-mix(in oklab, var(--hs-secondary-fill) 16%, var(--u-bg-color));
+  --u-secondary-color-weaker:  color-mix(in oklab, var(--hs-secondary-fill) 30%, var(--u-bg-color));
+  --u-secondary-color-weak:    color-mix(in oklab, var(--hs-secondary-fill) 55%, var(--u-bg-color));
+  --u-secondary-color:         var(--hs-secondary-fill);
+  --u-secondary-color-strong:  var(--hs-secondary-ink);
+  --u-secondary-txt-color:     var(--hs-secondary-contrast);
+  --u-secondary-bg-color:      var(--hs-secondary-soft);
 
-  /* Chart series — eight, in order (slot one first, never cycled). Slot one is the interaction blue, so a
-     one-series chart draws in the colour the rest of the screen uses for "this is the thing"; the other seven
-     are muted, warm-leaning hues chosen as a set: OKLCH L 0.50–0.68, chroma ≥ 0.10, neighbours ΔE ≥ 15 for
-     full colour vision and ≥ 8 under red–green deficiency (Machado 2009), every slot at least ΔE 10 from a
-     status colour. Slot six (light olive) is 2.8:1 on white — six or more series need a legend or labels. */
-  --u-chart-color-1: #2F6FEB;
-  --u-chart-color-2: #B55F40;
+  /* Interaction — links, focus and the mark of a chosen option (a checked box or radio) follow the accent */
+  --u-link-txt-color:      var(--hs-accent-ink);
+  --u-focus-ring-color:    var(--hs-accent-fill);
+  --u-selection-color:     var(--hs-accent-fill);
+  --u-selection-txt-color: var(--hs-accent-contrast);   /* the check drawn on that fill */
+
+  /* Chart series — eight, in order (slot one first, never cycled). Slot one is the accent and slot two the
+     secondary, each held to the series lightness band; the other six are muted, warm-leaning hues chosen as a
+     set: OKLCH L 0.50–0.68, chroma ≥ 0.10, neighbours ΔE ≥ 15 for full colour vision and ≥ 8 under red–green
+     deficiency (Machado 2009), every slot at least ΔE 10 from a status colour — measured with the default seeds.
+     Slot six (light olive) is 2.8:1 on white — six or more series need a legend or labels. */
+  --u-chart-color-1: oklch(from var(--hs-accent) clamp(0.5, l, 0.66) c h);
+  --u-chart-color-2: oklch(from var(--hs-secondary) clamp(0.5, l, 0.66) c h);
   --u-chart-color-3: #14938D;
   --u-chart-color-4: #AF8020;
   --u-chart-color-5: #7D4B92;
@@ -113,21 +144,21 @@
   --u-info-bg-color:         #E8F0FD;
   --u-info-txt-color:        #FFFFFF;
 
-  --u-success-color-weakest: #CDEBD9;
-  --u-success-color-weaker:  #A3D8BA;
-  --u-success-color-weak:    #4AA274;
-  --u-success-color:         #1B7A44;
-  --u-success-color-strong:  #1B6E3E;
-  --u-success-bg-color:      #E6F4EC;
+  --u-success-color-weakest: #CDEBD6;
+  --u-success-color-weaker:  #A3D8B4;
+  --u-success-color-weak:    #4AA26A;
+  --u-success-color:         #1A7F37;
+  --u-success-color-strong:  #176F31;
+  --u-success-bg-color:      #E6F4EA;
   --u-success-txt-color:     #FFFFFF;
 
   --u-warning-color-weakest: #FBEBCF;
-  --u-warning-color-weaker:  #F5D9A3;
+  --u-warning-color-weaker:  #F0D9B5;
   --u-warning-color-weak:    #E8B25A;
   --u-warning-color:         #E59A24;
-  --u-warning-color-strong:  #8A5100;
-  --u-warning-bg-color:      #FDF3E1;
-  --u-warning-txt-color:     #18191B;
+  --u-warning-color-strong:  #A15C00;
+  --u-warning-bg-color:      #FEF5E6;
+  --u-warning-txt-color:     #1F2023;
 
   --u-danger-color-weakest:  #F9D4D0;
   --u-danger-color-weaker:   #F2AAA2;
@@ -137,36 +168,219 @@
   --u-danger-bg-color:       #FDECEA;
   --u-danger-txt-color:      #FFFFFF;
 
-  /* Elevation — a hairline lift for surfaces, one real shadow for things that float */
+  /* Elevation — surfaces are flat (a hairline); one real shadow for things that float */
+  --u-shadow-color-weaker:   rgba(16, 19, 24, 0.04);
+  --u-shadow-color-weak:     rgba(16, 19, 24, 0.06);
+  --u-shadow-color-normal:   rgba(16, 19, 24, 0.10);
+  --u-shadow-color-strong:   rgba(16, 19, 24, 0.14);
+  --u-shadow-color-stronger: rgba(16, 19, 24, 0.18);
+  --u-shadow-sm: 0 1px 2px rgba(16, 19, 24, 0.06);
+  --u-shadow-md: 0 1px 2px rgba(16, 19, 24, 0.06);
+  --u-shadow-lg: 0 12px 32px rgba(16, 19, 24, 0.14), 0 2px 6px rgba(16, 19, 24, 0.06);
+  --u-shadow-xl: 0 16px 40px rgba(16, 19, 24, 0.18), 0 2px 8px rgba(16, 19, 24, 0.08);
+
+  /* Shell (`@iyulab/modern-app`) — a light sidebar on the surface; the current item is the accent tint */
+  --app-sidebar-bg:              var(--u-bg-color);
+  --app-sidebar-fg:              var(--u-txt-color);
+  --app-header-bg:               var(--u-bg-color);
+  --app-header-fg:               var(--u-txt-color);
+  --app-sidebar-active-bg:       var(--hs-accent-soft);
+  --app-sidebar-active-fg:       var(--hs-accent-ink);
+  --app-sidebar-group-active-fg: var(--hs-accent-ink);
+
+  /* The current tab — its text and its 2px bar */
+  --hs-tab-current-color: var(--hs-accent-ink);
+}
+
+/* ── cool · dark ─────────────────────────────────────────────────────────── */
+:root[theme="dark"] {
+  --hs-accent-fill:        oklch(from var(--hs-accent) max(l, 0.7) c h);
+  --hs-accent-contrast:    #0E1013;
+  --hs-accent-soft:        color-mix(in oklab, var(--hs-accent) 22%, var(--u-bg-color));
+  --hs-accent-ink:         oklch(from var(--hs-accent) max(l, 0.8) c h);
+  --hs-secondary-fill:     oklch(from var(--hs-secondary) max(l, 0.7) c h);
+  --hs-secondary-contrast: #0E1013;
+  --hs-secondary-soft:     color-mix(in oklab, var(--hs-secondary) 24%, var(--u-bg-color));
+  --hs-secondary-ink:      oklch(from var(--hs-secondary) max(l, 0.8) c h);
+
+  --u-neutral-0:    #0E1013;
+  --u-neutral-50:   #111418;
+  --u-neutral-100:  #181B20;
+  --u-neutral-200:  #1F2329;
+  --u-neutral-300:  #2A2F36;
+  --u-neutral-400:  #3D434C;
+  --u-neutral-500:  #646B76;
+  --u-neutral-600:  #8D939B;
+  --u-neutral-700:  #A2A8B0;
+  --u-neutral-800:  #C6CBD1;
+  --u-neutral-900:  #E4E6E9;
+  --u-neutral-1000: #FFFFFF;
+
+  --u-canvas-bg-color:       #111418;
+  --u-bg-color:              #181B20;
+  --u-panel-bg-color:        #181B20;
+  --u-input-bg-color:        #181B20;
+  --u-bg-color-raised:       #1F2329;
+  --u-bg-color-raised-hover: #282D34;
+  --u-bg-color-hover:        #22262D;
+  --u-bg-color-active:       #2A2F37;
+  --u-bg-color-disabled:     #1C1F24;
+  --u-overlay-bg-color:      rgba(0, 0, 0, 0.56);
+
+  --u-border-color:              #2A2F36;
+  --u-border-color-weak:         #23272D;
+  --u-border-color-strong:       #646B76;
+  --u-border-color-hover:        #646B76;
+  --u-input-border-color:        #6B727D;
+  --u-input-border-color-hover:  #A2A8B0;
+
+  --u-txt-color:           #E4E6E9;
+  --u-txt-color-strong:    #FFFFFF;
+  --u-txt-color-weak:      #A2A8B0;
+  --u-txt-color-weaker:    #8D939B;
+  --u-txt-color-hover:     #E4E6E9;
+  --u-txt-color-active:    #E4E6E9;
+  --u-txt-color-disabled:  #575D66;
+  --u-icon-color:          #A2A8B0;
+  --u-icon-color-hover:    #E4E6E9;
+  --u-icon-color-active:   #E4E6E9;
+
+  /* Chart series, dark — the same hues stepped into the dark band (L 0.52–0.66), every slot ≥ 3:1 on the
+     surface and the raised surface. */
+  --u-chart-color-1: oklch(from var(--hs-accent) clamp(0.6, l, 0.66) c h);
+  --u-chart-color-2: oklch(from var(--hs-secondary) clamp(0.6, l, 0.66) c h);
+  --u-chart-color-3: #04A19B;
+  --u-chart-color-4: #B8892D;
+  --u-chart-color-5: #9760AF;
+  --u-chart-color-6: #57833D;
+  --u-chart-color-7: #CF7188;
+  --u-chart-color-8: #9A5F1A;
+
+  --u-info-color-weakest:    #1F3152;
+  --u-info-color-weaker:     #2C4A7E;
+  --u-info-color-weak:       #5E8BE0;
+  --u-info-color:            #8DB3F7;
+  --u-info-color-strong:     #8DB3F7;
+  --u-info-bg-color:         #1B2A44;
+  --u-info-txt-color:        #0E1013;
+
+  --u-success-color-weakest: #1A3826;
+  --u-success-color-weaker:  #2B5A3E;
+  --u-success-color-weak:    #4FB07D;
+  --u-success-color:         #7DD8A5;
+  --u-success-color-strong:  #7DD8A5;
+  --u-success-bg-color:      #16301F;
+  --u-success-txt-color:     #0E1013;
+
+  --u-warning-color-weakest: #3F2E12;
+  --u-warning-color-weaker:  #5E451A;
+  --u-warning-color-weak:    #C99140;
+  --u-warning-color:         #F2B65A;
+  --u-warning-color-strong:  #F2B65A;
+  --u-warning-bg-color:      #3A2A10;
+  --u-warning-txt-color:     #0E1013;
+
+  --u-danger-color-weakest:  #4A1F1B;
+  --u-danger-color-weaker:   #6E2C26;
+  --u-danger-color-weak:     #E0675C;
+  --u-danger-color:          #FF8A80;
+  --u-danger-color-strong:   #FF8A80;
+  --u-danger-bg-color:       #3D1A17;
+  --u-danger-txt-color:      #1A0D0B;
+
+  --u-shadow-color-weaker:   rgba(0, 0, 0, 0.24);
+  --u-shadow-color-weak:     rgba(0, 0, 0, 0.32);
+  --u-shadow-color-normal:   rgba(0, 0, 0, 0.40);
+  --u-shadow-color-strong:   rgba(0, 0, 0, 0.50);
+  --u-shadow-color-stronger: rgba(0, 0, 0, 0.60);
+  --u-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --u-shadow-md: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --u-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.40);
+  --u-shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.60), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* ── warm · light — the house before 0.8: warm grey, an ink main action, the accent for interaction only ── */
+:root[hs-palette="warm"] {
+  --hs-accent: #2F6FEB;
+
+  --u-neutral-0:    #FFFFFF;
+  --u-neutral-50:   #F6F6F4;
+  --u-neutral-100:  #F1F1EF;
+  --u-neutral-200:  #EAEAE7;
+  --u-neutral-300:  #E3E3DF;
+  --u-neutral-400:  #C8C9C5;
+  --u-neutral-500:  #8F9296;
+  --u-neutral-600:  #666970;
+  --u-neutral-700:  #5B5E63;
+  --u-neutral-800:  #34363A;
+  --u-neutral-900:  #18191B;
+  --u-neutral-1000: #0E0F10;
+
+  --u-canvas-bg-color:       #F6F6F4;
+  --u-bg-color:              #FFFFFF;
+  --u-panel-bg-color:        #FFFFFF;
+  --u-input-bg-color:        #FFFFFF;
+  --u-bg-color-raised:       #F1F1EF;
+  --u-bg-color-raised-hover: #E5E5E2;
+  --u-bg-color-hover:        #F1F1EF;
+  --u-bg-color-active:       #EAEAE7;
+  --u-bg-color-disabled:     #F1F1EF;
+  --u-overlay-bg-color:      rgba(24, 25, 27, 0.32);
+
+  --u-border-color:              #E3E3DF;
+  --u-border-color-weak:         #ECECE9;
+  --u-border-color-strong:       #8F9296;
+  --u-border-color-hover:        #8F9296;
+  --u-input-border-color:        #8F9296;
+  --u-input-border-color-hover:  #5B5E63;
+
+  --u-txt-color:           #18191B;
+  --u-txt-color-strong:    #0E0F10;
+  --u-txt-color-weak:      #5B5E63;
+  --u-txt-color-weaker:    #666970;
+  --u-txt-color-hover:     #18191B;
+  --u-txt-color-active:    #18191B;
+  --u-txt-color-disabled:  #A3A5A9;
+  --u-icon-color:          #5B5E63;
+  --u-icon-color-hover:    #18191B;
+  --u-icon-color-active:   #18191B;
+
+  /* Action — ink. The primary button is near-black; selection stays the accent. */
+  --u-primary-color-weakest: #E3E3DF;
+  --u-primary-color-weaker:  #C8C9C5;
+  --u-primary-color-weak:    #5B5E63;
+  --u-primary-color:         #18191B;
+  --u-primary-color-strong:  #18191B;
+  --u-primary-txt-color:     #FFFFFF;
+
+  --u-success-color-weakest: #CDEBD9;
+  --u-success-color-weaker:  #A3D8BA;
+  --u-success-color-weak:    #4AA274;
+  --u-success-color:         #1B7A44;
+  --u-success-color-strong:  #1B6E3E;
+  --u-success-bg-color:      #E6F4EC;
+
+  --u-warning-color-weaker:  #F5D9A3;
+  --u-warning-color-strong:  #8A5100;
+  --u-warning-bg-color:      #FDF3E1;
+  --u-warning-txt-color:     #18191B;
+
   --u-shadow-color-weaker:   rgba(16, 17, 19, 0.04);
   --u-shadow-color-weak:     rgba(16, 17, 19, 0.06);
   --u-shadow-color-normal:   rgba(16, 17, 19, 0.10);
   --u-shadow-color-strong:   rgba(16, 17, 19, 0.14);
   --u-shadow-color-stronger: rgba(16, 17, 19, 0.18);
-  --u-shadow-sm: 0 1px 2px rgba(16, 17, 19, 0.06);
-  --u-shadow-md: 0 1px 2px rgba(16, 17, 19, 0.06);
-  --u-shadow-lg: 0 12px 32px rgba(16, 17, 19, 0.14), 0 2px 6px rgba(16, 17, 19, 0.06);
-  --u-shadow-xl: 0 16px 40px rgba(16, 17, 19, 0.18), 0 2px 8px rgba(16, 17, 19, 0.08);
 
-  /* Shell (`@iyulab/modern-app`) */
-  --app-sidebar-bg:          var(--u-bg-color);
-  --app-sidebar-fg:          var(--u-txt-color-weak);
-  --app-header-bg:           var(--u-bg-color);
-  --app-header-fg:           var(--u-txt-color);
-  --app-sidebar-width:       232px;
-  --app-sidebar-active-bg:   var(--hs-brand-soft);
-  --app-sidebar-active-fg:   var(--hs-brand-ink);
-  --app-sidebar-group-active-fg: var(--hs-brand-ink);
-
-  /* Brand — the application's identity colour. The house default is neutral, so an
-     unbranded app looks finished; an application sets these three and nothing else. */
-  --hs-brand:      #18191B;
-  --hs-brand-soft: #EAEAE7;
-  --hs-brand-ink:  #18191B;
+  /* The shell keeps the neutral current item; the current tab is ink */
+  --app-sidebar-fg:              var(--u-txt-color-weak);
+  --app-sidebar-active-bg:       var(--u-bg-color-active);
+  --app-sidebar-active-fg:       var(--u-txt-color);
+  --app-sidebar-group-active-fg: var(--u-txt-color);
+  --hs-tab-current-color: var(--u-txt-color);
 }
 
-/* ── dark ───────────────────────────────────────────────────────────────── */
-:root[theme="dark"] {
+/* ── warm · dark ─────────────────────────────────────────────────────────── */
+:root[hs-palette="warm"][theme="dark"] {
   --u-neutral-0:    #0E0F10;
   --u-neutral-50:   #121314;
   --u-neutral-100:  #1A1B1D;
@@ -197,7 +411,6 @@
   --u-border-color-hover:        #6A6D72;
   --u-input-border-color:        #6A6D72;
   --u-input-border-color-hover:  #A3A6AB;
-  --u-input-border-color-focus:  #6E9CF7;
 
   --u-txt-color:           #EDEDEC;
   --u-txt-color-strong:    #FFFFFF;
@@ -216,32 +429,6 @@
   --u-primary-color:         #EDEDEC;
   --u-primary-color-strong:  #EDEDEC;
   --u-primary-txt-color:     #18191B;
-  --u-primary-bg-color:      #1C2638;
-
-  --u-link-txt-color:   #8DB3F7;
-  --u-focus-ring-color: #6E9CF7;
-  --u-selection-color:     #6E9CF7;
-  --u-selection-txt-color: #0E0F10;
-
-  /* Chart series, dark — the same hues stepped into the dark band (L 0.52–0.66), every slot ≥ 3:1 on the
-     surface and the raised surface. Slot one is the dark interaction blue taken to the band's top (#6E9CF7
-     itself is lighter than a filled mark should be on this surface). */
-  --u-chart-color-1: #628FEA;
-  --u-chart-color-2: #C97152;
-  --u-chart-color-3: #04A19B;
-  --u-chart-color-4: #B8892D;
-  --u-chart-color-5: #9760AF;
-  --u-chart-color-6: #57833D;
-  --u-chart-color-7: #CF7188;
-  --u-chart-color-8: #9A5F1A;
-
-  --u-info-color-weakest:    #1F3152;
-  --u-info-color-weaker:     #2C4A7E;
-  --u-info-color-weak:       #5E8BE0;
-  --u-info-color:            #8DB3F7;
-  --u-info-color-strong:     #8DB3F7;
-  --u-info-bg-color:         #1B2A44;
-  --u-info-txt-color:        #0E0F10;
 
   --u-success-color-weakest: #1A3826;
   --u-success-color-weaker:  #2B5A3E;
@@ -249,58 +436,74 @@
   --u-success-color:         #7DD8A5;
   --u-success-color-strong:  #7DD8A5;
   --u-success-bg-color:      #16301F;
-  --u-success-txt-color:     #0E0F10;
 
-  --u-warning-color-weakest: #3F2E12;
   --u-warning-color-weaker:  #5E451A;
-  --u-warning-color-weak:    #C99140;
-  --u-warning-color:         #F2B65A;
   --u-warning-color-strong:  #F2B65A;
   --u-warning-bg-color:      #3A2A10;
   --u-warning-txt-color:     #0E0F10;
-
-  --u-danger-color-weakest:  #4A1F1B;
-  --u-danger-color-weaker:   #6E2C26;
-  --u-danger-color-weak:     #E0675C;
-  --u-danger-color:          #FF8A80;
-  --u-danger-color-strong:   #FF8A80;
-  --u-danger-bg-color:       #3D1A17;
-  --u-danger-txt-color:      #1A0D0B;
 
   --u-shadow-color-weaker:   rgba(0, 0, 0, 0.24);
   --u-shadow-color-weak:     rgba(0, 0, 0, 0.32);
   --u-shadow-color-normal:   rgba(0, 0, 0, 0.40);
   --u-shadow-color-strong:   rgba(0, 0, 0, 0.50);
   --u-shadow-color-stronger: rgba(0, 0, 0, 0.60);
-  --u-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
-  --u-shadow-md: 0 1px 2px rgba(0, 0, 0, 0.40);
-  --u-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.40);
-  --u-shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.60), 0 2px 8px rgba(0, 0, 0, 0.45);
-
-  --hs-brand:      #EDEDEC;
-  --hs-brand-soft: #2A2B2E;
-  --hs-brand-ink:  #EDEDEC;
 }
 
-/* ── mode-independent scale: shape, type, spacing ───────────────────────── */
+/* ── contrast · light — the cool screen with a dark shell ───────────────── *
+ * The sidebar re-scopes the neutral roles to these shell values (components.css), so everything drawn inside
+ * it — links, groups, a menu it opens — reads as one dark surface. */
+:root[hs-palette="contrast"] {
+  --hs-shell-bg:          #1F2937;
+  --hs-shell-raised:      #273244;
+  --hs-shell-hover:       #2B3647;
+  --hs-shell-active:      #334155;
+  --hs-shell-line:        #334155;
+  --hs-shell-ink:         #E5E7EB;
+  --hs-shell-ink-weak:    #A9B1BD;
+  --hs-shell-ink-weaker:  #9AA3AF;
+  --hs-shell-current-bg:  color-mix(in oklab, var(--hs-accent) 42%, var(--hs-shell-bg));
+  --hs-shell-current-ink: #FFFFFF;
+
+  --app-sidebar-bg:              var(--hs-shell-bg);
+  --app-sidebar-fg:              var(--hs-shell-ink);
+  --app-sidebar-active-bg:       var(--hs-shell-current-bg);
+  --app-sidebar-active-fg:       var(--hs-shell-current-ink);
+  --app-sidebar-group-active-fg: var(--hs-shell-current-ink);
+}
+
+/* ── contrast · dark ─────────────────────────────────────────────────────── */
+:root[hs-palette="contrast"][theme="dark"] {
+  --hs-shell-bg:          #0B0F14;
+  --hs-shell-raised:      #131A22;
+  --hs-shell-hover:       #18202A;
+  --hs-shell-active:      #212B37;
+  --hs-shell-line:        #1E2630;
+  --hs-shell-ink:         #E4E6E9;
+  --hs-shell-ink-weak:    #A2A8B0;
+  --hs-shell-ink-weaker:  #8D939B;
+  --hs-shell-current-ink: #FFFFFF;
+}
+
+/* ── mode-independent scale: shape, size, type ──────────────────────────── */
 :root {
-  /* Shape — badge 4 · control 6 · card and table 10 */
+  /* Shape — mark 4 · control and menu item 8 · card and table 10 · status pill */
   --u-radius-sm:   3px;
   --u-radius-md:   4px;
-  --u-radius-lg:   6px;
+  --u-radius-lg:   8px;
   --u-radius-xl:  10px;
   --u-radius-2xl: 12px;
   --u-radius-3xl: 16px;
 
-  /* Type — Pretendard; one ladder 22 / 18 / 15 / 14 / 13 / 12 / 11. Korean gets no positive
-     tracking, so only the largest step is tightened and the overline stays near zero. */
+  /* Type — Pretendard; one ladder 24 / 18 / 15 / 14 / 13 / 12 / 11. Korean gets no positive
+     tracking in running text, so only the largest step is tightened; the overline (a group label) is
+     spaced a little. */
   --u-font-base: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
                  'Noto Sans KR', 'Malgun Gothic', 'Segoe UI', system-ui, sans-serif;
   --u-font-mono: 'JetBrains Mono', D2Coding, ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
 
-  --u-text-display-size:      22px;
+  --u-text-display-size:      24px;
   --u-text-display-weight:    700;
-  --u-text-display-leading:   1.364;
+  --u-text-display-leading:   1.333;
   --u-text-display-tracking:  -0.01em;
   --u-text-title-size:        18px;
   --u-text-title-weight:      700;
@@ -320,42 +523,44 @@
   --u-text-label-tracking:    0;
   --u-text-caption-size:      12px;
   --u-text-caption-weight:    400;
-  --u-text-caption-leading:   1.5;
+  --u-text-caption-leading:   1.333;
   --u-text-caption-tracking:  0;
   --u-text-overline-size:     11px;
   --u-text-overline-weight:   600;
-  --u-text-overline-leading:  1.455;
-  --u-text-overline-tracking: 0.02em;
+  --u-text-overline-leading:  1.273;
+  --u-text-overline-tracking: 0.04em;
 
   /* House-only scale — control heights and table rows (read by components.css · patterns.css) */
-  --hs-control-sm: 28px;
-  --hs-control-md: 32px;
+  --hs-control-sm: 32px;
+  --hs-control-md: 36px;
   --hs-control-lg: 40px;
-  --hs-row:         40px;
-  --hs-row-compact: 32px;
-  --hs-page-padding: 24px;
+  --hs-row:         44px;
+  --hs-row-compact: 36px;
+  --hs-page-padding: 20px 32px 48px;
+  --hs-section-gap: 20px;
 
   /* House type steps beyond the shared ladder — derived from it, so a rescaled ladder (density, a product system)
-     carries them along. Dense = the step between body and label (13 at 14/12): table cells, definition lists,
-     callouts. Hero = a headline figure, display + 6 (28 at 22). */
+     carries them along. Dense = the step between body and label (13 at 14/12): secondary lines, table headers,
+     breadcrumbs. Hero = a headline figure, display + 4 (28 at 24). */
   --hs-text-dense-size: calc((var(--u-text-body-size) + var(--u-text-label-size)) / 2);
-  --hs-text-hero-size:  calc(var(--u-text-display-size) + 6px);
+  --hs-text-hero-size:  calc(var(--u-text-display-size) + 4px);
 
   /* Prose measure — a running paragraph stops around 70 characters a line (`.hs-prose`). */
   --hs-measure: 70ch;
 
-  /* Field box (`@iyulab/components`) — 32px fields beside 32px buttons; 40px inside form sections. In em, so the box
-     follows the control density with the buttons (resolved at the field: 4.5px / 12px at the default 14px). */
-  --u-field-padding-block:  calc(4.5em / 14);
+  /* Field box (`@iyulab/components`) — 36px fields beside 36px buttons; 40px inside form sections. In em, so the box
+     follows the control density with the buttons (resolved at the field: 6.5px / 12px at the default 14px). */
+  --u-field-padding-block:  calc(6.5em / 14);
   --u-field-padding-inline: calc(12em / 14);
-  --u-field-radius:         6px;
+  --u-field-radius:         8px;
 
-  /* Shell (`@iyulab/modern-app`) — 32px navigation rows, 16px icons, a flat current item */
+  /* Shell (`@iyulab/modern-app`) — a 240px sidebar of 38px rows with 18px icons, a flat current item */
   --app-main-padding:           var(--hs-page-padding);
-  --app-sidebar-item-radius:    6px;
-  --app-sidebar-item-gap:       8px;
-  --app-sidebar-item-padding:   6px 12px;
-  --app-sidebar-icon-size:      16px;
+  --app-sidebar-width:          240px;
+  --app-sidebar-item-radius:    8px;
+  --app-sidebar-item-gap:       10px;
+  --app-sidebar-item-padding:   8px 10px;
+  --app-sidebar-icon-size:      18px;
   --app-sidebar-active-shadow:  none;
   --app-sidebar-active-shadow-hover: none;
 }

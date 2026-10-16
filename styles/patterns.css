@@ -15,7 +15,7 @@
  *   edit   = side sheet with .hs-fieldset sections and a pinned u-action-bar (summary slot)
  *
  * Rules the patterns encode:
- *   · one ink (primary) button per view — the rest are outlined, plain or in a menu
+ *   · one filled (main-action) button per view — the rest are outlined, plain or in a menu
  *   · conditions fold, results open — the table starts in the top third of the screen
  *   · numbers right-aligned in tabular figures; an empty value is an em dash
  *   · row actions appear on hover or selection, never as a red trash can on every row
@@ -30,16 +30,17 @@
 .hs-page {
   display: flex;
   flex-direction: column;
-  gap: var(--u-space-lg, 16px);
+  gap: var(--hs-section-gap, 20px);
   min-width: 0;
 }
 
 
-/* ── Plain table — for small server-rendered tables that do not need a grid ── */
+/* ── Plain table — for small server-rendered tables that do not need a grid ──
+ *    44px body-size rows, a 13px semibold header; the first and last cells keep the card's 20px edge. */
 .hs-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--hs-text-dense-size, 13px);
+  font-size: var(--u-text-body-size, 14px);
   line-height: 20px;
   color: var(--u-txt-color);
 }
@@ -47,31 +48,33 @@
   padding: var(--u-space-sm, 8px) var(--u-space-md, 12px);
   text-align: start;
   white-space: nowrap;
-  font-size: var(--u-text-label-size, 12px);
-  line-height: 16px;
-  font-weight: 500;
+  font-size: var(--hs-text-dense-size, 13px);
+  line-height: 18px;
+  font-weight: 600;
   color: var(--u-txt-color-weak);
   background: var(--u-bg-color-raised);
   border-bottom: 1px solid var(--u-border-color);
 }
 .hs-table td {
-  height: var(--hs-row, 40px);
+  height: var(--hs-row, 44px);
   padding: 0 var(--u-space-md, 12px);
   border-bottom: 1px solid var(--u-border-color);
   vertical-align: middle;
 }
+.hs-table :is(th, td):first-child { padding-inline-start: var(--u-space-xl, 20px); }
+.hs-table :is(th, td):last-child { padding-inline-end: var(--u-space-xl, 20px); }
 .hs-table tbody tr:last-child td { border-bottom: 0; }
 .hs-table tbody tr:hover td { background: var(--u-bg-color-hover); }
 .hs-table tr[aria-selected='true'] td { background: var(--u-primary-bg-color); }
 .hs-table tfoot td {
-  height: var(--hs-row, 40px);
+  height: var(--hs-row, 44px);
   font-weight: 600;
 }
 /* One line separates the totals from the body — not one per totals row (subtotal · tax · total). */
 .hs-table tfoot tr:first-child td { border-top: 1px solid var(--u-border-color); }
 /* Totals rows follow the compact height too (`tfoot td` would otherwise win on specificity). */
 .hs-table--compact td,
-.hs-table--compact tfoot td { height: var(--hs-row-compact, 32px); }
+.hs-table--compact tfoot td { height: var(--hs-row-compact, 36px); }
 .hs-table--top td { vertical-align: top; padding-block: var(--u-space-sm, 8px); height: auto; }
 /* Cells (`th` too — header text aligns with its values) */
 .hs-num,
@@ -97,7 +100,7 @@ a.hs-id:hover,
 .hs-table .hs-continued td.hs-keep { color: var(--u-txt-color); }
 /* A group header row with its subtotal. */
 .hs-table .hs-group td {
-  height: 32px;
+  height: var(--hs-row-compact, 36px);
   background: var(--u-bg-color-raised);
   font-size: var(--u-text-label-size, 12px);
   font-weight: 600;
@@ -139,7 +142,7 @@ tr[aria-selected='true'] .hs-row-actions {
 .hs-detail__cols {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--u-space-lg, 16px);
+  gap: var(--hs-section-gap, 20px);
   align-items: flex-start;
 }
 .hs-detail__cols > * {
@@ -153,7 +156,7 @@ tr[aria-selected='true'] .hs-row-actions {
 .hs-grid-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--u-space-lg, 16px);
+  gap: var(--hs-section-gap, 20px);
   align-items: start;
 }
 

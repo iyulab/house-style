@@ -192,6 +192,39 @@ pre code {
 .chart-swatch .swatch-chip {
   flex: none;
 }
+/* Palette controls (Theme & layout) — preset buttons, the two seed pickers, the derived pairs. */
+.palette-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--u-space-md, 12px) var(--u-space-lg, 16px);
+  margin-block: var(--u-space-md, 12px);
+}
+.palette-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-space-xs, 6px);
+}
+.palette-seed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u-space-sm, 8px);
+  font-size: var(--hs-text-dense-size, 13px);
+  color: var(--u-txt-color-weak);
+}
+.palette-seed input {
+  inline-size: 40px;
+  block-size: 32px;
+  padding: 2px;
+  border: 1px solid var(--u-input-border-color);
+  border-radius: var(--u-radius-lg, 8px);
+  background: var(--u-input-bg-color);
+}
+.palette-sample {
+  padding: var(--u-space-md, 12px) var(--u-space-lg, 16px);
+  border-radius: var(--u-radius-lg, 8px);
+  font-weight: 600;
+}
 @media (max-width: 640px) {
   .swatch-row {
     grid-template-columns: 1fr;

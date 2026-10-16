@@ -11,7 +11,7 @@
 // density, each control at each size — the host height and the font size of the element that draws the text.
 // Fails if a step is not taller than the one below it, if its text is smaller than the one below it (a field's lg keeps
 // md's text — its step is the padding — so text may stay level, never shrink), if a field is not level with the button
-// of the same step, or if the default density is not 28 / 32 / 40. Run after `npm run build`.
+// of the same step, or if the default density is not 32 / 36 / 40. Run after `npm run build`.
 import { existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -34,7 +34,7 @@ const CONTROLS = {
 };
 const SIZES = ['sm', 'md', 'lg'];
 const DENSITIES = [12, 14, 16, 18];
-const DEFAULT = { density: 14, heights: { sm: 28, md: 32, lg: 40 } };
+const DEFAULT = { density: 14, heights: { sm: 32, md: 36, lg: 40 } };
 const LEVEL = 0.5; // px — a field and a button of the same step are level within this
 
 const { preview } = await import('vite');

@@ -109,6 +109,9 @@ export function mountAppShell(root: HTMLElement) {
               title: 'Orders Reference',
               main: NAV_ITEMS.map((n) => ({
                 type: 'link', label: n.label, icon: n.icon, lib: n.lib, href: base.slice(0, -1) + n.path,
+                // A section stays the current item on its own deeper screens (an order under Orders); the root
+                // (Dashboard) matches only itself.
+                pattern: n.path === '/' ? undefined : `${base.slice(0, -1)}${n.path}{/*}?`,
                 requirePermission: n.permission,
               })),
               footer: [

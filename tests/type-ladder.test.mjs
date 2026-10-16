@@ -4,7 +4,7 @@
 // literal px, so a consumer who rescales the ladder (a denser or larger mode, a product system) carries every pattern
 // along. Each read keeps a literal fallback equal to the house value, so a page without tokens.css looks the same.
 // The one exemption is the control-height recipe (buttons and fields): there the font size is a term of the
-// 28/32/40 height formula, not a text step.
+// 32/36/40 height formula, not a text step.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -40,7 +40,7 @@ function sizes(source) {
   return out;
 }
 
-test('the house steps sit on the ladder: dense 13 between body and label, hero 28', () => {
+test('the house steps sit on the ladder: dense 13 between body and label, hero 28 (display 24 + 4)', () => {
   assert.ok(lightRoot.length > 0);
   assert.equal(px('--hs-text-dense-size'), 13);
   assert.equal(px('--hs-text-hero-size'), 28);
@@ -56,7 +56,7 @@ for (const file of ['patterns.css', 'components.css']) {
         continue;
       }
       if (/inherit|em$|%$/.test(value)) continue;
-      // Control-height recipe — the font size is a term of the 28/32/40 formula.
+      // Control-height recipe — the font size is a term of the 32/36/40 formula.
       if (/^(:is\([^)]*\))?u-button|^:is\(u-input/.test(selector)) continue;
       offenders.push(`${selector} ${prop}: ${value}`);
     }

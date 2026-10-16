@@ -1,5 +1,54 @@
 # Changelog
 
+## [Unreleased]
+
+The palette moves to the application and the house gains presets; controls, rows and the type ladder grow a step.
+The default look changes — see *Migrating*.
+
+### Added
+
+- **Seed colours.** An application sets `--hs-accent` (the main action, the current item, links, focus) and
+  `--hs-secondary` (a second emphasis) on `:root`. Every step the components need is derived from the seed, in light
+  and dark: `--hs-accent-fill` (the seed, darkened only as far as white text needs), `--hs-accent-contrast`,
+  `--hs-accent-soft`, `--hs-accent-ink`, and the same for `--hs-secondary`. Each derived step is its own token, so an
+  application overrides only the step its seed defeats. The derivations use relative colour syntax and `color-mix()`.
+- **Presets** — `<html hs-palette="…">`, each with a light and a dark side:
+  - `cool` (no attribute, the new default): cool-grey neutrals, the accent as the filled main action, a light sidebar
+    whose current item is the accent tint, the current tab in the accent.
+  - `warm`: the look before this release — warm-grey neutrals, an ink main action, a neutral current item, an ink tab.
+  - `contrast`: the `cool` screen with a dark sidebar; the sidebar re-scopes the neutral roles, so its links, groups,
+    section titles and any menu it opens read as one dark surface.
+- `--u-secondary-*` role tokens (for `color="secondary"` — requires an `@iyulab/components` release with the
+  `secondary` role) and chart series slot two following the secondary seed.
+- Tailwind entry: `accent` · `accent-soft` · `accent-ink` · `on-accent` (and `secondary-*`) colours, `rounded-pill`.
+
+### Changed
+
+- Controls are 32 / 36 / 40 (were 28 / 32 / 40) — buttons and fields alike, still a function of `--u-density`; buttons
+  are semibold, md at the density size. Labelled fields stay 40.
+- Control, field and menu-item corners are 8px (were 6px); cards stay 10px. Tags are pills.
+- Table rows are 44px, compact 36px (were 40 / 32). Cells are at the body size (14px) with a 13px semibold header;
+  `.hs-table` keeps a 20px edge on its first and last cells.
+- Type: display 24px (was 22px) with a 32px line, overline tracking 0.04em; the hero figure stays 28px (display + 4).
+- Tabs (`u-tab-nav`, `u-tab-panel`): the current tab takes the preset's tab colour, 14px, 10px × 12px.
+- Shell: a 240px sidebar of 38px rows (8px × 10px, 18px icons, 10px gap, 8px corners); main padding 20px 32px 48px;
+  20px between page sections (`.hs-page`, `.hs-detail__cols`, `.hs-grid-cards`).
+- Cool neutrals: canvas `#F5F6F8`, lines `#E0E0E0`, body text `#333232`, secondary text `#666666`; field edges stay
+  at 3:1 (`#858C96`).
+
+### Removed
+
+- `--hs-brand`, `--hs-brand-soft`, `--hs-brand-ink` and the Tailwind `brand*` colours — use the seeds.
+
+### Migrating
+
+- Brand tokens: `--hs-brand` → `--hs-accent` (one seed; drop `-soft`/`-ink` unless the derived step does not suit you,
+  then set `--hs-accent-soft` / `--hs-accent-ink`). Tailwind `bg-brand` → `bg-accent`, `bg-brand-soft` →
+  `bg-accent-soft`, `text-brand-ink` → `text-accent-ink`.
+- To keep the previous colours: `<html hs-palette="warm">`. The size changes are not part of a preset; to keep the
+  previous sizes, set the tokens (`--u-radius-lg: 6px`, `--hs-row: 40px`, `--u-text-display-size: 22px`, …) and the
+  control padding on your own `:root` / `u-button`.
+
 ## [0.7.0] - 2026-10-16
 
 ### Removed
