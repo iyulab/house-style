@@ -325,6 +325,12 @@ u-page-header::part(subtitle) {
   color: var(--u-txt-color-weak);
 }
 
+/* ── Info field (`@iyulab/modern-app`) — a KPI figure (`size="xl"`) is the house hero step, 28 at the 24 display.
+ *    A tile (`appearance="tile"`) is already a card surface — border, card corner, surface — from the shared tokens. ── */
+u-info-field {
+  --info-field-xl-size: var(--hs-text-hero-size);
+}
+
 /* ── Sidebar layout — the sidebar is a surface separated from the canvas by a hairline.
  *    (The page already sits on `--u-canvas-bg-color`; padding is `--app-main-padding`.) ── */
 u-sidebar-layout::part(sidebar) {

@@ -125,6 +125,29 @@ export class DataPatternsSection extends LitElement {
             good news, so the tone is overridden to <code>positive</code> instead of the
             auto-inferred <code>negative</code>.
           </p>
+          <p>
+            On a detail page the figures stand on their own, each in a tile: <code>appearance="tile"</code>
+            draws the card surface, <code>size="xl"</code> the headline figure (the house hero step, 28px).
+            A tile with a <code>tone</code> takes that tone's face and border — attention reads across the grid,
+            not only in the figure's colour — and the <code>trend-icon</code> slot puts a status icon before the
+            caption. A figure that cannot be computed keeps <code>—</code> at figure size and says why on the line
+            under it (<code>blank-reason</code>), so the row of tiles stays level.
+          </p>
+          <u-info-section min="190">
+            <u-info-field appearance="tile" size="xl" label="On-time delivery" .value=${96.4} unit="%"
+              .trendLabel=${'Target 95%'}></u-info-field>
+            <u-info-field appearance="tile" size="xl" label="Orders on hold" .value=${7}
+              tone="warning" .trendLabel=${'3 past their promised date'}>
+              <u-icon slot="trend-icon" lib="bootstrap" name="exclamation-triangle-fill"></u-icon>
+            </u-info-field>
+            <u-info-field appearance="tile" size="xl" label="Avg. fulfillment" .value=${2.4} unit="days"></u-info-field>
+            <u-info-field appearance="tile" size="xl" label="Return rate" unit="%"
+              blank-reason="No returns in this period"></u-info-field>
+          </u-info-section>
+          <p>
+            Strip or tiles: a dashboard header that reads as one band of related numbers is the strip above; figures that
+            each carry their own status on a detail page are tiles.
+          </p>
         </u-group-box>
 
         <u-group-box level="2" title="List screen — one source, the view that shows it, and slots">
