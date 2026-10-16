@@ -530,10 +530,8 @@
   --u-text-overline-leading:  1.273;
   --u-text-overline-tracking: 0.04em;
 
-  /* House-only scale — control heights and table rows (read by components.css · patterns.css) */
-  --hs-control-sm: 32px;
-  --hs-control-md: 36px;
-  --hs-control-lg: 40px;
+  /* House-only scale — table rows (read by components.css · patterns.css). Control heights are not tokens: they
+     follow from the density (`--u-density`) through the padding formula in components.css, 32 / 36 / 40 at 14px. */
   --hs-row:         44px;
   --hs-row-compact: 36px;
   --hs-page-padding: 20px 32px 48px;

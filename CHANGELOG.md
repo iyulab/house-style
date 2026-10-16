@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Removed
+
+- `--hs-control-sm` · `--hs-control-md` · `--hs-control-lg` — declared as «read by components.css», read by nothing.
+  Control heights follow from the density (`--u-density`) through the padding formula (32 / 36 / 40 at 14px), so the
+  literals would also have been wrong at any other density. A host control that wants the ladder measures a
+  `u-button` or sets its own height.
+
 ## [0.8.1] - 2026-10-17
 
 ### Fixed
