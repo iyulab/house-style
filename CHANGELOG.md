@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.1] - 2026-10-17
+
+### Fixed
+
+- A KPI figure (`u-info-field size="xl"`) is the house hero step (`--hs-text-hero-size`, 28px at the 24px display) —
+  0.8.0 defined the step but nothing read it. Needs `@iyulab/modern-app` 0.56 or later (the optional peer floor moves
+  from 0.54 to 0.56).
+
+### Documentation
+
+- The guide's KPI section shows the tile grid (`appearance="tile"`, `size="xl"`, a toned tile with a status icon, a
+  blank figure with its reason) next to the strip, and when to use which.
+
 ## [0.8.0] - 2026-10-17
 
 The palette moves to the application and the house gains presets; controls, rows and the type ladder grow a step.
