@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.8.0] - 2026-10-17
 
 The palette moves to the application and the house gains presets; controls, rows and the type ladder grow a step.
 The default look changes — see *Migrating*.
@@ -48,6 +48,8 @@ The default look changes — see *Migrating*.
 - To keep the previous colours: `<html hs-palette="warm">`. The size changes are not part of a preset; to keep the
   previous sizes, set the tokens (`--u-radius-lg: 6px`, `--hs-row: 40px`, `--u-text-display-size: 22px`, …) and the
   control padding on your own `:root` / `u-button`.
+- Requires `@iyulab/components` 2.29.0 or later (peer range `^2.29.0`, was `^2.26.0`) — the house sets the
+  `secondary` role tokens, which components reads from 2.29.0.
 
 ## [0.7.0] - 2026-10-16
 
