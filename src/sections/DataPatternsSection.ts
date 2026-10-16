@@ -255,12 +255,15 @@ export class DataPatternsSection extends LitElement {
             <code>u-master-detail-layout</code> (a Vaadin <code>MasterDetailLayout</code>-style
             split-pane shell) doesn't manage selection either — it only shows its
             <code>detail</code> slot when that slot has content, and hides it when empty.
-            Which record fills it is the host's decision, wired the same way the bulk-action
-            bar above is: by reading <code>u-rich-table</code>'s <code>selection-change</code>
-            event. Check exactly one row to open its detail pane. Narrow this window (or
-            resize the browser) below the layout's own <code>overlay-breakpoint</code> and the
-            detail pane switches from a side panel to a full overlay with a close button —
-            that's the component's own responsive behavior, not extra code here.
+            Which record fills it is the host's decision: <code>u-rich-table</code>'s
+            <code>row-activate</code> (a click on a row, or Enter on it) opens that row — checking
+            boxes stays bulk selection, a different thing. <code>detail-size</code> fixes the
+            detail pane's width and gives the list the rest, and <code>slot="detail-placeholder"</code>
+            says what goes there before anything is open. No height is set: a real list is long and
+            its page scrolls, and the detail pane stays in view beside the row you picked. Narrow this
+            window below the layout's own <code>overlay-breakpoint</code> and the detail pane becomes
+            an overlay over the list with a close button — the component's own behavior, not extra
+            code here.
           </p>
           <house-data-patterns-master-detail></house-data-patterns-master-detail>
           <house-demo-source label="MasterDetailDemo.ts" .source=${masterDetailSrc}></house-demo-source>

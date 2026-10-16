@@ -6,16 +6,19 @@ import '@iyulab/modern-app/dist/components/InfoSection.js';
 import '@iyulab/modern-app/dist/components/InfoField.js';
 import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import type { RichTableEventMap } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
-import type { URichTable } from '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 
 import { COLUMNS, ROWS, renderStatusTag } from './constants.js';
 
 /**
  * `u-master-detail-layout` doesn't manage selection — it only shows or hides its
  * `detail` slot depending on whether that slot has content. Which record fills it is
- * the host's decision. `u-rich-table`'s only selection signal today is checkbox-based
- * `selection-change` (there's no row-click "activate" event yet), so this demo treats
- * "exactly one row checked" as the signal to open a detail pane.
+ * the host's decision: here `u-rich-table`'s `row-activate` (a click on a row, or Enter
+ * on it) opens that row. Checking boxes stays a separate thing — bulk selection, not
+ * "the record I'm looking at".
+ *
+ * `detail-size` gives the detail pane the fixed width and lets the list take the rest —
+ * a wide list with a record summary beside it. No height is set: a real list is long and
+ * its page scrolls, and the detail pane stays in view beside the row you picked.
  */
 @customElement('house-data-patterns-master-detail')
 export class MasterDetailDemo extends LitElement {
@@ -25,9 +28,8 @@ export class MasterDetailDemo extends LitElement {
 
   @state() private selectedId: string | null = null;
 
-  private handleSelectionChange(e: RichTableEventMap['selection-change']) {
-    const ids = e.detail.selectedIds;
-    this.selectedId = ids.length === 1 ? String(ids[0]) : null;
+  private handleRowActivate(e: RichTableEventMap['row-activate']) {
+    this.selectedId = e.detail.id;
   }
 
   private get selectedRow() {
@@ -36,29 +38,25 @@ export class MasterDetailDemo extends LitElement {
 
   /**
    * The overlay close button only fires `detail-close` — it doesn't clear the slot
-   * itself (the layout doesn't own selection, so it has nothing to clear). The host
-   * clears its own state and also clears the table's checkbox, so the two stay in sync.
+   * itself (the layout doesn't own selection, so it has nothing to clear).
    */
   private handleClose() {
     this.selectedId = null;
-    this.querySelector<URichTable>('#master-detail-table')?.clearSelection();
   }
 
   render() {
     return html`
       <u-master-detail-layout
-        style="height: 22rem"
+        detail-size="18rem"
         overlay-breakpoint="640"
         @detail-close=${this.handleClose}
       >
         <u-rich-table
-          id="master-detail-table"
-          aria-label="Master list"
+          aria-label="Orders"
           .columns=${COLUMNS}
           .data=${ROWS}
           .totalCount=${ROWS.length}
-          selectable
-          @selection-change=${this.handleSelectionChange}
+          @row-activate=${this.handleRowActivate}
         ></u-rich-table>
         ${this.selectedRow ? html`
           <div slot="detail" style="padding: var(--u-space-lg, 16px)">
@@ -70,13 +68,8 @@ export class MasterDetailDemo extends LitElement {
             ${renderStatusTag(this.selectedRow.status)}
           </div>
         ` : ''}
+        <p slot="detail-placeholder" style="padding: var(--u-space-lg, 16px)">Open an order to see it here.</p>
       </u-master-detail-layout>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'house-data-patterns-master-detail': MasterDetailDemo;
   }
 }
