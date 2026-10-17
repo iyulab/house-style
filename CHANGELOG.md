@@ -4,6 +4,10 @@
 
 ### Added
 
+- The reference app's sidebar foot is an account menu — the signed-in user's name, a role line and initials, with the theme
+  toggle and Sign out inside (`type: 'menu'` with `avatar` and `description`). The route guard that loads the session keeps the
+  user, and the shell reads it when the layout route renders (again after every sign-in), so the config needs no reactive
+  session.
 - `.hs-note` — a collapsible explanation (`<details class="hs-note">`): an accent summary line, the body one step quieter,
   760px at most. The guide also says that a section heading (`u-group-box` `meta` + `actions`) and a record heading
   (`u-page-header` `eyebrow` + `status`) are components already — no pattern for them.

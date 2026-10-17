@@ -6,6 +6,7 @@ import { SidebarLayout, ScreenObserver } from '@iyulab/modern-app/react';
 // passes them itself rather than copying the mapping — a copy would miss the package's later fixes to it.
 import { defaultFallback, unsavedChangesGuard } from '@iyulab/modern-app';
 import { auth } from '../lib/auth.js';
+import type { DemoUser } from '../mocks/data.js';
 import { hasPermission } from '@iyulab/enterprise';
 import { Toast } from '@iyulab/components/dist/utilities/Toast.js';
 import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
@@ -45,9 +46,21 @@ const ORDERS_READ = NAV_ITEMS.find((n) => n.path === '/orders')?.permission;
  *  which loaded the session's permissions. */
 const can = (permission: string | undefined) => () => !permission || hasPermission(permission);
 
+/** The signed-in user, read by the guard below on every navigation. The shell builds its config when the layout route
+ *  renders — which is after the guard has run, and again after every sign-in — so the account block takes the user from
+ *  here and needs no reactive shell config. */
+let sessionUser: DemoUser | null = null;
+
+/** Up to two capital letters for the avatar: «Demo Operator» → DO. */
+const initialsOf = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+
+/** What the account may do, in a line under the name. */
+const roleOf = (user: DemoUser) => (user.Permissions.includes('orders.write') ? 'Read and write' : 'Read-only');
+
 async function requireAuth(ctx: RouteContext): Promise<boolean | string> {
   if (ctx.pathname === base + 'login') return true;
   const session = await auth.fetchMe();
+  sessionUser = session.status === 'authenticated' ? session.user : null;
   // Only a definite «no session» (401) sends the user to sign in. When the session is unknown
   // (server down, offline) the route fails with the error instead of pretending they logged out.
   if (session.status === 'unknown') throw session.error;
@@ -115,8 +128,16 @@ export function mountAppShell(root: HTMLElement) {
                 requirePermission: n.permission,
               })),
               footer: [
-                { type: 'button', label: 'Toggle theme', icon: 'circle-half', lib: 'bootstrap', onClick: () => Theme.set(Theme.resolved() === 'dark' ? 'light' : 'dark') },
-                { type: 'button', label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut },
+                {
+                  type: 'menu',
+                  label: sessionUser?.Name ?? 'Account',
+                  description: sessionUser ? roleOf(sessionUser) : undefined,
+                  avatar: sessionUser ? { initials: initialsOf(sessionUser.Name) } : undefined,
+                  items: [
+                    { label: 'Toggle theme', icon: 'circle-half', lib: 'bootstrap', onClick: () => Theme.set(Theme.resolved() === 'dark' ? 'light' : 'dark') },
+                    { label: 'Sign out', icon: 'box-arrow-right', lib: 'bootstrap', onClick: signOut },
+                  ],
+                },
               ],
               hasPermission,
             }}
