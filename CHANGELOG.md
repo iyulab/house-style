@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- `.hs-note` — a collapsible explanation (`<details class="hs-note">`): an accent summary line, the body one step quieter,
+  760px at most. The guide also says that a section heading (`u-group-box` `meta` + `actions`) and a record heading
+  (`u-page-header` `eyebrow` + `status`) are components already — no pattern for them.
+
 ### Removed
 
 - `--hs-control-sm` · `--hs-control-md` · `--hs-control-lg` — declared as «read by components.css», read by nothing.

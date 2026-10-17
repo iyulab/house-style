@@ -160,6 +160,30 @@ tr[aria-selected='true'] .hs-row-actions {
   align-items: start;
 }
 
+/* ── Collapsible note — `<details class="hs-note">`: an accent summary line, the body one step quieter. For the
+ *    explanation a screen can do without; the conclusion still goes in the title (callouts), not in here. ── */
+.hs-note {
+  max-inline-size: 760px;
+  font-size: var(--u-text-label-size);
+  line-height: 1.55;
+  color: var(--u-txt-color-weak);
+}
+.hs-note > summary {
+  cursor: pointer;
+  width: fit-content;
+  font-size: var(--u-text-body-size);
+  font-weight: 600;
+  color: var(--u-primary-color);
+}
+.hs-note > summary:focus-visible {
+  outline: 2px solid var(--u-focus-ring-color, var(--u-primary-color));
+  outline-offset: 2px;
+  border-radius: var(--u-radius-sm);
+}
+.hs-note > :not(summary) {
+  margin: var(--u-space-sm, 8px) 0 0;
+}
+
 /* ── Form — label above, help below; sections instead of one long grid ── */
 .hs-fieldset {
   margin: 0;

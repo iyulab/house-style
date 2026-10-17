@@ -326,6 +326,19 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
         </div>
       </u-group-box>
 
+      <u-group-box level="2" title="Collapsible note — the explanation a screen can do without">
+        <details class="hs-note">
+          <summary>About this renewal</summary>
+          <p>Renewals follow the standing terms unless a line is amended; amended lines show their own end date.</p>
+        </details>
+        <p>
+          A note is <code>&lt;details class="hs-note"&gt;</code>: an accent summary line, the body one step quieter, 760px
+          at most. A section heading is <code>&lt;u-group-box title meta&gt;</code> with its link in the
+          <code>actions</code> slot, and a record heading is <code>&lt;u-page-header&gt;</code> with the identifier in
+          <code>eyebrow</code> and the state in <code>status</code> — components, not patterns.
+        </p>
+      </u-group-box>
+
       <u-group-box level="2" title="Callouts — the conclusion in the title">
         <div class="hs-page">
           <u-alert inline open status="warning" title="Some customers need their due date checked">
