@@ -14,6 +14,7 @@ import { ActionBar } from '@iyulab/modern-app/react/ActionBar.js';
 import { EmptyState } from '@iyulab/modern-app/react/EmptyState.js';
 import { svc } from '../lib/odata.js';
 import { usePermission } from '../lib/permissions.js';
+import { won } from '../lib/money.js';
 import NewOrderDrawer from './NewOrderDrawer.js';
 import { StatusTag } from '../components/StatusTag.js';
 import { Dialog } from '@iyulab/components/dist/utilities/Dialog.js';
@@ -24,7 +25,7 @@ const COLUMNS: ColumnDefReact[] = [
   { key: 'Id', label: 'Order', width: '140px', sortable: true },
   { key: 'Customer', label: 'Customer', width: '200px', sortable: true },
   { key: 'Status', label: 'Status', width: '120px', render: (v) => <StatusTag status={String(v) as OrderStatus} /> },
-  { key: 'Total', label: 'Total', width: '140px', align: 'end', sortable: true, render: (v) => `₩${Number(v).toLocaleString()}` },
+  { key: 'Total', label: 'Total', width: '140px', align: 'end', sortable: true, render: (v) => won(v) },
 ];
 
 /**
@@ -96,7 +97,7 @@ export default function OrdersListPage() {
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UDataViewReact slot="view" view-name="cards" hideToolbar
-        renderCard={(o) => <><strong>{String(o.Customer)}</strong> <StatusTag status={o.Status as OrderStatus} /><div><small>{String(o.Id)} · ₩{Number(o.Total).toLocaleString()}</small></div></>}
+        renderCard={(o) => <><strong>{String(o.Customer)}</strong> <StatusTag status={o.Status as OrderStatus} /><div><small>{String(o.Id)} · {won(o.Total)}</small></div></>}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UPagination slot="pager" label="Orders pages" />
       {/* 데이터가 아예 없는 것과 조건이 걸러낸 것은 다음 행동이 다르다 — 화면이 자기 조건을 보고 고른다. */}

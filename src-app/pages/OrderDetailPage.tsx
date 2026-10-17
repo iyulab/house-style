@@ -22,14 +22,13 @@ import type { ColumnDef } from '@iyulab/data-components';
 import { svc } from '../lib/odata.js';
 import { usePermission } from '../lib/permissions.js';
 import { useDiscardableForm } from '../lib/unsaved.js';
+import { won } from '../lib/money.js';
 import type { Order, OrderStatus, OrderItem, Product } from '../mocks/data.js';
 
 // The edit form's Status choices deliberately exclude "cancelled" — cancelling is a separate,
 // one-way destructive action (the button below), not a step in the normal fulfillment flow
 // this select edits. Matches the house-style guide's own "Edit form" recipe (Data Patterns).
 const EDITABLE_STATUSES: OrderStatus[] = ['pending', 'shipped', 'delivered'];
-
-const won = (v: unknown) => `₩${Number(v).toLocaleString()}`;
 
 // The guide's «Line items» pattern (Data patterns): a group box holding a rich table, with the columns
 // trimmed to what belongs on a line. Quantity is the one editable cell — double-click or Enter edits it.
@@ -294,7 +293,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
                   </USelect>
                 </FormRow>
                 <FormRow full>
-                  <UInput label="Total" description="Read-only — set from the order's items" value={`₩${order.Total.toLocaleString()}`} disabled />
+                  <UInput label="Total" description="Read-only — set from the order's items" value={won(order.Total)} disabled />
                 </FormRow>
               </FormSection>
               </fieldset>

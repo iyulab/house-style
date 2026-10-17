@@ -7,6 +7,7 @@ import { UInput, UButton } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
 import ItemEntryForm, { type ItemEntryFormLine } from '../components/ItemEntryForm.js';
 import { svc } from '../lib/odata.js';
+import { won } from '../lib/money.js';
 import type { Order, OrderItem, Product } from '../mocks/data.js';
 
 const STEPS: WizardStep[] = [
@@ -148,7 +149,7 @@ export default function NewOrderPage() {
               style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--u-space-md, 16px)', alignItems: 'center', padding: 'var(--u-space-sm, 10px) 0' }}
             >
               <span style={{ flex: '1 1 10rem', minWidth: 0 }}>{line.productName} × {line.quantity}</span>
-              <span>₩{(line.quantity * line.unitPrice).toLocaleString()}</span>
+              <span>{won(line.quantity * line.unitPrice)}</span>
               <UButton color="danger" appearance="plain" size="sm" onClick={() => removeLine(i)}>Remove</UButton>
             </div>
           ))}
@@ -159,9 +160,9 @@ export default function NewOrderPage() {
         <FormSection title="Review">
           <p>{customer || '(no customer)'}</p>
           {lines.map((line, i) => (
-            <p key={`${line.productId}-${i}`}>{line.productName} × {line.quantity} — ₩{(line.quantity * line.unitPrice).toLocaleString()}</p>
+            <p key={`${line.productId}-${i}`}>{line.productName} × {line.quantity} — {won(line.quantity * line.unitPrice)}</p>
           ))}
-          <p>Total: ₩{total.toLocaleString()}</p>
+          <p>Total: {won(total)}</p>
           {error && <p role="alert">{error}</p>}
         </FormSection>
       </div>
