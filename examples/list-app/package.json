@@ -12,7 +12,7 @@
     "@iyulab/components": "^2.28.1",
     "@iyulab/data-components": "^0.51.1",
     "@iyulab/enterprise": "^0.35.0",
-    "@iyulab/flex-table": "^0.69.0",
+    "@iyulab/flex-table": "^0.70.0",
     "@iyulab/house-style": "^0.8.0",
     "@iyulab/modern-app": "^0.56.0",
     "lit": "^3.3.3"
