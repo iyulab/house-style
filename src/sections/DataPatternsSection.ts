@@ -186,6 +186,7 @@ export class DataPatternsSection extends LitElement {
               <tr><td>Header text</td><td><code>label</code></td><td><code>label</code></td></tr>
               <tr><td>Cell content</td><td><code>render(value, row)</code> — returns a string or an element</td><td><code>render</code> — the same name; see the component's reference for its arguments</td></tr>
               <tr><td>Alignment</td><td><code>align</code> · <code>headerAlign</code>: <code>'start' | 'center' | 'end'</code></td><td><code>align</code> · <code>headerAlign</code>: <code>'start' | 'center' | 'end'</code></td></tr>
+              <tr><td>Header note</td><td><code>description</code> — what the values mean (the basis a label cannot carry); an info icon beside the label opens it as a tooltip</td><td><code>description</code> — the same</td></tr>
               <tr><td>Width</td><td><code>width</code>: a number (px) or a CSS length</td><td><code>width</code>: a number (px)</td></tr>
               <tr><td>Where it fits</td><td>Row-level CRUD, filter row, client or server paging</td><td>Cell-level editing, very large or wide data (virtualised rows and columns)</td></tr>
             </tbody>
