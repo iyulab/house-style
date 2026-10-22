@@ -77,7 +77,7 @@
     "@iyulab/flex-table": "^0.72.0",
     "@iyulab/modern-app": "^0.56.0",
     "@iyulab/router": "^0.24.0",
-    "@iyulab/u-widgets": "^0.38.2",
+    "@iyulab/u-widgets": "^0.39.0",
     "@lit/react": "^1.0.8",
     "@types/node": "^26.1.1",
     "@types/react": "^19.3.0",
