@@ -27,8 +27,7 @@
   "sideEffects": [
     "**/*.css",
     "./src/**",
-    "./src-app/**",
-    "./samples/**"
+    "./src-app/**"
   ],
   "scripts": {
     "preversion": "node -e \"if(require('fs').existsSync('../../scripts/preversion-check.mjs'))require('child_process').execFileSync('node',['../../scripts/preversion-check.mjs'],{stdio:'inherit'})\"",

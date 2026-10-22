@@ -1,14 +1,10 @@
 import { resolve } from 'path'
 import { defineConfig, type Plugin } from 'vite'
-import { SAMPLES } from './samples/catalog'
-
-/** The separate apps beside the guide — each its own HTML entry and router, under its own path. */
-const APPS = ['app/', ...SAMPLES.map((s) => `samples/${s.slug}/`)]
 
 /**
- * Dev- and preview-server twin of the deploy workflow's `404.html`: a deep link under one of the
- * apps (`/house-style/app/orders/G-2026-0512`, a reload on any sample screen) is served that app's
- * `index.html`, not the guide's. Without it, Vite's single SPA fallback answered every unknown
+ * Dev- and preview-server twin of the deploy workflow's `404.html`: a deep link under the reference
+ * app (`/house-style/app/orders/G-2026-0512`, a reload on any app screen) is served `app/index.html`,
+ * not the guide's. Without it, Vite's single SPA fallback answered every unknown
  * path with the guide, whose router found no such page and rendered nothing — the published site
  * worked and the local servers did not. The preview server is where the accessibility check
  * follows in-app links, so without the twin there it opened the guide for every app deep link.
@@ -16,8 +12,8 @@ const APPS = ['app/', ...SAMPLES.map((s) => `samples/${s.slug}/`)]
 function appDeepLinkFallback(): Plugin {
   const rewrite = (req: { url?: string; headers: { accept?: string } }, _res: unknown, next: () => void) => {
     const path = (req.url ?? '').split('?')[0]
-    const app = APPS.find((a) => path.startsWith(`/house-style/${a}`))
-    if (app && !/\.[a-z0-9]+$/i.test(path) && req.headers.accept?.includes('text/html')) req.url = `/house-style/${app}index.html`
+    const isAppRoute = path.startsWith('/house-style/app/') && !/\.[a-z0-9]+$/i.test(path)
+    if (isAppRoute && req.headers.accept?.includes('text/html')) req.url = '/house-style/app/index.html'
     next()
   }
   return {
@@ -44,10 +40,6 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         app: resolve(__dirname, 'app/index.html'),
-        // The sample apps come from `samples/catalog.ts`. They stay out of the guide ↔ reference-app
-        // parity check, which reads the literal entries above: a sample shows one kind of app, not the
-        // whole vocabulary the guide teaches.
-        ...Object.fromEntries(SAMPLES.map((s) => [`sample-${s.slug}`, resolve(__dirname, `samples/${s.slug}/index.html`)])),
       },
     },
   },

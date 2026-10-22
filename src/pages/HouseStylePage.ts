@@ -10,7 +10,6 @@ import { Theme } from '@iyulab/components/dist/utilities/Theme.js';
 import '../sections/data-patterns/ListScreenDemo.js';
 import '../internals/DemoSource.js';
 import { CATEGORIES, TIERS } from '../categories.js';
-import { SAMPLES } from '../../samples/catalog.js';
 import { BOOT, CREATE, INDEX_HTML, INSTALL, STARTER } from '../start-here.js';
 import listScreenSrc from '../sections/data-patterns/ListScreenDemo.ts?raw';
 import listConstantsSrc from '../sections/data-patterns/constants.ts?raw';
@@ -150,9 +149,6 @@ export class HouseStylePage extends LitElement {
                 `)}
                 ${tier === 'Screens' ? html`
                   <li><a href="${base}app/">Reference app</a><span>A small complete app — sign in, browse and cancel orders, a multi-step wizard — built the way your app would be.</span></li>
-                  ${SAMPLES.map(s => html`
-                    <li><a href="${base}samples/${s.slug}/">Sample — ${s.title}</a><span>${s.summary}</span></li>
-                  `)}
                 ` : ''}
               </ul>
             </section>

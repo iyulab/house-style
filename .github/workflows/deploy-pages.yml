@@ -56,8 +56,7 @@ jobs:
       - name: Leaving with unsaved input
         run: npm run check:leave
 
-      # An app deep link (`app/…`, `samples/<slug>/…`) gets that app's index.html; anything else, the guide's.
-      - name: SPA fallback (client-side routing, guide + reference app + samples)
+      - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'
           <!doctype html>
@@ -67,9 +66,8 @@ jobs:
               <script>
                 (function () {
                   var base = '/house-style/';
-                  var rest = location.pathname.indexOf(base) === 0 ? location.pathname.slice(base.length) : '';
-                  var app = rest.match(/^(app\/|samples\/[^\/]+\/)/);
-                  var target = location.origin + base + (app ? app[1] : '') + 'index.html';
+                  var isApp = location.pathname.indexOf(base + 'app/') === 0;
+                  var target = location.origin + base + (isApp ? 'app/index.html' : 'index.html');
                   fetch(target).then(function (r) { return r.text(); }).then(function (html) {
                     document.open();
                     document.write(html);
