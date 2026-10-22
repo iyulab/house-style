@@ -113,10 +113,10 @@ export default function OrdersListPage({ status = '', q = '' }: { status?: strin
         )}
       </ActionBar>
       {message && <UAlert slot="toolbar" open status="success">{message}</UAlert>}
-      <URichTableReact slot="view" view-name="table" aria-label="Orders" columns={COLUMNS} selectable={canWrite} hidePagination hideToolbar
+      <URichTableReact slot="view" view-name="table" aria-label="Orders" rowKey="Id" columns={COLUMNS} selectable={canWrite} hidePagination hideToolbar
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
-      <UDataViewReact slot="view" view-name="cards" hideToolbar
+      <UDataViewReact slot="view" view-name="cards" rowKey="Id" hideToolbar
         renderCard={(o) => <><strong>{String(o.Customer)}</strong> <StatusTag status={o.Status as OrderStatus} /><div><small>{String(o.Id)} · {won(o.Total)}</small></div></>}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UPagination slot="pager" label="Orders pages" />

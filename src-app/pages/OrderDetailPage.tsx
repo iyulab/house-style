@@ -248,15 +248,16 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               {items.length > 0 && (
                 <URichTableReact
                   aria-label="Order items"
+                  rowKey="Id"
                   dataMode="client"
                   hidePagination
                   columns={lineItemColumns(canEdit && order.Status !== 'cancelled')}
-                  data={items.map((i) => ({ ...i, _id: i.Id, Amount: i.Quantity * i.UnitPrice }))}
+                  data={items.map((i) => ({ ...i, Amount: i.Quantity * i.UnitPrice }))}
                   deletable={canEdit && order.Status !== 'cancelled'}
                   onRowUpdate={(e) => {
-                    if (e.detail.field === 'Quantity') updateItemQuantity(String(e.detail.row._id), Number(e.detail.value));
+                    if (e.detail.field === 'Quantity') updateItemQuantity(String(e.detail.row.Id), Number(e.detail.value));
                   }}
-                  onRowDelete={(e) => removeItem(String(e.detail.row._id))}
+                  onRowDelete={(e) => removeItem(String(e.detail.row.Id))}
                 />
               )}
               {canEdit && order.Status !== 'cancelled' && (

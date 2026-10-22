@@ -87,7 +87,6 @@ export const handlers = [
     }
     const newId = `G-2026-${String(1000 + nextOrderSeq++).slice(-4)}`;
     const created: Order = {
-      _id: newId,
       Id: newId,
       Customer: body.Customer ?? 'Unknown',
       Status: 'pending',
@@ -123,7 +122,6 @@ export const handlers = [
     }
     const newId = `OI-${String(1000 + nextItemSeq++).slice(-4)}`;
     const created: OrderItem = {
-      _id: newId,
       Id: newId,
       OrderId: body.OrderId ?? '',
       ProductId: body.ProductId ?? '',
