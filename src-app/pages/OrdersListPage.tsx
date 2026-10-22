@@ -28,20 +28,39 @@ const COLUMNS: ColumnDefReact[] = [
   { key: 'Total', label: 'Total', width: '140px', align: 'end', sortable: true, render: (v) => won(v) },
 ];
 
+const LIST = `${import.meta.env.BASE_URL}app/orders`;
+
+/** The list's address for a set of criteria — the empty ones are left out. */
+function listHref(criteria: { status: string; q: string }) {
+  const params = new URLSearchParams();
+  if (criteria.status) params.set('status', criteria.status);
+  if (criteria.q) params.set('q', criteria.q);
+  const query = params.toString();
+  return query ? `${LIST}?${query}` : LIST;
+}
+
 /**
  * The orders list — `ListPage` binds one OData source (the server pages, sorts and searches) to the table, the cards
- * and the pager. The screen holds only what is its own: the status criterion, the view, the selection.
+ * and the pager. The screen holds only what is its own: the view and the selection.
+ *
+ * The criteria — status and search — live in the address, not in component state: Back from an order returns to the
+ * list as it was filtered, and a refresh or a shared link opens the same list. The route is keyed on the path, so a
+ * criterion change updates these props instead of remounting the screen (see AppShell).
  */
-export default function OrdersListPage() {
-  const [status, setStatus] = useState('');
+export default function OrdersListPage({ status = '', q = '' }: { status?: string; q?: string }) {
   // The status criterion is part of the query — a changed `fixedFilter` goes back to the first page.
   const orders = useODataSource<Order>('/$data/Orders', {
     // The service's base URL and session policy — an expired session goes to sign-in from the list too.
     ...svc.sourceDefaults,
     pageSize: 5,
     defaultOrderBy: 'CreatedAt desc',
+    // Read once, when the screen mounts — later searches reach the source through `ListPage` and the address.
+    initialSearch: q,
     fixedFilter: status ? { Status: status } : undefined,
   });
+  // A criterion change replaces the entry rather than adding one — Back leaves the list, it does not undo a filter.
+  const setCriteria = (next: Partial<{ status: string; q: string }>) =>
+    navigate(listHref({ status, q, ...next }), { replace: true });
   const [view, setView] = useState<'table' | 'cards'>('table');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
@@ -69,8 +88,9 @@ export default function OrdersListPage() {
     // bulk-action bar (the house tints it from the page's `:state(selected)`) and its title says how many.
     <ListPage source={orders.source} view={view} appearance="card">
       <PageHeader slot="header" title="Orders" subtitle={`${orders.totalCount} order(s)`} />
-      <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" />
-      <USelect slot="filters" label="Status" value={status} onChange={(e) => setStatus(String((e.target as USelectElement).value ?? ''))}>
+      <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" value={q}
+        onSearch={(e) => setCriteria({ q: e.detail.query })} />
+      <USelect slot="filters" label="Status" value={status} onChange={(e) => setCriteria({ status: String((e.target as USelectElement).value ?? '') })}>
         <u-option value="">All statuses</u-option>
         <u-option value="pending">Pending</u-option>
         <u-option value="shipped">Shipped</u-option>

@@ -18,6 +18,8 @@ import { ORDERS } from '../mocks/data.js';
 // deep-import + JSX augmentation pattern OrderDetailPage.tsx already uses is enough here.
 import '@iyulab/components/dist/components/card/UCard.js';
 import { PageHeader } from '@iyulab/modern-app/react/PageHeader.js';
+import { navigate } from '@iyulab/router';
+import { won } from '../lib/money.js';
 
 declare module 'react' {
   namespace JSX {
@@ -27,8 +29,23 @@ declare module 'react' {
   }
 }
 
+const APP = `${import.meta.env.BASE_URL}app`;
+
+/** A link the router follows — a real anchor (middle-click, copy address) that navigates in place on a plain click. */
+function RouteLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
+  return (
+    <a className={className} href={href} onClick={(e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      navigate(href);
+    }}>{children}</a>
+  );
+}
+
 export default function DashboardPage() {
-  const pending = ORDERS.filter((o) => o.Status === 'pending').length;
+  const pendingOrders = ORDERS.filter((o) => o.Status === 'pending')
+    .sort((a, b) => a.CreatedAt.localeCompare(b.CreatedAt));
+  const pending = pendingOrders.length;
   const revenue = ORDERS.reduce((sum, o) => sum + o.Total, 0);
 
   return (
@@ -52,6 +69,33 @@ export default function DashboardPage() {
           <InfoField label="Avg. fulfillment" size="lg" value={2.4} unit="days" trend="flat" trendLabel="No change" />
         </InfoSection>
       </div>
+      {/* The work waiting on someone, oldest first — a dashboard says what to do next, and each row is one step from
+          doing it. «All pending» opens the list already filtered (the list keeps its criteria in the address). */}
+      <u-card style={{ gridColumn: '1 / -1' }}>
+        <div slot="header" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--u-space-md, 12px)' }}>
+          <strong>Needs attention</strong>
+          <RouteLink href={`${APP}/orders?status=pending`}>All pending orders ({pending})</RouteLink>
+        </div>
+        {pending === 0
+          ? <p className="hs-muted" style={{ margin: 0 }}>Nothing is waiting — every order has moved past pending.</p>
+          : (
+            <table className="hs-table hs-table--compact">
+              <thead>
+                <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Placed</th><th scope="col" className="hs-num">Total</th></tr>
+              </thead>
+              <tbody>
+                {pendingOrders.slice(0, 5).map((o) => (
+                  <tr key={o.Id}>
+                    <td><RouteLink className="hs-id" href={`${APP}/orders/${o.Id}`}>{o.Id}</RouteLink></td>
+                    <td>{o.Customer}</td>
+                    <td className="hs-nowrap">{o.CreatedAt.slice(0, 10)}</td>
+                    <td className="hs-num">{won(o.Total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+      </u-card>
       {/* Illustrative constant series, not derived from `ORDERS`. */}
       <u-card style={{ gridColumn: '1 / -1' }}>
         <UWidget

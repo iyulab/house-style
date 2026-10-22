@@ -147,7 +147,14 @@ export function mountAppShell(root: HTMLElement) {
         ),
         children: [
           { index: true, render: () => <DashboardPage /> },
-          { path: 'orders', enter: can(ORDERS_READ), render: () => <OrdersListPage /> },
+          // The list's criteria live in its address. Keyed on the path, a criterion change (a query-only URL change)
+          // reaches the screen as new props instead of remounting it — the loaded rows and the selection stay.
+          {
+            path: 'orders',
+            enter: can(ORDERS_READ),
+            key: (ctx) => ctx.pathname,
+            render: (ctx) => <OrdersListPage status={ctx.query.get('status') ?? ''} q={ctx.query.get('q') ?? ''} />,
+          },
           { path: 'orders/new', enter: can('orders.write'), render: () => <NewOrderPage /> },
           { path: 'orders/:id', enter: can(ORDERS_READ), render: (ctx) => <OrderDetailPage orderId={ctx.params.id as string} /> },
         ],

@@ -248,6 +248,18 @@ export class FlowsSection extends LitElement {
           address bar and the panel cannot disagree. This demo keeps its selection in
           memory only because it is not a routed screen.
         </p>
+        <p>
+          <strong>The list's criteria belong there too</strong> &mdash; the status tab, the
+          search, every filter. Kept in component state they vanish the moment the user
+          opens a row as a route page and comes Back, or when a query-only navigation
+          remounts the screen; kept in the query string they survive both, and a pasted
+          link opens the same filtered list. Write each change with
+          <code>replace</code> rather than a new history entry &mdash; Back should leave the
+          list, not undo a filter one step at a time. The reference app's order list does
+          exactly this (<code>?status=</code> · <code>?q=</code>, the same
+          <code>key</code> on its route), and its dashboard links straight into
+          <code>?status=pending</code>.
+        </p>
       </u-group-box>
 
       <u-group-box level="2" title="Wizard — multi-step setup flow">
