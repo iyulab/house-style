@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Sample apps beside the reference app — each a different kind of line-of-business app built from the libraries and this
+  house style with made-up data, at `samples/<name>/`. The first, **Records Center** (`samples/records/`), is a records
+  custody app: a work-queue home with KPI tiles and trend lines, a list whose status tabs and criteria live in the address,
+  a pick-into-a-request flow (the table's keyed selection is the basket), and a storage map on the contrast palette.
+  `samples/catalog.ts` is the one list: the build inputs, the deep-link fallback, the guide's links and the accessibility
+  check read it. The guide's sidebar button "Open the reference app" is now a menu, "Open an app".
+
+### Fixed
+
+- The preview server sends an app deep link (`app/orders/…`) to that app's `index.html`, as the dev server and the deployed
+  404 page already did. The accessibility check follows in-app links on the preview server, where every app deep link had
+  opened the guide.
+
 ## [0.9.0] - 2026-10-17
 
 ### Added

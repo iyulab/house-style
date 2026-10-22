@@ -9,6 +9,7 @@ import '../styles/index.css';
 import '@iyulab/enterprise/icons';
 import './styles/page-shell.css';
 import { CATEGORIES, TIERS } from './categories.js';
+import { SAMPLES } from '../samples/catalog.js';
 import './pages/HouseStylePage.js';
 import './sections/IdentitySection.js';
 import './sections/LayoutSection.js';
@@ -130,15 +131,16 @@ app.load({
         onClick: () => window.open('https://github.com/iyulab/house-style', '_blank'),
       },
       {
-        type: 'button',
-        label: 'Open the reference app',
+        type: 'menu',
+        label: 'Open an app',
         icon: 'box-arrow-up-right',
         lib: 'bootstrap',
-        styles: { icon: { color: 'var(--u-primary-color)' } },
-        // A real navigation, not client-side routing — `app/` is a second, separate Vite
-        // HTML entry (its own React app + Router), not a route this guide's own Router
-        // knows about.
-        onClick: () => { window.location.href = `${base}app/`; },
+        // Real navigations, not client-side routing — `app/` and each `samples/<slug>/` are
+        // separate Vite HTML entries with their own Router, not routes this guide's Router knows.
+        items: [
+          { label: 'Reference app', onClick: () => { window.location.href = `${base}app/`; } },
+          ...SAMPLES.map((s) => ({ label: `Sample — ${s.title}`, onClick: () => { window.location.href = `${base}samples/${s.slug}/`; } })),
+        ],
       },
     ],
 

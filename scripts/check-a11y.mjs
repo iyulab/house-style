@@ -21,9 +21,14 @@ if (!existsSync(join(pkg, 'publish', 'index.html'))) {
 }
 
 const categories = readFileSync(join(pkg, 'src', 'categories.ts'), 'utf8');
-const paths = ['', ...[...categories.matchAll(/\bpath:\s*'([^']+)'/g)].map((m) => m[1]), 'app/'];
+const samples = [...readFileSync(join(pkg, 'samples', 'catalog.ts'), 'utf8').matchAll(/\bslug:\s*'([^']+)'/g)].map((m) => `samples/${m[1]}/`);
+const paths = ['', ...[...categories.matchAll(/\bpath:\s*'([^']+)'/g)].map((m) => m[1]), 'app/', ...samples];
 if (paths.length < 3) {
   console.error('✗ Accessibility check: found no category paths in src/categories.ts — the derivation broke');
+  process.exit(1);
+}
+if (!samples.length) {
+  console.error('✗ Accessibility check: found no samples in samples/catalog.ts — the derivation broke');
   process.exit(1);
 }
 

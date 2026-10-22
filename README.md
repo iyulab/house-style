@@ -129,7 +129,7 @@ The live page is organized into sections:
 The guide has a second half: a small but working line-of-business app, assembled only from
 these libraries, at **https://iyulab.github.io/house-style/app/** (sign in with `demo` / `demo`,
 or `viewer` / `viewer` for a read-only account — the backend is mocked in the browser, there are
-no real accounts). It is reachable from the guide's sidebar under "Open the reference app".
+no real accounts). It is reachable from the guide's sidebar under "Open an app".
 
 The two accounts show permissions end to end: one permission decides both whether a link or
 action is shown and whether its route lets the user in. The read-only account sees no create or
@@ -141,6 +141,21 @@ a list screen with filtering, selection and bulk actions, a master-detail order 
 edit drawer, and a multi-step wizard. It is held to the guide rather than kept beside it — a
 check in this monorepo compares the two and reports any layout primitive one half uses and the
 other does not.
+
+## Sample apps
+
+Beside the reference app sit sample apps — each a different kind of line-of-business app, built
+only from these libraries and this house style with made-up data, for other apps to borrow a
+layout from. They live at **https://iyulab.github.io/house-style/samples/&lt;name&gt;/** and are
+listed on the guide's landing page and under "Open an app" in its sidebar.
+
+- **Records Center** (`samples/records/`) — physical records custody: a work-queue home with KPI
+  tiles, a filtered list whose criteria live in the address, a pick-and-request flow, and a storage
+  map.
+
+A sample is a folder under `samples/` with its own `index.html`, plus one entry in
+`samples/catalog.ts` — the build, the deep-link fallback, the guide's links and the accessibility
+check all read that list.
 
 Sections that say "Not yet decided" mean exactly that — no design decision has
 been made for that area yet, rather than the guide inventing one.
