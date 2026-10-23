@@ -36,7 +36,7 @@ so its preflight would beat the theme; `tailwind.css` imports the theme into Tai
 |---|---|
 | `styles/index.css` (package root) | everything below plus Pretendard — for apps without Tailwind |
 | `styles/theme.css` | the theme without fonts (bring your own face) |
-| `styles/tokens.css` | the presets (`cool` · `warm` · `contrast`, light and dark) for the `--u-*` token axes, the seeds `--hs-accent` · `--hs-secondary` and their derived steps, and the house scale |
+| `styles/tokens.css` | the presets (`cool` · `warm` · `contrast`, light and dark) for the `--u-*` token axes, the seeds `--hs-accent` · `--hs-secondary` and their derived steps, the house scale, and the board scale (`hs-scale="board"` — about twice the ladder, for a screen read from across a room) |
 | `styles/components.css` | the document flow (body text, `h1`–`h6`, block gaps, code spans, native control and scrollbar colours) and sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
 | `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
 | `styles/tailwind.css` | the Tailwind v4 entry: fonts + theme (in Tailwind's `components` layer) + role utilities — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |

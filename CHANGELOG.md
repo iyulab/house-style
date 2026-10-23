@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- **Board scale** — `hs-scale="board"` on an element puts everything inside it on a ladder about twice the house one
+  (smallest text 22px, running text 28px, headline 56px), with spacing, table rows and the larger radii stepped up to
+  match: a floor board on a TV, a lobby or kiosk screen read at 5–8 m. Components inside keep their proportions.
+
 ### Fixed
 
 - The preview server sends an app deep link (`app/orders/…`) to that app's `index.html`, as the dev server and the deployed

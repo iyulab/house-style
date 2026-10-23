@@ -563,4 +563,43 @@
   --app-sidebar-active-shadow-hover: none;
 }
 
+/* ── Board scale — a screen read from across a room ─────────────────────────────────────────────────────────────
+   `hs-scale="board"` on an element (a floor board on a TV, a lobby or kiosk screen) puts everything inside it on a
+   ladder about twice the house one: the smallest text 22px, running text 28px, a headline 56px — read at 5–8 m on a
+   1080p screen. Spacing, rows and the larger radii step up with it, so components inside (tags, buttons, info
+   fields, tables) keep their proportions. The house steps derived from the ladder are restated here: a derivation
+   resolves where it is declared, and the root one would keep the root sizes. */
+[hs-scale="board"] {
+  --u-text-display-size:  56px;
+  --u-text-title-size:    40px;
+  --u-text-subtitle-size: 32px;
+  --u-text-body-size:     28px;
+  --u-text-label-size:    24px;
+  --u-text-caption-size:  24px;
+  --u-text-overline-size: 22px;
+  --hs-text-dense-size: calc((var(--u-text-body-size) + var(--u-text-label-size)) / 2);
+  --hs-text-hero-size:  calc(var(--u-text-display-size) + 8px);
+
+  --u-space-3xs:  4px;
+  --u-space-2xs:  8px;
+  --u-space-xs:  12px;
+  --u-space-sm:  16px;
+  --u-space-md:  24px;
+  --u-space-lg:  32px;
+  --u-space-xl:  40px;
+  --u-space-2xl: 48px;
+  --u-space-3xl: 64px;
+  --u-space-4xl: 80px;
+
+  --u-radius-lg:  16px;
+  --u-radius-xl:  20px;
+  --u-radius-2xl: 24px;
+  --u-radius-3xl: 32px;
+
+  --hs-row:          88px;
+  --hs-row-compact:  72px;
+  --hs-section-gap:  40px;
+  font-size: var(--u-text-body-size);
+}
+
 } /* @layer iyu.house */

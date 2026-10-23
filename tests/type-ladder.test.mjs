@@ -19,7 +19,7 @@ const lightRoot = tokens.slice(tokens.indexOf(':root'), tokens.indexOf(':root[th
 function px(name, seen = new Set()) {
   assert.ok(!seen.has(name), `cycle at ${name}`);
   seen.add(name);
-  const decl = [...tokens.matchAll(new RegExp(`${name}\s*:\s*([^;]+);`, 'g'))].map((m) => m[1].trim());
+  const decl = [...tokens.matchAll(new RegExp(String.raw`${name}\s*:\s*([^;]+);`, 'g'))].map((m) => m[1].trim());
   assert.ok(decl.length > 0, `${name} is declared in tokens.css`);
   const expr = decl[0]
     .replace(/var\((--[\w-]+)\)/g, (_, n) => String(px(n, seen)))
@@ -63,3 +63,17 @@ for (const file of ['patterns.css', 'components.css']) {
     assert.deepEqual(offenders, []);
   });
 }
+
+test('board scale: the same ladder about twice as large, its derived steps restated in scope', () => {
+  const at = tokens.indexOf('[hs-scale="board"]');
+  assert.ok(at > 0, 'tokens.css declares [hs-scale="board"]');
+  const block = tokens.slice(at, tokens.indexOf('}', at));
+  const value = (name) => Number(block.match(new RegExp(String.raw`${name}\s*:\s*(\d+)px`))?.[1]);
+  const steps = ['display', 'title', 'subtitle', 'body', 'label', 'caption', 'overline'].map((s) => [s, value(`--u-text-${s}-size`)]);
+  for (const [step, size] of steps) assert.ok(size >= 22, `board ${step} ${size}px is readable across a room (≥ 22px)`);
+  // The ladder keeps its order: each step at least the next one down.
+  for (let i = 1; i < steps.length; i++) assert.ok(steps[i - 1][1] >= steps[i][1], `${steps[i - 1][0]} ≥ ${steps[i][0]}`);
+  // A derivation resolves where it is declared — the root one would keep root sizes inside the board.
+  assert.match(block, /--hs-text-dense-size\s*:\s*calc\(/);
+  assert.match(block, /--hs-text-hero-size\s*:\s*calc\(/);
+});
