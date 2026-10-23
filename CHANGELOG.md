@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- **The card list toolbar keeps its 48px band on `@iyulab/modern-app` 0.59.0.** That release draws `u-action-bar`'s
+  padding inside its `base` part rather than on the host, so the house rule now sets the band's height and padding on
+  `::part(base)`; set on the host it would add to the bar's own padding. The optional `@iyulab/modern-app` peer moves
+  to `>=0.59.0`.
+
 ## [0.10.0] - 2026-10-23
 
 ### Added

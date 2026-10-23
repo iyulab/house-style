@@ -203,6 +203,9 @@ u-list-page[appearance='card']::part(pager) {
  *    toolbar and selection bar (`@iyulab/data-components` 0.50). ── */
 u-list-page[appearance='card'] > u-action-bar[slot='toolbar'] {
   --action-bar-padding-inline: var(--u-space-md, 12px);
+}
+/* The bar's box is its `base` part (`@iyulab/modern-app` 0.59.0) — padding set on the host would add to it. */
+u-list-page[appearance='card'] > u-action-bar[slot='toolbar']::part(base) {
   box-sizing: border-box;
   min-height: 48px;
   padding-block: var(--u-space-sm, 8px);
