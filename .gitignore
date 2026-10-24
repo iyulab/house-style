@@ -13,3 +13,6 @@ publish
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# npm lock files anywhere (the examples install on their own) — this repo keeps none
+package-lock.json
