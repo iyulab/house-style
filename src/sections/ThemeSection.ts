@@ -127,6 +127,12 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
           The Tailwind entry imports the theme into Tailwind's <code>components</code> layer instead —
           above preflight, below utilities and your own CSS.
         </p>
+        <p>
+          Charts and widgets from <code>@iyulab/u-widgets</code> keep their own palette until you also load its
+          bridge — the charts draw in the widgets' default indigo and nothing warns. The bridge ties them to the
+          tokens this theme sets (chart series, surfaces, text, status colours, type sizes):
+        </p>
+        <pre tabindex="0"><code>import '@iyulab/u-widgets/themes/components.css';</code></pre>
         <table class="prose-table">
           <thead><tr><th>Layer</th><th>Holds</th></tr></thead>
           <tbody>

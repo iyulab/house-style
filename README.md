@@ -32,6 +32,16 @@ Tailwind declares its own layers (`theme, base, components, utilities`) after th
 so its preflight would beat the theme; `tailwind.css` imports the theme into Tailwind's
 `components` layer — above preflight, below utilities and your own CSS.
 
+**Charts and widgets from `@iyulab/u-widgets`** keep their own palette until you also load its bridge — the
+charts draw in the widgets' default indigo and nothing warns:
+
+```ts
+import '@iyulab/u-widgets/themes/components.css';   // series colours, surfaces, text, status, radius, type sizes
+```
+
+It ties the widgets to the `--u-*` tokens this theme sets (`--u-chart-color-1`…`8`, `--u-bg-color`, `--u-txt-color`,
+`--u-text-*-size` …), so a palette preset or seed change reaches the charts too.
+
 | File | What it holds |
 |---|---|
 | `styles/index.css` (package root) | everything below plus Pretendard — for apps without Tailwind |
