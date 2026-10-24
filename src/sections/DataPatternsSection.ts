@@ -441,8 +441,9 @@ table.stylesheets = [sheet];</code></pre>
         <u-group-box level="2" title="Edit form — assembled, not a dedicated kit">
           <p>
             Same story as the list screen: no purpose-built "edit-form kit" component
-            exists. This is <code>u-drawer</code> — its existing header/body/footer
-            slots and imperative <code>show()</code>/<code>hide()</code> — wrapped
+            exists. This is <code>u-side-panel</code> (modern-app) — <code>u-drawer</code> with the side panel's
+            defaults: in from the right, a close button at the top right, the whole screen on a phone — and its
+            header/body/footer slots and imperative <code>show()</code>/<code>hide()</code>, wrapped
             around the same <code>u-info-section</code> + <code>u-field</code> grid
             composition a full-page edit screen already uses elsewhere in this
             framework, so a field keeps the same column rhythm whether it sits on a

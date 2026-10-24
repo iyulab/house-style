@@ -10,6 +10,9 @@
   0.55) can take it through `stylesheets`: build a `CSSStyleSheet` from `marks.css?inline` and assign it. Page styles do
   not reach a cell's `render` output, so the marks came out bare there. `patterns.css` imports the file into
   `@layer iyu.house`, so a page that loads the theme sees no change. The guide's data patterns page shows it.
+- **The side sheet recipe covers `u-side-panel`.** The hairline header and the always-visible body scrollbar apply to
+  `u-side-panel` (`@iyulab/modern-app` 0.61 — `u-drawer` with the side-panel defaults) as well as `u-drawer`, and the
+  guide's edit form opens in one.
 
 ## [0.11.0] - 2026-10-24
 

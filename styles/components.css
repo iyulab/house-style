@@ -293,12 +293,12 @@ u-card {
   --card-border-color: var(--u-border-color);
 }
 
-/* ── Drawer — the side sheet. Header and footer separated by a hairline,
- *    body scrollbar always visible so long forms show there is more below. ── */
-u-drawer::part(header) {
+/* ── Drawer — the side sheet (`u-side-panel` from modern-app is the same element with the side-panel defaults).
+ *    Header and footer separated by a hairline, body scrollbar always visible so long forms show there is more below. ── */
+:is(u-drawer, u-side-panel)::part(header) {
   border-bottom: 1px solid var(--u-border-color);
 }
-u-drawer::part(body) {
+:is(u-drawer, u-side-panel)::part(body) {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--u-border-color-strong) transparent;

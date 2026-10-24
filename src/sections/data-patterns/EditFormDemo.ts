@@ -5,7 +5,7 @@ import '@iyulab/components/dist/components/date-picker/UDatePicker.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/components/dist/components/alert/UAlert.js';
 import '@iyulab/components/dist/components/badge/UBadge.js';
-import '@iyulab/components/dist/components/drawer/UDrawer.js';
+import '@iyulab/modern-app/dist/components/SidePanel.js';
 import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/select/USelect.js';
 import '@iyulab/components/dist/components/option/UOption.js';
@@ -14,7 +14,7 @@ import '@iyulab/modern-app/dist/components/InfoSection.js';
 import { UFormControlElement } from '@iyulab/components/dist/components/UFormControlElement.js';
 import { ApiError, applyFieldErrors } from '@iyulab/enterprise';
 import { UnsavedChangesController, confirmDiscardChanges } from '@iyulab/modern-app';
-import type { UDrawer } from '@iyulab/components/dist/components/drawer/UDrawer.js';
+import type { SidePanel } from '@iyulab/modern-app/dist/components/SidePanel.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 
 /**
@@ -29,7 +29,7 @@ const labelOf = (control: Element): string =>
 
 /**
  * Edit form recipe. No purpose-built "edit-form kit" component exists — this is
- * `u-drawer` — its existing header/body/footer slots and imperative
+ * `u-side-panel` (modern-app — `u-drawer` with the side-panel defaults) — its existing header/body/footer slots and imperative
  * `show()`/`hide()` — wrapped around the same `u-info-section` + `u-field` grid
  * composition a full-page edit screen already uses elsewhere in this framework, so
  * a field keeps the same column rhythm whether it sits on a page or inside a drawer.
@@ -121,13 +121,13 @@ export class EditFormDemo extends LitElement {
     this.saveStatus = 'idle';
     this.saveError = null;
     this.fieldErrors = [];
-    this.querySelector<UDrawer>('#edit-drawer')?.show();
+    this.querySelector<SidePanel>('#edit-drawer')?.show();
     this.snapshot = this.values();
     this.editing = true;
   }
 
   private closeEditDrawer() {
-    this.querySelector<UDrawer>('#edit-drawer')?.hide();
+    this.querySelector<SidePanel>('#edit-drawer')?.hide();
   }
 
   /**
@@ -218,7 +218,7 @@ export class EditFormDemo extends LitElement {
   render() {
     return html`
       <u-button color="primary" @click=${this.openEditDrawer}>Edit order</u-button>
-      <u-drawer id="edit-drawer" placement="right" closable @hide=${this.handleHide}>
+      <u-side-panel id="edit-drawer" @hide=${this.handleHide}>
         <span slot="header">Edit order G-2026-0512</span>
         ${this.fieldErrors.length
           ? html`
@@ -277,7 +277,7 @@ export class EditFormDemo extends LitElement {
             ${this.saveStatus === 'saving' ? 'Saving…' : 'Save'}
           </u-button>
         </div>
-      </u-drawer>
+      </u-side-panel>
     `;
   }
 }
