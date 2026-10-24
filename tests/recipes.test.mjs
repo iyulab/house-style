@@ -87,3 +87,18 @@ test('the list page filters row does not override the page alignment', () => {
   assert.ok(filters, 'components.css styles the filters row');
   assert.equal(filters.has('align-items'), false, 'the page aligns the row to the bottom (`flex-end`)');
 });
+
+// ⑸ Cell marks stand alone, so a table that renders cells in a shadow root can adopt the file as a constructable
+//   stylesheet (`table.stylesheets = [sheet]`). A constructable sheet rejects `@import`, and the page theme still gets
+//   the marks through patterns.css.
+test('cell marks stand alone and the page theme still imports them', () => {
+  const raw = readFileSync(fileURLToPath(new URL('../styles/marks.css', import.meta.url)), 'utf8');
+  const marks = raw.replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.equal(/@import|@layer/.test(marks), false, 'marks.css has no @import and no layer of its own');
+  for (const cls of ['.hs-num', '.hs-id', '.hs-empty', '.hs-due', '.hs-due--soon', '.hs-due--over']) {
+    assert.ok(rule(marks, cls), `marks.css defines ${cls}`);
+    assert.equal(rule(patterns, cls), undefined, `${cls} is defined once — in marks.css`);
+  }
+  const src = readFileSync(fileURLToPath(new URL('../styles/patterns.css', import.meta.url)), 'utf8');
+  assert.match(src, /@import '\.\/marks\.css' layer\(iyu\.house\);/);
+});

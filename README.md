@@ -49,6 +49,7 @@ It ties the widgets to the `--u-*` tokens this theme sets (`--u-chart-color-1`�
 | `styles/tokens.css` | the presets (`cool` · `warm` · `contrast`, light and dark) for the `--u-*` token axes, the seeds `--hs-accent` · `--hs-secondary` and their derived steps, the house scale, and the board scale (`hs-scale="board"` — about twice the ladder, for a screen read from across a room) |
 | `styles/components.css` | the document flow (body text, `h1`–`h6`, block gaps, code spans, native control and scrollbar colours) and sizes and finish for `u-button`, `u-card`, `u-drawer`, `flex-table`, the app shell |
 | `styles/patterns.css` | `hs-*` layout patterns — page head, saved views, filter bar, stat strip, table card, callout, form sections, side-sheet footer |
+| `styles/marks.css` | the cell marks (`.hs-id` · `.hs-num` · `.hs-empty` · `.hs-due`) on their own — `patterns.css` imports them; a table that renders cells in a shadow root takes this file as a constructable stylesheet (`table.stylesheets = [sheet]`, the sheet built from `marks.css?inline`) |
 | `styles/tailwind.css` | the Tailwind v4 entry: fonts + theme (in Tailwind's `components` layer) + role utilities — `bg-canvas`, `text-ink-weak`, `border-line`, `bg-warning-soft`, `rounded-card` … |
 | `styles/tailwind-neutrals.css` | optional: Tailwind's grey ramps (`gray`, `slate`, `zinc`, `neutral`, `stone`) follow the house neutrals |
 | `styles/fonts.css` | Pretendard Variable (dynamic subset) |

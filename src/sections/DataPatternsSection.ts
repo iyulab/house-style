@@ -28,6 +28,8 @@ import crossPageSrc from './data-patterns/CrossPageSelectionDemo.ts?raw';
 import masterDetailSrc from './data-patterns/MasterDetailDemo.ts?raw';
 import filterEmptySrc from './data-patterns/FilterEmptyStateDemo.ts?raw';
 import editFormSrc from './data-patterns/EditFormDemo.ts?raw';
+// The cell marks as text — a table renders its cells in a shadow root, which page styles do not reach.
+import cellMarksCss from '../../styles/marks.css?inline';
 
 /**
  * Capabilities the UI names but hasn't built yet. A missing feature checked against
@@ -49,6 +51,29 @@ const LINE_ITEMS = [
   { _id: 'li-1', item: 'Business cards, 500ct', qty: 2, unitPrice: '₩45,000', subtotal: '₩90,000' },
   { _id: 'li-2', item: 'Letterhead, A4', qty: 1, unitPrice: '₩1,150,000', subtotal: '₩1,150,000' },
   { _id: 'li-3', item: 'Envelope, #10', qty: 1, unitPrice: '₩0', subtotal: '₩0' },
+];
+
+/** The house cell marks as a stylesheet a table adopts — one sheet, shared by every table that takes it. */
+const CELL_MARKS = new CSSStyleSheet();
+CELL_MARKS.replaceSync(cellMarksCss);
+
+const DUE_COLUMNS: ColumnDef[] = [
+  { key: 'id', label: 'Order', width: '140px', render: (v) => html`<a class="hs-id" href="#">${v}</a>` },
+  { key: 'customer', label: 'Customer', minWidth: '200px' },
+  {
+    key: 'due', label: 'Due', width: '120px',
+    render: (v, row) => v == null
+      ? html`<span class="hs-empty">—</span>`
+      : html`<span class="hs-due ${row.dueTone ? `hs-due--${row.dueTone}` : ''}">${v}</span>`,
+  },
+  { key: 'total', label: 'Total', align: 'end', width: '120px', render: (v) => html`<span class="hs-num">${v}</span>` },
+];
+
+const DUE_ROWS = [
+  { _id: 'd-1', id: 'G-2026-0512', customer: 'Aster Trading', due: 'D-5', total: '₩1,240,000' },
+  { _id: 'd-2', id: 'G-2026-0513', customer: 'Blue Harbor Co.', due: 'D-1', dueTone: 'soon', total: '₩380,500' },
+  { _id: 'd-3', id: 'G-2026-0514', customer: 'Cedar & Finch', due: 'D+2', dueTone: 'over', total: '₩92,000' },
+  { _id: 'd-4', id: 'G-2026-0515', customer: 'Driftwood Supply', due: null, total: '₩2,010,000' },
 ];
 
 const DEMO_CUSTOMERS: (PickerItem & { email: string })[] = [
@@ -365,6 +390,28 @@ export class DataPatternsSection extends LitElement {
             .columns=${LINE_ITEM_COLUMNS}
             .data=${LINE_ITEMS}
             .totalCount=${3}
+          ></u-rich-table>
+        </u-group-box>
+
+        <u-group-box level="2" title="Marks inside a table cell — hand the table the marks sheet">
+          <p>
+            A cell's <code>render</code> output is drawn in the table's shadow root, where page styles do not reach —
+            <code>.hs-id</code>, <code>.hs-due</code> and <code>.hs-num</code> would come out bare. The marks live in
+            their own file, <code>styles/marks.css</code>, with no <code>@import</code> and no layer, so it can be
+            handed to the table as a constructable stylesheet. <code>u-rich-table</code> and <code>flex-table</code>
+            take it the same way, through <code>stylesheets</code>; make the sheet once and share it.
+          </p>
+          <pre><code>import marks from '@iyulab/house-style/styles/marks.css?inline';   // Vite
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(marks);
+table.stylesheets = [sheet];</code></pre>
+          <u-rich-table
+            aria-label="Orders due"
+            .columns=${DUE_COLUMNS}
+            .data=${DUE_ROWS}
+            .totalCount=${DUE_ROWS.length}
+            .stylesheets=${[CELL_MARKS]}
+            hide-pagination
           ></u-rich-table>
         </u-group-box>
 

@@ -1,0 +1,55 @@
+/*
+ * @iyulab/house-style — cell marks
+ * ==========================================================================
+ * The small marks a table cell carries: the row identifier, a number, an empty value, days left.
+ * `patterns.css` imports this file into `@layer iyu.house`, so a page that loads the theme has them.
+ *
+ * A table that renders its cells in a shadow root (`flex-table`, `u-rich-table`) does not see
+ * page styles there. Hand it this file as a constructable stylesheet:
+ *
+ *   import marks from '@iyulab/house-style/styles/marks.css?inline';   // Vite
+ *   const sheet = new CSSStyleSheet();
+ *   sheet.replaceSync(marks);
+ *   table.stylesheets = [sheet];
+ *
+ * That is why the file stands alone: no `@import`, no layer of its own (a constructable sheet
+ * rejects `@import`), and every rule reads tokens only — the `--u-*` values inherit into the
+ * shadow root from the page.
+ * ========================================================================== */
+
+/* Numbers right-aligned in tabular figures */
+.hs-num { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hs-center { text-align: center; }
+.hs-nowrap { white-space: nowrap; }
+.hs-muted { color: var(--u-txt-color-weak); }
+.hs-strong { font-weight: 600; }
+
+/* The row's identifier — bold ink, underline on hover; not a blue link repeated on every row. */
+.hs-id {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--u-txt-color);
+  text-decoration: none;
+}
+a.hs-id:hover,
+.hs-id:is(button):hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* An empty value is shown, never left blank: `<span class="hs-empty">—</span>` */
+.hs-empty { color: var(--u-txt-color-weaker); }
+
+/* Days left: neutral, soon (warning), overdue (danger). */
+.hs-due {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--u-radius-pill, 9999px);
+  font-size: var(--u-text-overline-size, 11px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: var(--u-bg-color-raised);
+  color: var(--u-txt-color-weak);
+  white-space: nowrap;
+}
+.hs-due--soon { background: var(--u-warning-bg-color); color: var(--u-warning-color-strong); }
+.hs-due--over { background: var(--u-danger-bg-color); color: var(--u-danger-color-strong); }

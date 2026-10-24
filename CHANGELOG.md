@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **Cell marks a table can adopt — `styles/marks.css`.** `.hs-id`, `.hs-num`, `.hs-center`, `.hs-nowrap`, `.hs-muted`,
+  `.hs-strong`, `.hs-empty` and `.hs-due` move out of `patterns.css` into a file of their own, with no `@import` and no
+  layer, so a table that draws its cells in a shadow root (`flex-table`, `u-rich-table` from `@iyulab/data-components`
+  0.55) can take it through `stylesheets`: build a `CSSStyleSheet` from `marks.css?inline` and assign it. Page styles do
+  not reach a cell's `render` output, so the marks came out bare there. `patterns.css` imports the file into
+  `@layer iyu.house`, so a page that loads the theme sees no change. The guide's data patterns page shows it.
+
 ## [0.11.0] - 2026-10-24
 
 ### Added

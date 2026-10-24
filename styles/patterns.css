@@ -24,6 +24,10 @@
 
 @layer iyu.base, iyu.house;
 
+/* Cell marks (`.hs-num` · `.hs-id` · `.hs-empty` · `.hs-due` …) live in their own file so a table's
+   shadow root can adopt them as a stylesheet — see marks.css. */
+@import './marks.css' layer(iyu.house);
+
 @layer iyu.house {
 
 /* ── Page ──────────────────────────────────────────────────────────────── */
@@ -76,25 +80,9 @@
 .hs-table--compact td,
 .hs-table--compact tfoot td { height: var(--hs-row-compact, 36px); }
 .hs-table--top td { vertical-align: top; padding-block: var(--u-space-sm, 8px); height: auto; }
-/* Cells (`th` too — header text aligns with its values) */
-.hs-num,
+/* Cells — the marks themselves are in marks.css; a header cell aligns with its values. */
 .hs-table th.hs-num { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.hs-center,
 .hs-table th.hs-center { text-align: center; }
-.hs-nowrap { white-space: nowrap; }
-.hs-muted { color: var(--u-txt-color-weak); }
-.hs-strong { font-weight: 600; }
-/* The row's identifier — bold ink, underline on hover; not a blue link repeated on every row. */
-.hs-id {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--u-txt-color);
-  text-decoration: none;
-}
-a.hs-id:hover,
-.hs-id:is(button):hover { text-decoration: underline; text-underline-offset: 3px; }
-/* An empty value is shown, never left blank: `<span class="hs-empty">—</span>` */
-.hs-empty { color: var(--u-txt-color-weaker); }
 /* A run of rows that repeat the previous row's leading cells: fade the repeats. */
 .hs-table .hs-continued td { color: var(--u-txt-color-weaker); }
 .hs-table .hs-continued td.hs-keep { color: var(--u-txt-color); }
@@ -230,24 +218,5 @@ tr[aria-selected='true'] .hs-row-actions {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, max(var(--hs-grid-min), (100% - 2 * var(--hs-grid-gap)) / 3)), 1fr));
 }
 .hs-span-all { grid-column: 1 / -1; }
-
-
-/* ── Small marks ───────────────────────────────────────────────────────── */
-/* Days left: neutral, soon (warning), overdue (danger). */
-.hs-due {
-  display: inline-flex;
-  align-items: center;
-  height: 18px;
-  padding: 0 6px;
-  border-radius: var(--u-radius-pill, 9999px);
-  font-size: var(--u-text-overline-size, 11px);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  background: var(--u-bg-color-raised);
-  color: var(--u-txt-color-weak);
-  white-space: nowrap;
-}
-.hs-due--soon { background: var(--u-warning-bg-color); color: var(--u-warning-color-strong); }
-.hs-due--over { background: var(--u-danger-bg-color); color: var(--u-danger-color-strong); }
 
 } /* @layer iyu.house */

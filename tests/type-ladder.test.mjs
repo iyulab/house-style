@@ -46,7 +46,7 @@ test('the house steps sit on the ladder: dense 13 between body and label, hero 2
   assert.equal(px('--hs-text-hero-size'), 28);
 });
 
-for (const file of ['patterns.css', 'components.css']) {
+for (const file of ['patterns.css', 'marks.css', 'components.css']) {
   test(`${file}: text reads a ladder step, and its fallback equals the house value`, () => {
     const offenders = [];
     for (const { selector, prop, value } of sizes(read(file))) {
