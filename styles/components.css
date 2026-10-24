@@ -281,6 +281,13 @@ u-alert[inline]::part(content) {
   color: var(--u-txt-color-weak);
 }
 
+/* ── Steps (`@iyulab/components`) — the compact track's current segment is the accent, the mark of the current item
+ *    in every preset. Travelled segments are ink, so under `warm` (where the main action is ink) a primary-coloured
+ *    current segment would read as one more travelled step. ── */
+u-steps {
+  --steps-current-color: var(--hs-accent-fill);
+}
+
 /* ── Card — flat surface, hairline border; shadow is for things that float ── */
 u-card {
   --card-border-color: var(--u-border-color);

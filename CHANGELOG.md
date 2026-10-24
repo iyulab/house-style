@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **The compact steps track marks the current step in the accent.** `u-steps appearance="compact"` (components 2.35)
+  fills travelled segments with ink; under `warm`, where the primary colour is ink too, the current segment would look
+  like one more travelled step. The house sets `--steps-current-color` to the accent in every preset.
+
 ## [0.10.1] - 2026-10-23
 
 ### Fixed
