@@ -314,6 +314,19 @@ export class DataPatternsSection extends LitElement {
             an overlay over the list with a close button — the component's own behavior, not extra
             code here.
           </p>
+          <p>
+            <strong>On a list screen, the layout goes inside the list page.</strong> Put it in
+            <code>u-list-page</code>'s <code>slot="view"</code> with the table as its content: the list page binds its
+            source to the table inside, and the detail pane starts level with the table — below the filters and the
+            toolbar — instead of at the top of the screen. The selected state and the bulk-action toolbar keep working.
+          </p>
+          <pre><code>&lt;u-list-page appearance="card"&gt;
+  &lt;u-master-detail-layout slot="view" detail-size="20rem"&gt;
+    &lt;u-rich-table aria-label="Orders"&gt;&lt;/u-rich-table&gt;
+    &lt;div slot="detail"&gt;…the opened order…&lt;/div&gt;
+  &lt;/u-master-detail-layout&gt;
+  &lt;u-pagination slot="pager"&gt;&lt;/u-pagination&gt;
+&lt;/u-list-page&gt;</code></pre>
           <house-data-patterns-master-detail></house-data-patterns-master-detail>
           <house-demo-source label="MasterDetailDemo.ts" .source=${masterDetailSrc}></house-demo-source>
         </u-group-box>

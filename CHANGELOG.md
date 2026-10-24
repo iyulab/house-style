@@ -13,6 +13,9 @@
 - **The side sheet recipe covers `u-side-panel`.** The hairline header and the always-visible body scrollbar apply to
   `u-side-panel` (`@iyulab/modern-app` 0.61 — `u-drawer` with the side-panel defaults) as well as `u-drawer`, and the
   guide's edit form opens in one.
+- **The guide shows a list with a preview inside the list page.** The master›detail recipe now puts
+  `u-master-detail-layout` in `u-list-page`'s `slot="view"` (`@iyulab/enterprise` 0.36 binds the table inside it), so the
+  preview starts level with the table rather than at the top of the screen.
 
 ## [0.11.0] - 2026-10-24
 
