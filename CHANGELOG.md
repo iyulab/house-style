@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **The reference app's «New order» opens its panel.** The panel sat inside `u-list-page` without a slot, where the page
+  never renders it; it now sits beside the list page, and opens as `u-side-panel` (`@iyulab/modern-app` 0.61) — a close
+  with a typed customer still asks before discarding.
+
 ### Added
 
 - **Cell marks a table can adopt — `styles/marks.css`.** `.hs-id`, `.hs-num`, `.hs-center`, `.hs-nowrap`, `.hs-muted`,

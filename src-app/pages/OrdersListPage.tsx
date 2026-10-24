@@ -83,9 +83,10 @@ export default function OrdersListPage({ status = '', q = '' }: { status?: strin
   // The selection lives on the table — hidden behind the cards view, it is not what the toolbar acts on.
   const selecting = view === 'table' && selectedIds.length > 0;
 
+  // A card list page: toolbar, table and pager on one surface; while rows are selected the toolbar is the
+  // bulk-action bar (the house tints it from the page's `:state(selected)`) and its title says how many.
   return (
-    // A card list page: toolbar, table and pager on one surface; while rows are selected the toolbar is the
-    // bulk-action bar (the house tints it from the page's `:state(selected)`) and its title says how many.
+    <>
     <ListPage source={orders.source} view={view} appearance="card">
       <PageHeader slot="header" title="Orders" subtitle={`${orders.totalCount} order(s)`} />
       <UInput slot="filters" type="search" label="Search" placeholder="Order or customer" value={q}
@@ -124,7 +125,10 @@ export default function OrdersListPage({ status = '', q = '' }: { status?: strin
       <EmptyState slot="empty" {...(orders.search || status
         ? { variant: 'no-results', title: 'No orders match', description: 'Clear the search or the status to see more.' }
         : { variant: 'no-data', title: 'No orders yet', description: 'Create the first one to get started.' })} />
-      <NewOrderDrawer open={newOrderOpen} onClose={() => setNewOrderOpen(false)} onCreated={() => orders.refresh()} />
     </ListPage>
+    {/* The panel sits beside the list page, not inside it — the page draws only its named slots, so an unslotted
+        child is never rendered. */}
+    <NewOrderDrawer open={newOrderOpen} onClose={() => setNewOrderOpen(false)} onCreated={() => orders.refresh()} />
+    </>
   );
 }

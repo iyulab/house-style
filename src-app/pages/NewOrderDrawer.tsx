@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FormSection, FormRow } from '@iyulab/enterprise/react';
-import { UButton, UInput, UDrawer } from '../lib/ui-react.js';
+import { SidePanel } from '@iyulab/modern-app/react/SidePanel.js';
+import { UButton, UInput } from '../lib/ui-react.js';
 import type { UInput as UInputElement } from '@iyulab/components';
 import { svc } from '../lib/odata.js';
 import type { Order } from '../mocks/data.js';
@@ -51,7 +52,7 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
   }
 
   return (
-    <UDrawer open={open} placement="right" closable onHide={form.onHide}>
+    <SidePanel open={open} onHide={form.onHide}>
       <span slot="header">New order</span>
       <fieldset disabled={saving} style={{ display: 'contents' }}>
       <FormSection title="Details">
@@ -71,6 +72,6 @@ export default function NewOrderDrawer({ open, onClose, onCreated }: {
           Create
         </UButton>
       </div>
-    </UDrawer>
+    </SidePanel>
   );
 }
