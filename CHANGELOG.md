@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- **The compact steps' current segment takes the accent inside a table cell too.** The colour was set on `u-steps`,
+  which matches only elements in the document; a table draws its cells in its own shadow root, so a `u-steps` there fell
+  back to the primary colour — under `warm`, where that is ink, the current segment looked like one more travelled
+  step. `--steps-current-color` and the KPI figure size `--info-field-xl-size` are now set on `:root` and inherit into
+  any shadow tree.
+
 ## [0.12.0] - 2026-10-25
 
 ### Fixed

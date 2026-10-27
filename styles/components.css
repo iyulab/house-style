@@ -283,8 +283,10 @@ u-alert[inline]::part(content) {
 
 /* ── Steps (`@iyulab/components`) — the compact track's current segment is the accent, the mark of the current item
  *    in every preset. Travelled segments are ink, so under `warm` (where the main action is ink) a primary-coloured
- *    current segment would read as one more travelled step. ── */
-u-steps {
+ *    current segment would read as one more travelled step.
+ *    Set on the root, not on `u-steps`: the compact track's main place is a table cell, which a table draws in its own
+ *    shadow root where a `u-steps` rule in this sheet does not reach — a custom property inherits across it. ── */
+:root {
   --steps-current-color: var(--hs-accent-fill);
 }
 
@@ -337,7 +339,8 @@ u-page-header::part(subtitle) {
 
 /* ── Info field (`@iyulab/modern-app`) — a KPI figure (`size="xl"`) is the house hero step, 28 at the 24 display.
  *    A tile (`appearance="tile"`) is already a card surface — border, card corner, surface — from the shared tokens. ── */
-u-info-field {
+:root {
+  /* On the root for the same reason as the steps' colour above — a KPI tile is drawn inside other components. */
   --info-field-xl-size: var(--hs-text-hero-size);
 }
 
