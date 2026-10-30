@@ -199,6 +199,14 @@ export class DataPatternsSection extends LitElement {
             the slots do not fit, <code>bindSource</code> binds the same source to elements you place yourself.
           </p>
           <p>
+            On a phone a table does not suit — both tables draw their rows as cards there (<code>layout="auto"</code>,
+            the default: a screen narrower than <code>card-breakpoint</code>, or a narrow place whose columns do not
+            fit). Decide it on the screen: <code>layout="auto"</code> keeps that, <code>layout="table"</code> or
+            <code>"cards"</code> fixes one, and a column's <code>card</code> role says which value heads the card
+            (<code>title</code>) and which is left out (<code>hidden</code>). A table left undecided notes the fallback
+            once in the console. A table with editable columns stays a table.
+          </p>
+          <p>
             Both tables describe a column with the same words, so moving a screen from one to the
             other keeps its column list:
           </p>

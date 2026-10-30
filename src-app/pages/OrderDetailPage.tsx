@@ -247,6 +247,7 @@ export default function OrderDetailPage({ orderId }: { orderId: string }) {
               )}
               {items.length > 0 && (
                 <URichTableReact
+                  layout="auto"
                   aria-label="Order items"
                   rowKey="Id"
                   dataMode="client"

@@ -23,7 +23,8 @@ import type { Order, OrderStatus } from '../mocks/data.js';
 
 const COLUMNS: ColumnDefReact[] = [
   { key: 'Id', label: 'Order', width: '140px', sortable: true },
-  { key: 'Customer', label: 'Customer', width: '200px', sortable: true },
+  // A phone draws the table as cards (layout="auto" below) — the customer heads each card.
+  { key: 'Customer', label: 'Customer', width: '200px', sortable: true, card: 'title' },
   { key: 'Status', label: 'Status', width: '120px', render: (v) => <StatusTag status={String(v) as OrderStatus} /> },
   { key: 'Total', label: 'Total', width: '140px', align: 'end', sortable: true, render: (v) => won(v) },
 ];
@@ -114,7 +115,7 @@ export default function OrdersListPage({ status = '', q = '' }: { status?: strin
         )}
       </ActionBar>
       {message && <UAlert slot="toolbar" open status="success">{message}</UAlert>}
-      <URichTableReact slot="view" view-name="table" aria-label="Orders" rowKey="Id" columns={COLUMNS} selectable={canWrite} hidePagination hideToolbar
+      <URichTableReact slot="view" view-name="table" layout="auto" aria-label="Orders" rowKey="Id" columns={COLUMNS} selectable={canWrite} hidePagination hideToolbar
         onSelectionChange={(e) => { setSelectedIds(e.detail.selectedIds); setMessage(''); }}
         onRowActivate={(e) => navigate(`${import.meta.env.BASE_URL}app/orders/${e.detail.id}`)} />
       <UDataViewReact slot="view" view-name="cards" rowKey="Id" hideToolbar
