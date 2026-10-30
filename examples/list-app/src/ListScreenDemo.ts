@@ -57,7 +57,7 @@ export class ListScreenDemo extends LitElement {
         </u-select>
         <u-button slot="toolbar" size="sm" appearance="outlined" aria-pressed=${this.view === 'cards'}
           @click=${() => { this.view = this.view === 'table' ? 'cards' : 'table'; }}>Cards</u-button>
-        <u-rich-table slot="view" view-name="table" aria-label="Orders" .columns=${COLUMNS} selectable hide-pagination
+        <u-rich-table slot="view" view-name="table" layout="auto" aria-label="Orders" .columns=${COLUMNS} selectable hide-pagination
           @selection-change=${(e: RichTableEventMap['selection-change']) => { this.selected = e.detail.selectedIds.length; }}>
           <!-- The table states the count beside these; the slot holds only what to do with the selection. -->
           <u-button slot="bulk-actions" size="sm" color="danger" appearance="outlined" @click=${this.cancelSelected}>Cancel orders</u-button>

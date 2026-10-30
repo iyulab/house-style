@@ -4,8 +4,9 @@ import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-t
 import '@iyulab/components/dist/components/tag/UTag.js';
 
 export const COLUMNS: ColumnDef[] = [
+  // On a phone the table draws cards: the customer heads each card, the order number follows as label and value.
   { key: 'id', label: 'Order', width: '120px' },
-  { key: 'customer', label: 'Customer', minWidth: '200px' },
+  { key: 'customer', label: 'Customer', minWidth: '200px', card: 'title' },
   { key: 'status', label: 'Status', width: '140px', render: renderStatusTag },
   { key: 'total', label: 'Total', align: 'end', width: '120px' },
 ];
