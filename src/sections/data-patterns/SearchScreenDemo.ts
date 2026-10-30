@@ -191,7 +191,7 @@ export class SearchScreenDemo extends LitElement {
               </u-empty-state>
             `
           : html`
-              <u-rich-table
+              <u-rich-table layout="auto"
                 aria-label="Search results"
                 .columns=${COLUMNS}
                 .data=${this.pageRows}

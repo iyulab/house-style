@@ -51,7 +51,7 @@ export class MasterDetailDemo extends LitElement {
         overlay-breakpoint="640"
         @detail-close=${this.handleClose}
       >
-        <u-rich-table
+        <u-rich-table layout="auto"
           aria-label="Orders"
           .columns=${COLUMNS}
           .data=${ROWS}

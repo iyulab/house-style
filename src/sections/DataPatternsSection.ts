@@ -407,7 +407,7 @@ export class DataPatternsSection extends LitElement {
             what belongs on a line item and the "add related record" action riding in the
             group-box's own <code>actions</code> slot.
           </p>
-          <u-rich-table
+          <u-rich-table layout="auto"
             .columns=${LINE_ITEM_COLUMNS}
             .data=${LINE_ITEMS}
             .totalCount=${3}
@@ -426,7 +426,7 @@ export class DataPatternsSection extends LitElement {
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(marks);
 table.stylesheets = [sheet];</code></pre>
-          <u-rich-table
+          <u-rich-table layout="auto"
             aria-label="Orders due"
             .columns=${DUE_COLUMNS}
             .data=${DUE_ROWS}
