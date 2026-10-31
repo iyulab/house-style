@@ -347,21 +347,21 @@ import '@iyulab/house-style';                          // fonts + tokens + recip
 
       <u-group-box level="2" title="Callouts — the conclusion in the title">
         <div class="hs-page">
-          <u-alert inline open status="warning" title="Some customers need their due date checked">
+          <u-alert open status="warning" title="Some customers need their due date checked">
             Due dates are not computed for barter and offset accounts.
             <u-button slot="footer" size="sm" appearance="outlined">Show them</u-button>
           </u-alert>
-          <u-alert inline open status="info" title="Totals follow the filters above">
+          <u-alert open status="info" title="Totals follow the filters above">
             Clear a filter chip to widen them.
           </u-alert>
-          <u-alert inline open status="notice" role="note" title="Note">
+          <u-alert open status="notice" role="note" title="Note">
             <u-icon slot="icon" lib="bootstrap" name="pencil"></u-icon>
             Customer asked for the same cover as last year; only the logo changes.
             <u-button slot="footer" size="sm" appearance="plain">Edit</u-button>
           </u-alert>
         </div>
         <p>
-          A callout is <code>&lt;u-alert inline open&gt;</code>: the conclusion in <code>title</code>, the body as
+          A callout is <code>&lt;u-alert open&gt;</code>: the conclusion in <code>title</code>, the body as
           content, actions in <code>slot="footer"</code> (the house puts them in a right-hand column). One callout per
           screen. No thick coloured edge — an icon and a tint carry the tone. A person's note on a record is a
           <code>notice</code> alert with <code>role="note"</code> and a pencil in <code>slot="icon"</code>: it is not a
