@@ -14,6 +14,7 @@ import '@iyulab/data-components/dist/components/u-rich-table/URichTable.js';
 import '@iyulab/data-components/dist/components/u-record-picker/URecordPicker.js';
 import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-table/types.js';
 import type { PickerItem } from '@iyulab/data-components/dist/components/u-record-picker/types.js';
+import { Locale } from '@iyulab/components/dist/utilities/Locale.js';
 
 import './data-patterns/ListScreenDemo.js';
 import './data-patterns/SearchScreenDemo.js';
@@ -83,10 +84,8 @@ const DEMO_CUSTOMERS: (PickerItem & { email: string })[] = [
   { id: 'c4', label: 'Delta Freight', email: 'info@delta.example' },
 ];
 
-const searchDemoCustomers = async (query: string): Promise<PickerItem[]> => {
-  const q = query.toLowerCase();
-  return DEMO_CUSTOMERS.filter((c) => c.label.toLowerCase().includes(q));
-};
+const searchDemoCustomers = async (query: string): Promise<PickerItem[]> =>
+  DEMO_CUSTOMERS.filter((c) => Locale.matchesSearch(c.label, query));
 
 /**
  * §4 Data visualization & patterns.

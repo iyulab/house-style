@@ -16,6 +16,7 @@ import type { ColumnDef } from '@iyulab/data-components/dist/components/u-rich-t
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
 import type { USelect } from '@iyulab/components/dist/components/select/USelect.js';
 import type { UDateRangePicker } from '@iyulab/components/dist/components/date-range-picker/UDateRangePicker.js';
+import { Locale } from '@iyulab/components/dist/utilities/Locale.js';
 
 import { PAGED_ROWS, PAGED_PAGE_SIZE, renderStatusTag } from './constants.js';
 
@@ -101,8 +102,7 @@ export class SearchScreenDemo extends LitElement {
     const { keyword, status } = this.applied;
     return PAGED_ROWS.filter(row => {
       const matchesKeyword =
-        !keyword || row.customer.toLowerCase().includes(keyword.toLowerCase()) ||
-        row.id.toLowerCase().includes(keyword.toLowerCase());
+        !keyword || Locale.matchesSearch(row.customer, keyword) || Locale.matchesSearch(row.id, keyword);
       const matchesStatus = !status || row.status === status;
       return matchesKeyword && matchesStatus;
     });

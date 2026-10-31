@@ -5,6 +5,7 @@ import '@iyulab/components/dist/components/input/UInput.js';
 import '@iyulab/components/dist/components/button/UButton.js';
 import '@iyulab/modern-app/dist/components/EmptyState.js';
 import type { UInput } from '@iyulab/components/dist/components/input/UInput.js';
+import { Locale } from '@iyulab/components/dist/utilities/Locale.js';
 
 const FILTER_ITEMS = ['Aster Trading', 'Blue Harbor Co.', 'Cedar & Finch'];
 
@@ -21,8 +22,9 @@ export class FilterEmptyStateDemo extends LitElement {
   @state() private filterText = '';
 
   render() {
-    const matches = FILTER_ITEMS.filter(name =>
-      name.toLowerCase().includes(this.filterText.toLowerCase()));
+    // The components search match — the one u-select and the table filters use: case and accents folded,
+    // Korean initials (ㅅㅇ finds 서울), and a syllable still being typed.
+    const matches = FILTER_ITEMS.filter(name => Locale.matchesSearch(name, this.filterText));
     return html`
       <u-input
         placeholder="Filter customers…"
