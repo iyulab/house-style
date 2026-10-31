@@ -73,8 +73,8 @@
   "devDependencies": {
     "@iyulab/components": "^2.35.0",
     "@iyulab/data-components": "^0.56.1",
-    "@iyulab/enterprise": "^0.37.0",
-    "@iyulab/flex-table": "^0.77.0",
+    "@iyulab/enterprise": "^0.38.0",
+    "@iyulab/flex-table": "^0.78.0",
     "@iyulab/modern-app": "^0.61.0",
     "@iyulab/router": "^0.24.0",
     "@iyulab/u-widgets": "^0.45.0",
