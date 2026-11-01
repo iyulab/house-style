@@ -56,6 +56,12 @@ jobs:
       - name: Leaving with unsaved input
         run: npm run check:leave
 
+      # Text cut by an ellipsis or a clipping box loses its tail for a sighted reader, more so under user text spacing
+      # (WCAG 1.4.12). Every page at a desktop and a phone width, with the spacing overrides applied in every shadow
+      # root; a clipped text box with no title fails unless judged in the script. Not deployed if so.
+      - name: Text spacing
+        run: npm run check:spacing
+
       - name: SPA fallback (client-side routing, guide + reference app)
         run: |
           cat > publish/404.html <<'EOF'
