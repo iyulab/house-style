@@ -46,6 +46,15 @@ test('the sheet declares the shared layer order and wraps everything in iyu.hous
   assert.equal(css.match(/@layer iyu\.house \{/g)?.length, 1);
 });
 
+// A finger needs a bigger target than a mouse: the house sheet sets the components' `--u-target-size` floor on a coarse
+// pointer and nowhere else, so a fine pointer keeps the 32 / 36 / 40 ladder (control-ladder.test.mjs).
+test('the touch floor is set on :root under (pointer: coarse) only, and never unconditionally', () => {
+  const coarse = css.match(/@media \(pointer: coarse\) \{\s*:root \{([^}]*)\}\s*\}/);
+  assert.ok(coarse, 'a (pointer: coarse) block sets a :root declaration');
+  assert.match(coarse[1], /--u-target-size:\s*44px;/);
+  assert.equal(css.match(/--u-target-size\s*:/g)?.length, 1, 'declared exactly once — inside the media query');
+});
+
 for (const [name, light, dark] of [['cool', ROOT, DARK], ['warm', pal('warm'), palDark('warm')], ['contrast', pal('contrast'), palDark('contrast')]]) {
   test(`🔴${name}: every literal colour set in light is also set in dark (no light value leaks into dark)`, () => {
     const d = block(dark);

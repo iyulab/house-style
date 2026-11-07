@@ -102,7 +102,8 @@ One filled button per view under every preset — the rest are outlined, plain o
 
 **Fixed by the house** (token by token overridable): the 24/18/15/14/13/12/11 type ladder in Pretendard,
 32/36/40 controls, 8px controls and menu items, 10px cards, pill status tags, 44px table rows (36px compact),
-a 240px sidebar of 38px rows.
+a 240px sidebar of 38px rows. On a touch screen (`@media (pointer: coarse)`) pressed controls grow to a 44px floor —
+`--u-target-size`, set once on `:root`; override it there to change or turn it off (`0px`).
 
 The type ladder is the `--u-text-*-size` steps plus two house steps derived from them —
 `--hs-text-dense-size` (between body and label: table cells, definition lists, callouts) and

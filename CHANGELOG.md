@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- **Controls grow to a 44px floor on a touch screen.** Under `@media (pointer: coarse)` the theme sets
+  `--u-target-size: 44px` on `:root`, so buttons, text fields, selects, date pickers, tabs and menu rows are at least 44px
+  high for a finger; checkboxes, switches and the like keep their look and grow only the area that takes the press.
+  A mouse or trackpad is unchanged (the 32 / 36 / 40 ladder). Before, an app had to add the one line itself; to keep the
+  old size on touch, set `--u-target-size: 0px` on `:root` in an unlayered rule.
+  The peer range of `@iyulab/flex-table` rises to `>=0.45.0`, the first release whose table controls follow the token.
+
 ## [0.12.1] - 2026-10-27
 
 ### Fixed

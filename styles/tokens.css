@@ -563,6 +563,17 @@
   --app-sidebar-active-shadow-hover: none;
 }
 
+/* ── Touch targets — a floor for what is pressed ─────────────────────────────────────────────────────────────────
+   On a coarse pointer (a finger) every control that is pressed once grows to 44px: buttons, text fields, selects,
+   date pickers, tabs and menu rows (`@iyulab/components` `--u-target-size`); small controls keep their look and grow
+   only the area that takes the press. A fine pointer (mouse, trackpad) is unchanged — the ladder stays 32 / 36 / 40.
+   The page can still say otherwise: an unlayered `--u-target-size` on `:root` beats this layered one. */
+@media (pointer: coarse) {
+  :root {
+    --u-target-size: 44px;
+  }
+}
+
 /* ── Board scale — a screen read from across a room ─────────────────────────────────────────────────────────────
    `hs-scale="board"` on an element (a floor board on a TV, a lobby or kiosk screen) puts everything inside it on a
    ladder about twice the house one: the smallest text 22px, running text 28px, a headline 56px — read at 5–8 m on a

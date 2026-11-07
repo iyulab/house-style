@@ -60,7 +60,7 @@
   },
   "peerDependencies": {
     "@iyulab/components": "^2.35.0",
-    "@iyulab/flex-table": ">=0.41.0",
+    "@iyulab/flex-table": ">=0.45.0",
     "@iyulab/modern-app": ">=0.59.0"
   },
   "peerDependenciesMeta": {

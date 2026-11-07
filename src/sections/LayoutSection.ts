@@ -78,6 +78,22 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
+      <u-group-box level="2" title="Touch — a floor the theme turns on">
+        <p>
+          On a coarse pointer (a finger, <code>@media (pointer: coarse)</code>) the theme sets
+          <code>--u-target-size: 44px</code> on <code>:root</code>, the component library's floor for
+          everything that is pressed once. Measured on the reference app: a button goes from 37px to
+          44px and a sidebar link from 34px to 44px; a control already taller stays as it is, and
+          small ones (checkbox, switch, a field's clear icon) keep their look and grow only the area
+          that takes the press. A mouse or trackpad sees no change.
+        </p>
+        <p>
+          It is the opposite of density: that one is a switch you turn on, this one the theme turns on
+          for you. To keep the desktop size on touch, set
+          <code>:root { --u-target-size: 0px; }</code> in a rule outside the theme's layer.
+        </p>
+      </u-group-box>
+
       <u-group-box level="2" title="Stacking and Escape">
         <p>
           Surfaces that overlap across the page stack in three named layers — the shell, floating
