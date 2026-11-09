@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Documentation
+
+- The guide site serves `llms.txt` (an entry point for coding agents): the `@iyulab/*` packages, what each is for, and the link
+  to the agent skill each one ships in its tarball. The README points to it.
+
 ### Changed
 
 - **Controls grow to a 44px floor on a touch screen.** Under `@media (pointer: coarse)` the theme sets

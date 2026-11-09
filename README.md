@@ -126,6 +126,9 @@ well opts into the measure: `<div class="hs-prose">` stops its paragraphs and li
 **Live**: https://iyulab.github.io/house-style/ — this is the guide. There is no
 separate docs site; the page above is the only place to read it.
 
+**For agents**: https://iyulab.github.io/house-style/llms.txt lists every `@iyulab/*` package with what it is for and where its
+agent skill (`SKILL.md`) lives; the skills ship inside each package's npm tarball.
+
 The live page is organized into sections:
 
 - **Visual identity & tokens** — type scale, colour roles, surfaces and ink, chart colours, radius, elevation

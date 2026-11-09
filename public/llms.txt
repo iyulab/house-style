@@ -1,0 +1,25 @@
+# iyulab web UI libraries
+
+> Lit-based web components and application libraries for line-of-business web apps, published on npm under the `@iyulab/*` scope. A package that has an agent skill ships it inside its npm tarball: read its `SKILL.md` first, then the `references/` it points to.
+
+Packages register their custom elements when imported. The components package carries the design tokens; the guide below shows the pieces working together.
+
+## Guide
+
+- [House-style guide and reference app](https://iyulab.github.io/house-style/): the guide is the place to see the packages used together; the reference app is a working line-of-business example.
+
+## Packages
+
+- [@iyulab/components](https://unpkg.com/@iyulab/components/skills/iyulab-components/SKILL.md): Base UI elements (buttons, inputs, selects, date pickers, dialogs and more), design tokens, theming and a locale registry. Start here. [npm](https://www.npmjs.com/package/@iyulab/components), [source](https://github.com/iyulab/node-components).
+- [@iyulab/house-style](https://www.npmjs.com/package/@iyulab/house-style): The house theme: CSS-only recipes on top of the components (tokens, layout, line-of-business patterns). Its site is the guide and a live reference app. [source](https://github.com/iyulab/house-style).
+- [@iyulab/modern-app](https://unpkg.com/@iyulab/modern-app/skills/modern-app/SKILL.md): Application shell: layout, sidebar, command palette, routing and app lifecycle (`app.load()`), built on components and router. [npm](https://www.npmjs.com/package/@iyulab/modern-app), [source](https://github.com/iyulab/node-modern-app).
+- [@iyulab/router](https://unpkg.com/@iyulab/router/skills/iyulab-router/SKILL.md): Client-side router for Lit and React with enter and leave guards and history-state handling. [npm](https://www.npmjs.com/package/@iyulab/router), [source](https://github.com/iyulab/node-router).
+- [@iyulab/data-components](https://unpkg.com/@iyulab/data-components/skills/iyulab-data-components/SKILL.md): Data elements built on components: `u-rich-table`, `u-simple-sheet`, `u-record-picker`. [npm](https://www.npmjs.com/package/@iyulab/data-components), [source](https://github.com/iyulab/node-data-components).
+- [@iyulab/flex-table](https://unpkg.com/@iyulab/flex-table/skills/iyulab-flex-table/SKILL.md): Spreadsheet-like data grid element: editing, selection, clipboard, filters and virtual scrolling. [npm](https://www.npmjs.com/package/@iyulab/flex-table), [source](https://github.com/iyulab/flex-table).
+- [@iyulab/enterprise](https://unpkg.com/@iyulab/enterprise/skills/iyulab-enterprise/SKILL.md): Business-app building blocks: OData service client, sign-in and list-page scaffolding. [npm](https://www.npmjs.com/package/@iyulab/enterprise), [source](https://github.com/iyulab/node-enterprise).
+- [@iyulab/chat-components](https://unpkg.com/@iyulab/chat-components/skills/iyulab-chat-components/SKILL.md): Chat interface and streaming Markdown blocks for LLM front ends. [npm](https://www.npmjs.com/package/@iyulab/chat-components), [source](https://github.com/iyulab/node-chat-components).
+- [@iyulab/editor-components](https://unpkg.com/@iyulab/editor-components/skills/iyulab-editor-components/SKILL.md): Rich-text editor elements. [npm](https://www.npmjs.com/package/@iyulab/editor-components), [source](https://github.com/iyulab/node-editor-components).
+- [@iyulab/u-widgets](https://unpkg.com/@iyulab/u-widgets/skills/iyulab-u-widgets/SKILL.md): Declarative widgets and charts drawn from a JSON spec; ships an MCP server (`@iyulab/u-widgets-mcp`) and a JSON schema. [npm](https://www.npmjs.com/package/@iyulab/u-widgets), [source](https://github.com/iyulab/u-widgets).
+- [@iyulab/dimension-timeline](https://www.npmjs.com/package/@iyulab/dimension-timeline): Timeline element that lays tasks out across customizable dimensions with collision-aware placement. [source](https://github.com/iyulab/node-dimension-timeline).
+- [@iyulab/http-client](https://unpkg.com/@iyulab/http-client/skills/iyulab-http-client/SKILL.md): HTTP client with typed responses and errors, upload and streaming. [npm](https://www.npmjs.com/package/@iyulab/http-client), [source](https://github.com/iyulab/node-http-client).
+- [@iyulab/flex-components](https://www.npmjs.com/package/@iyulab/flex-components): Pure functions for sheet-shaped data and number arrays. [source](https://github.com/iyulab/node-flex-components).
