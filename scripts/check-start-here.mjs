@@ -65,19 +65,25 @@ try {
     step(`create: ${line}`, () => npmLine(line + ' --no-interactive', project));
   }
 
-  // Step 2 — install, verbatim.
-  step(`install: ${INSTALL}`, () => npmLine(INSTALL, project));
-
-  // `--local`: replace the registry's house-style with a tarball of this working tree — the
-  // rehearsal of what the next tag would ship. The registry run can only fail after a release.
+  // Step 2 — install, verbatim. `--local`: the one difference is where house-style comes from — a tarball of this
+  // working tree instead of the registry — the rehearsal of what the next tag would ship. It is in the same install
+  // as the other packages, not swapped in afterwards: the registry's house-style carries the previous release's peer
+  // ranges, and when a release raises a peer range (`@iyulab/components ^2` → `^3`) the registry's copy cannot be
+  // resolved next to the registry's current packages, so a registry-first install fails before this tree is ever tried.
+  let installLine = INSTALL;
   if (local) {
-    step('install: this package from the working tree (--local)', () => {
+    step('pack: this package from the working tree (--local)', () => {
       const packed = run(npm[0], [...npm.slice(1), 'pack', '--pack-destination', work], { cwd: resolve(here, '..') });
       const tgz = packed.stdout.trim().split(/\r?\n/).pop();
-      // `--no-save`: the reader's manifest keeps the registry range — the starter is written from it.
-      run(npm[0], [...npm.slice(1), 'install', '--no-save', join(work, tgz)], { cwd: project });
+      installLine = INSTALL.replace('@iyulab/house-style', join(work, tgz));
     });
   }
+  step(`install: ${INSTALL}`, () => {
+    npmLine(installLine, project);
+    // The tarball path is not what a reader's manifest says: put back the range the registry would have saved,
+    // so the starter written from this project keeps a registry range.
+    if (local) restoreRegistryRange(project);
+  });
 
   // Step 3 — index.html and src/main.ts, verbatim.
   writeFileSync(join(project, 'index.html'), INDEX_HTML + '\n');
@@ -215,6 +221,17 @@ function step(name, fn) {
 }
 
 /** Runs one of the reader's `npm …` lines, through npm 11 if needed. */
+/** After a `--local` install: the manifest names house-style by a tarball path — write the registry-style range back. */
+function restoreRegistryRange(dir) {
+  const file = join(dir, 'package.json');
+  const manifest = JSON.parse(readFileSync(file, 'utf8'));
+  const version = JSON.parse(readFileSync(resolve(here, '../package.json'), 'utf8')).version;
+  for (const field of ['dependencies', 'devDependencies']) {
+    if (manifest[field]?.['@iyulab/house-style']) manifest[field]['@iyulab/house-style'] = `^${version}`;
+  }
+  writeFileSync(file, JSON.stringify(manifest, null, 2) + '\n');
+}
+
 function npmLine(line, cwd) {
   const [cmd, ...args] = line.split(/\s+/);
   if (cmd !== 'npm') throw new Error(`not an npm line: ${line}`);
