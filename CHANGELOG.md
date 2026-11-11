@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.13.0] - 2026-11-11
 
 ### Documentation
 
@@ -15,6 +15,8 @@
   A mouse or trackpad is unchanged (the 32 / 36 / 40 ladder). Before, an app had to add the one line itself; to keep the
   old size on touch, set `--u-target-size: 0px` on `:root` in an unlayered rule.
   The peer range of `@iyulab/flex-table` rises to `>=0.45.0`, the first release whose table controls follow the token.
+- **Follows `@iyulab/components` 3.0.** The peer range of `@iyulab/components` moves from `^2.35.0` to `^3.0.0`; the guide and
+  its reference apps are built on 3.0 and the other `@iyulab/*` packages at their current releases.
 
 ## [0.12.1] - 2026-10-27
 

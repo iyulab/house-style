@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@iyulab/components": "^2.37.0",
-    "@iyulab/data-components": "^0.56.2",
-    "@iyulab/enterprise": "^0.38.0",
-    "@iyulab/flex-table": "^0.78.0",
+    "@iyulab/components": "^3.0.0",
+    "@iyulab/data-components": "^0.57.0",
+    "@iyulab/enterprise": "^0.39.0",
+    "@iyulab/flex-table": "^0.79.0",
     "@iyulab/house-style": "^0.12.1",
     "@iyulab/modern-app": "^0.62.0",
     "lit": "^3.3.3"
