@@ -110,6 +110,24 @@ export class LayoutSection extends LitElement {
         </p>
       </u-group-box>
 
+      <u-group-box level="2" title="Printing — no bottom margin after the last block">
+        <p>
+          A screen that gets printed should not end on a block with a bottom margin of its own when
+          that block sits inside a flex or grid container — <code>u-form</code>,
+          <code>u-info-section</code> and the side-by-side <code>u-master-detail-layout</code> are
+          such containers. Flex and grid items do not collapse their margins with the container, so
+          the margin stays inside it and the container grows by that much. When the content ends
+          within that margin of a page boundary, the printout gets one more page that holds nothing
+          but the margin.
+        </p>
+        <p>
+          Put the space <em>between</em> blocks (<code>margin-top</code>, or a <code>gap</code> on the
+          container) rather than after each one, so the last block adds nothing below itself. Block
+          containers without padding or a border (a plain <code>div</code>, and
+          <code>u-panel</code> in print) let that margin pass through and need no care.
+        </p>
+      </u-group-box>
+
       <u-group-box level="2" title="Not yet decided">
         <p>
           Beyond the breakpoint computation itself, there is no written rule yet for
